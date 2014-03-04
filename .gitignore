@@ -1,0 +1,40 @@
+
+# phpstorm project files
+.idea
+
+# netbeans project files
+nbproject
+
+# zend studio for eclipse project files
+.buildpath
+.project
+.settings
+
+# zend server deployment files
+/deployment
+/deployment.xml
+/deployment.properties
+
+# windows thumbnail cache
+Thumbs.db
+
+# composer vendor dir contents
+/vendor/*
+
+# composer itself is not needed
+composer.phar
+
+# composer.lock should not be committed as we always want the latest versions
+/composer.lock
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit is not needed
+phpunit.phar
+
+# local phpunit config
+/phpunit.xml
+
+# no log files
+*.log

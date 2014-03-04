@@ -1,0 +1,13 @@
+<?php
+
+return array(
+
+    1 => array(
+        'dbPass'        => '',
+    ),
+
+    2 => array(
+        'dbPass'        => '',
+    ),
+
+);

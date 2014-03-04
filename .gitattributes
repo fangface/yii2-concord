@@ -1,0 +1,29 @@
+# Autodetect text files
+* text=auto
+
+# Text files
+*.php text
+*.css text
+*.js text
+*.txt text
+*.md text
+*.xml text
+*.json text
+*.bat text
+*.sql text
+*.yml text
+*.ini text
+.htaccess text
+
+# Declare files that will always have CRLF line endings on checkout.
+*.bat eol=crlf
+
+# Declare files that will always have LF line endings on checkout.
+*.pem eol=lf
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.ttf binary

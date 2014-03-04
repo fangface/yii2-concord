@@ -1,0 +1,2399 @@
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [addressId] => 1
+            [phoneId] => 1
+            [createdAt] => 2050-12-31 23:59:59
+            [createdBy] => 99
+            [modifiedAt] => 2050-12-31 23:59:59
+            [modifiedBy] => 99
+            [customerAttributes] => Array
+                (
+                    [field1] => CAField1-1
+                    [field2] => CAField2-1
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                )
+
+            [address] => Array
+                (
+                    [id] => 1
+                    [customerId] => 1
+                    [title] => Mr1
+                    [forename] => A1
+                    [surname] => Sample1
+                    [jobTitle] => Job1
+                    [company] => Company1
+                    [address1] => Address1-1
+                    [address2] => Address2-1
+                    [address3] => Address3-1
+                    [city] => City1
+                    [region] => Region1
+                    [countryCode] => GBR
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                    [country] => Array
+                        (
+                            [id] => 1
+                            [countryCode] => GBR
+                            [shortName] => UK
+                            [longName] => United Kingdom
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                        )
+
+                )
+
+            [phone] => Array
+                (
+                    [id] => 1
+                    [customerId] => 1
+                    [telno] => 0123456789
+                )
+
+            [orders] => Array
+                (
+                    [1] => Array
+                        (
+                            [id] => 1
+                            [customerId] => 1
+                            [field1] => Order-Field-1-1-1
+                            [field2] => Order-Field-2-1-1
+                            [field3] => Order-Field-3-1-1
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [1] => Array
+                                        (
+                                            [id] => 1
+                                            [customerId] => 1
+                                            [orderId] => 1
+                                            [productCode] => CODE1
+                                            [quantity] => 2
+                                            [totalValue] => 1.50
+                                            [field1] => Item-Field-1-1-1
+                                            [field2] => Item-Field-2-1-1
+                                            [field3] => Item-Field-3-1-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [2] => Array
+                                        (
+                                            [id] => 2
+                                            [customerId] => 1
+                                            [orderId] => 1
+                                            [productCode] => CODE2
+                                            [quantity] => 1
+                                            [totalValue] => 1.59
+                                            [field1] => Item-Field-1-1-1
+                                            [field2] => Item-Field-2-1-1
+                                            [field3] => Item-Field-3-1-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [3] => Array
+                                        (
+                                            [id] => 3
+                                            [customerId] => 1
+                                            [orderId] => 1
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-1-1
+                                            [field2] => Item-Field-2-1-1
+                                            [field3] => Item-Field-3-1-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [2] => Array
+                        (
+                            [id] => 2
+                            [customerId] => 1
+                            [field1] => Order-Field-1-1-2
+                            [field2] => Order-Field-2-1-2
+                            [field3] => Order-Field-3-1-2
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [4] => Array
+                                        (
+                                            [id] => 4
+                                            [customerId] => 1
+                                            [orderId] => 2
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.33
+                                            [field1] => Item-Field-1-1-2
+                                            [field2] => Item-Field-2-1-2
+                                            [field3] => Item-Field-3-1-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [5] => Array
+                                        (
+                                            [id] => 5
+                                            [customerId] => 1
+                                            [orderId] => 2
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.00
+                                            [field1] => Item-Field-1-1-2
+                                            [field2] => Item-Field-2-1-2
+                                            [field3] => Item-Field-3-1-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [6] => Array
+                                        (
+                                            [id] => 6
+                                            [customerId] => 1
+                                            [orderId] => 2
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-1-2
+                                            [field2] => Item-Field-2-1-2
+                                            [field3] => Item-Field-3-1-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [3] => Array
+                        (
+                            [id] => 3
+                            [customerId] => 1
+                            [field1] => Order-Field-1-1-3
+                            [field2] => Order-Field-2-1-3
+                            [field3] => Order-Field-3-1-3
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [7] => Array
+                                        (
+                                            [id] => 7
+                                            [customerId] => 1
+                                            [orderId] => 3
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-1-3
+                                            [field2] => Item-Field-2-1-3
+                                            [field3] => Item-Field-3-1-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [8] => Array
+                                        (
+                                            [id] => 8
+                                            [customerId] => 1
+                                            [orderId] => 3
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-1-3
+                                            [field2] => Item-Field-2-1-3
+                                            [field3] => Item-Field-3-1-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [9] => Array
+                                        (
+                                            [id] => 9
+                                            [customerId] => 1
+                                            [orderId] => 3
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-1-3
+                                            [field2] => Item-Field-2-1-3
+                                            [field3] => Item-Field-3-1-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [4] => Array
+                        (
+                            [id] => 4
+                            [customerId] => 1
+                            [field1] => Order-Field-1-1-4
+                            [field2] => Order-Field-2-1-4
+                            [field3] => Order-Field-3-1-4
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [10] => Array
+                                        (
+                                            [id] => 10
+                                            [customerId] => 1
+                                            [orderId] => 4
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-1
+                                            [field2] => Item-Field-2-1
+                                            [field3] => Item-Field-3-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [11] => Array
+                                        (
+                                            [id] => 11
+                                            [customerId] => 1
+                                            [orderId] => 4
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-1-4
+                                            [field2] => Item-Field-2-1-4
+                                            [field3] => Item-Field-3-1-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [12] => Array
+                                        (
+                                            [id] => 12
+                                            [customerId] => 1
+                                            [orderId] => 4
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-1-4
+                                            [field2] => Item-Field-2-1-4
+                                            [field3] => Item-Field-3-1-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [5] => Array
+                        (
+                            [id] => 5
+                            [customerId] => 1
+                            [field1] => Order-Field-1-1-5
+                            [field2] => Order-Field-2-1-5
+                            [field3] => Order-Field-3-1-5
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [13] => Array
+                                        (
+                                            [id] => 13
+                                            [customerId] => 1
+                                            [orderId] => 5
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-1-5
+                                            [field2] => Item-Field-2-1-5
+                                            [field3] => Item-Field-3-1-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [14] => Array
+                                        (
+                                            [id] => 14
+                                            [customerId] => 1
+                                            [orderId] => 5
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.80
+                                            [field1] => Item-Field-1-1-5
+                                            [field2] => Item-Field-2-1-5
+                                            [field3] => Item-Field-3-1-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [15] => Array
+                                        (
+                                            [id] => 15
+                                            [customerId] => 1
+                                            [orderId] => 5
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.98
+                                            [field1] => Item-Field-1-1-5
+                                            [field2] => Item-Field-2-1-5
+                                            [field3] => Item-Field-3-1-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [6] => Array
+                        (
+                            [id] => 6
+                            [customerId] => 1
+                            [field1] => Order-Field-1-1-6
+                            [field2] => Order-Field-2-1-6
+                            [field3] => Order-Field-3-1-6
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [16] => Array
+                                        (
+                                            [id] => 16
+                                            [customerId] => 1
+                                            [orderId] => 6
+                                            [productCode] => CODE1
+                                            [quantity] => 4
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-1-6
+                                            [field2] => Item-Field-2-1-6
+                                            [field3] => Item-Field-3-1-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [17] => Array
+                                        (
+                                            [id] => 17
+                                            [customerId] => 1
+                                            [orderId] => 6
+                                            [productCode] => CODE2
+                                            [quantity] => 6
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-1-6
+                                            [field2] => Item-Field-2-1-6
+                                            [field3] => Item-Field-3-1-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [18] => Array
+                                        (
+                                            [id] => 18
+                                            [customerId] => 1
+                                            [orderId] => 6
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 2.56
+                                            [field1] => Item-Field-1-1-6
+                                            [field2] => Item-Field-2-1-6
+                                            [field3] => Item-Field-3-1-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [addressId] => 2
+            [phoneId] => 2
+            [createdAt] => 2050-12-31 23:59:59
+            [createdBy] => 99
+            [modifiedAt] => 2050-12-31 23:59:59
+            [modifiedBy] => 99
+            [customerAttributes] => Array
+                (
+                    [field1] => CAField1-2
+                    [field2] => CAField2-2
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                )
+
+            [address] => Array
+                (
+                    [id] => 2
+                    [customerId] => 2
+                    [title] => Mr2
+                    [forename] => A2
+                    [surname] => Sample2
+                    [jobTitle] => Job2
+                    [company] => Company2
+                    [address1] => Address1-2
+                    [address2] => Address2-2
+                    [address3] => Address3-2
+                    [city] => City2
+                    [region] => Region2
+                    [countryCode] => GBR
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                    [country] => Array
+                        (
+                            [id] => 1
+                            [countryCode] => GBR
+                            [shortName] => UK
+                            [longName] => United Kingdom
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                        )
+
+                )
+
+            [phone] => Array
+                (
+                    [id] => 2
+                    [customerId] => 2
+                    [telno] => 0123456789
+                )
+
+            [orders] => Array
+                (
+                    [7] => Array
+                        (
+                            [id] => 7
+                            [customerId] => 2
+                            [field1] => Order-Field-1-2-1
+                            [field2] => Order-Field-2-2-1
+                            [field3] => Order-Field-3-2-1
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [19] => Array
+                                        (
+                                            [id] => 19
+                                            [customerId] => 2
+                                            [orderId] => 7
+                                            [productCode] => CODE1
+                                            [quantity] => 2
+                                            [totalValue] => 1.50
+                                            [field1] => Item-Field-1-2-1
+                                            [field2] => Item-Field-2-2-1
+                                            [field3] => Item-Field-3-2-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [20] => Array
+                                        (
+                                            [id] => 20
+                                            [customerId] => 2
+                                            [orderId] => 7
+                                            [productCode] => CODE2
+                                            [quantity] => 1
+                                            [totalValue] => 1.59
+                                            [field1] => Item-Field-1-2-1
+                                            [field2] => Item-Field-2-2-1
+                                            [field3] => Item-Field-3-2-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [21] => Array
+                                        (
+                                            [id] => 21
+                                            [customerId] => 2
+                                            [orderId] => 7
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-2-1
+                                            [field2] => Item-Field-2-2-1
+                                            [field3] => Item-Field-3-2-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [8] => Array
+                        (
+                            [id] => 8
+                            [customerId] => 2
+                            [field1] => Order-Field-1-2-2
+                            [field2] => Order-Field-2-2-2
+                            [field3] => Order-Field-3-2-2
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [22] => Array
+                                        (
+                                            [id] => 22
+                                            [customerId] => 2
+                                            [orderId] => 8
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.33
+                                            [field1] => Item-Field-1-2-2
+                                            [field2] => Item-Field-2-2-2
+                                            [field3] => Item-Field-3-2-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [23] => Array
+                                        (
+                                            [id] => 23
+                                            [customerId] => 2
+                                            [orderId] => 8
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.00
+                                            [field1] => Item-Field-1-2-2
+                                            [field2] => Item-Field-2-2-2
+                                            [field3] => Item-Field-3-2-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [24] => Array
+                                        (
+                                            [id] => 24
+                                            [customerId] => 2
+                                            [orderId] => 8
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-2-2
+                                            [field2] => Item-Field-2-2-2
+                                            [field3] => Item-Field-3-2-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [9] => Array
+                        (
+                            [id] => 9
+                            [customerId] => 2
+                            [field1] => Order-Field-1-2-3
+                            [field2] => Order-Field-2-2-3
+                            [field3] => Order-Field-3-2-3
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [25] => Array
+                                        (
+                                            [id] => 25
+                                            [customerId] => 2
+                                            [orderId] => 9
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-2-3
+                                            [field2] => Item-Field-2-2-3
+                                            [field3] => Item-Field-3-2-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [26] => Array
+                                        (
+                                            [id] => 26
+                                            [customerId] => 2
+                                            [orderId] => 9
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-2-3
+                                            [field2] => Item-Field-2-2-3
+                                            [field3] => Item-Field-3-2-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [27] => Array
+                                        (
+                                            [id] => 27
+                                            [customerId] => 2
+                                            [orderId] => 9
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-2-3
+                                            [field2] => Item-Field-2-2-3
+                                            [field3] => Item-Field-3-2-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [10] => Array
+                        (
+                            [id] => 10
+                            [customerId] => 2
+                            [field1] => Order-Field-1-2-4
+                            [field2] => Order-Field-2-2-4
+                            [field3] => Order-Field-3-2-4
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [28] => Array
+                                        (
+                                            [id] => 28
+                                            [customerId] => 2
+                                            [orderId] => 10
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-2
+                                            [field2] => Item-Field-2-2
+                                            [field3] => Item-Field-3-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [29] => Array
+                                        (
+                                            [id] => 29
+                                            [customerId] => 2
+                                            [orderId] => 10
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-2-4
+                                            [field2] => Item-Field-2-2-4
+                                            [field3] => Item-Field-3-2-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [30] => Array
+                                        (
+                                            [id] => 30
+                                            [customerId] => 2
+                                            [orderId] => 10
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-2-4
+                                            [field2] => Item-Field-2-2-4
+                                            [field3] => Item-Field-3-2-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [11] => Array
+                        (
+                            [id] => 11
+                            [customerId] => 2
+                            [field1] => Order-Field-1-2-5
+                            [field2] => Order-Field-2-2-5
+                            [field3] => Order-Field-3-2-5
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [31] => Array
+                                        (
+                                            [id] => 31
+                                            [customerId] => 2
+                                            [orderId] => 11
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-2-5
+                                            [field2] => Item-Field-2-2-5
+                                            [field3] => Item-Field-3-2-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [32] => Array
+                                        (
+                                            [id] => 32
+                                            [customerId] => 2
+                                            [orderId] => 11
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.80
+                                            [field1] => Item-Field-1-2-5
+                                            [field2] => Item-Field-2-2-5
+                                            [field3] => Item-Field-3-2-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [33] => Array
+                                        (
+                                            [id] => 33
+                                            [customerId] => 2
+                                            [orderId] => 11
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.98
+                                            [field1] => Item-Field-1-2-5
+                                            [field2] => Item-Field-2-2-5
+                                            [field3] => Item-Field-3-2-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [12] => Array
+                        (
+                            [id] => 12
+                            [customerId] => 2
+                            [field1] => Order-Field-1-2-6
+                            [field2] => Order-Field-2-2-6
+                            [field3] => Order-Field-3-2-6
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [34] => Array
+                                        (
+                                            [id] => 34
+                                            [customerId] => 2
+                                            [orderId] => 12
+                                            [productCode] => CODE1
+                                            [quantity] => 4
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-2-6
+                                            [field2] => Item-Field-2-2-6
+                                            [field3] => Item-Field-3-2-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [35] => Array
+                                        (
+                                            [id] => 35
+                                            [customerId] => 2
+                                            [orderId] => 12
+                                            [productCode] => CODE2
+                                            [quantity] => 6
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-2-6
+                                            [field2] => Item-Field-2-2-6
+                                            [field3] => Item-Field-3-2-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [36] => Array
+                                        (
+                                            [id] => 36
+                                            [customerId] => 2
+                                            [orderId] => 12
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 2.56
+                                            [field1] => Item-Field-1-2-6
+                                            [field2] => Item-Field-2-2-6
+                                            [field3] => Item-Field-3-2-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [addressId] => 3
+            [phoneId] => 3
+            [createdAt] => 2050-12-31 23:59:59
+            [createdBy] => 99
+            [modifiedAt] => 2050-12-31 23:59:59
+            [modifiedBy] => 99
+            [customerAttributes] => Array
+                (
+                    [field1] => CAField1-3
+                    [field2] => CAField2-3
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                )
+
+            [address] => Array
+                (
+                    [id] => 3
+                    [customerId] => 3
+                    [title] => Mr3
+                    [forename] => A3
+                    [surname] => Sample3
+                    [jobTitle] => Job3
+                    [company] => Company3
+                    [address1] => Address1-3
+                    [address2] => Address2-3
+                    [address3] => Address3-3
+                    [city] => City3
+                    [region] => Region3
+                    [countryCode] => GBR
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                    [country] => Array
+                        (
+                            [id] => 1
+                            [countryCode] => GBR
+                            [shortName] => UK
+                            [longName] => United Kingdom
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                        )
+
+                )
+
+            [phone] => Array
+                (
+                    [id] => 3
+                    [customerId] => 3
+                    [telno] => 0123456789
+                )
+
+            [orders] => Array
+                (
+                    [13] => Array
+                        (
+                            [id] => 13
+                            [customerId] => 3
+                            [field1] => Order-Field-1-3-1
+                            [field2] => Order-Field-2-3-1
+                            [field3] => Order-Field-3-3-1
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [37] => Array
+                                        (
+                                            [id] => 37
+                                            [customerId] => 3
+                                            [orderId] => 13
+                                            [productCode] => CODE1
+                                            [quantity] => 2
+                                            [totalValue] => 1.50
+                                            [field1] => Item-Field-1-3-1
+                                            [field2] => Item-Field-2-3-1
+                                            [field3] => Item-Field-3-3-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [38] => Array
+                                        (
+                                            [id] => 38
+                                            [customerId] => 3
+                                            [orderId] => 13
+                                            [productCode] => CODE2
+                                            [quantity] => 1
+                                            [totalValue] => 1.59
+                                            [field1] => Item-Field-1-3-1
+                                            [field2] => Item-Field-2-3-1
+                                            [field3] => Item-Field-3-3-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [39] => Array
+                                        (
+                                            [id] => 39
+                                            [customerId] => 3
+                                            [orderId] => 13
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-3-1
+                                            [field2] => Item-Field-2-3-1
+                                            [field3] => Item-Field-3-3-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [14] => Array
+                        (
+                            [id] => 14
+                            [customerId] => 3
+                            [field1] => Order-Field-1-3-2
+                            [field2] => Order-Field-2-3-2
+                            [field3] => Order-Field-3-3-2
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [40] => Array
+                                        (
+                                            [id] => 40
+                                            [customerId] => 3
+                                            [orderId] => 14
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.33
+                                            [field1] => Item-Field-1-3-2
+                                            [field2] => Item-Field-2-3-2
+                                            [field3] => Item-Field-3-3-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [41] => Array
+                                        (
+                                            [id] => 41
+                                            [customerId] => 3
+                                            [orderId] => 14
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.00
+                                            [field1] => Item-Field-1-3-2
+                                            [field2] => Item-Field-2-3-2
+                                            [field3] => Item-Field-3-3-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [42] => Array
+                                        (
+                                            [id] => 42
+                                            [customerId] => 3
+                                            [orderId] => 14
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-3-2
+                                            [field2] => Item-Field-2-3-2
+                                            [field3] => Item-Field-3-3-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [15] => Array
+                        (
+                            [id] => 15
+                            [customerId] => 3
+                            [field1] => Order-Field-1-3-3
+                            [field2] => Order-Field-2-3-3
+                            [field3] => Order-Field-3-3-3
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [43] => Array
+                                        (
+                                            [id] => 43
+                                            [customerId] => 3
+                                            [orderId] => 15
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-3-3
+                                            [field2] => Item-Field-2-3-3
+                                            [field3] => Item-Field-3-3-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [44] => Array
+                                        (
+                                            [id] => 44
+                                            [customerId] => 3
+                                            [orderId] => 15
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-3-3
+                                            [field2] => Item-Field-2-3-3
+                                            [field3] => Item-Field-3-3-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [45] => Array
+                                        (
+                                            [id] => 45
+                                            [customerId] => 3
+                                            [orderId] => 15
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-3-3
+                                            [field2] => Item-Field-2-3-3
+                                            [field3] => Item-Field-3-3-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [16] => Array
+                        (
+                            [id] => 16
+                            [customerId] => 3
+                            [field1] => Order-Field-1-3-4
+                            [field2] => Order-Field-2-3-4
+                            [field3] => Order-Field-3-3-4
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [46] => Array
+                                        (
+                                            [id] => 46
+                                            [customerId] => 3
+                                            [orderId] => 16
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-3
+                                            [field2] => Item-Field-2-3
+                                            [field3] => Item-Field-3-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [47] => Array
+                                        (
+                                            [id] => 47
+                                            [customerId] => 3
+                                            [orderId] => 16
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-3-4
+                                            [field2] => Item-Field-2-3-4
+                                            [field3] => Item-Field-3-3-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [48] => Array
+                                        (
+                                            [id] => 48
+                                            [customerId] => 3
+                                            [orderId] => 16
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-3-4
+                                            [field2] => Item-Field-2-3-4
+                                            [field3] => Item-Field-3-3-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [17] => Array
+                        (
+                            [id] => 17
+                            [customerId] => 3
+                            [field1] => Order-Field-1-3-5
+                            [field2] => Order-Field-2-3-5
+                            [field3] => Order-Field-3-3-5
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [49] => Array
+                                        (
+                                            [id] => 49
+                                            [customerId] => 3
+                                            [orderId] => 17
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-3-5
+                                            [field2] => Item-Field-2-3-5
+                                            [field3] => Item-Field-3-3-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [50] => Array
+                                        (
+                                            [id] => 50
+                                            [customerId] => 3
+                                            [orderId] => 17
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.80
+                                            [field1] => Item-Field-1-3-5
+                                            [field2] => Item-Field-2-3-5
+                                            [field3] => Item-Field-3-3-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [51] => Array
+                                        (
+                                            [id] => 51
+                                            [customerId] => 3
+                                            [orderId] => 17
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.98
+                                            [field1] => Item-Field-1-3-5
+                                            [field2] => Item-Field-2-3-5
+                                            [field3] => Item-Field-3-3-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [18] => Array
+                        (
+                            [id] => 18
+                            [customerId] => 3
+                            [field1] => Order-Field-1-3-6
+                            [field2] => Order-Field-2-3-6
+                            [field3] => Order-Field-3-3-6
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [52] => Array
+                                        (
+                                            [id] => 52
+                                            [customerId] => 3
+                                            [orderId] => 18
+                                            [productCode] => CODE1
+                                            [quantity] => 4
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-3-6
+                                            [field2] => Item-Field-2-3-6
+                                            [field3] => Item-Field-3-3-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [53] => Array
+                                        (
+                                            [id] => 53
+                                            [customerId] => 3
+                                            [orderId] => 18
+                                            [productCode] => CODE2
+                                            [quantity] => 6
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-3-6
+                                            [field2] => Item-Field-2-3-6
+                                            [field3] => Item-Field-3-3-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [54] => Array
+                                        (
+                                            [id] => 54
+                                            [customerId] => 3
+                                            [orderId] => 18
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 2.56
+                                            [field1] => Item-Field-1-3-6
+                                            [field2] => Item-Field-2-3-6
+                                            [field3] => Item-Field-3-3-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [3] => Array
+        (
+            [id] => 4
+            [addressId] => 4
+            [phoneId] => 4
+            [createdAt] => 2050-12-31 23:59:59
+            [createdBy] => 99
+            [modifiedAt] => 2050-12-31 23:59:59
+            [modifiedBy] => 99
+            [customerAttributes] => Array
+                (
+                    [field1] => CAField1-4
+                    [field2] => CAField2-4
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                )
+
+            [address] => Array
+                (
+                    [id] => 4
+                    [customerId] => 4
+                    [title] => Mr4
+                    [forename] => A4
+                    [surname] => Sample4
+                    [jobTitle] => Job4
+                    [company] => Company4
+                    [address1] => Address1-4
+                    [address2] => Address2-4
+                    [address3] => Address3-4
+                    [city] => City4
+                    [region] => Region4
+                    [countryCode] => GBR
+                    [createdAt] => 2050-12-31 23:59:59
+                    [createdBy] => 99
+                    [modifiedAt] => 2050-12-31 23:59:59
+                    [modifiedBy] => 99
+                    [country] => Array
+                        (
+                            [id] => 1
+                            [countryCode] => GBR
+                            [shortName] => UK
+                            [longName] => United Kingdom
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                        )
+
+                )
+
+            [phone] => Array
+                (
+                    [id] => 4
+                    [customerId] => 4
+                    [telno] => 0123456789
+                )
+
+            [orders] => Array
+                (
+                    [19] => Array
+                        (
+                            [id] => 19
+                            [customerId] => 4
+                            [field1] => Order-Field-1-4-1
+                            [field2] => Order-Field-2-4-1
+                            [field3] => Order-Field-3-4-1
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [55] => Array
+                                        (
+                                            [id] => 55
+                                            [customerId] => 4
+                                            [orderId] => 19
+                                            [productCode] => CODE1
+                                            [quantity] => 2
+                                            [totalValue] => 1.50
+                                            [field1] => Item-Field-1-4-1
+                                            [field2] => Item-Field-2-4-1
+                                            [field3] => Item-Field-3-4-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [56] => Array
+                                        (
+                                            [id] => 56
+                                            [customerId] => 4
+                                            [orderId] => 19
+                                            [productCode] => CODE2
+                                            [quantity] => 1
+                                            [totalValue] => 1.59
+                                            [field1] => Item-Field-1-4-1
+                                            [field2] => Item-Field-2-4-1
+                                            [field3] => Item-Field-3-4-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [57] => Array
+                                        (
+                                            [id] => 57
+                                            [customerId] => 4
+                                            [orderId] => 19
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-4-1
+                                            [field2] => Item-Field-2-4-1
+                                            [field3] => Item-Field-3-4-1
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [20] => Array
+                        (
+                            [id] => 20
+                            [customerId] => 4
+                            [field1] => Order-Field-1-4-2
+                            [field2] => Order-Field-2-4-2
+                            [field3] => Order-Field-3-4-2
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [58] => Array
+                                        (
+                                            [id] => 58
+                                            [customerId] => 4
+                                            [orderId] => 20
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.33
+                                            [field1] => Item-Field-1-4-2
+                                            [field2] => Item-Field-2-4-2
+                                            [field3] => Item-Field-3-4-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [59] => Array
+                                        (
+                                            [id] => 59
+                                            [customerId] => 4
+                                            [orderId] => 20
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.00
+                                            [field1] => Item-Field-1-4-2
+                                            [field2] => Item-Field-2-4-2
+                                            [field3] => Item-Field-3-4-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [60] => Array
+                                        (
+                                            [id] => 60
+                                            [customerId] => 4
+                                            [orderId] => 20
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.50
+                                            [field1] => Item-Field-1-4-2
+                                            [field2] => Item-Field-2-4-2
+                                            [field3] => Item-Field-3-4-2
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [21] => Array
+                        (
+                            [id] => 21
+                            [customerId] => 4
+                            [field1] => Order-Field-1-4-3
+                            [field2] => Order-Field-2-4-3
+                            [field3] => Order-Field-3-4-3
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [61] => Array
+                                        (
+                                            [id] => 61
+                                            [customerId] => 4
+                                            [orderId] => 21
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-4-3
+                                            [field2] => Item-Field-2-4-3
+                                            [field3] => Item-Field-3-4-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [62] => Array
+                                        (
+                                            [id] => 62
+                                            [customerId] => 4
+                                            [orderId] => 21
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-4-3
+                                            [field2] => Item-Field-2-4-3
+                                            [field3] => Item-Field-3-4-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [63] => Array
+                                        (
+                                            [id] => 63
+                                            [customerId] => 4
+                                            [orderId] => 21
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-4-3
+                                            [field2] => Item-Field-2-4-3
+                                            [field3] => Item-Field-3-4-3
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [22] => Array
+                        (
+                            [id] => 22
+                            [customerId] => 4
+                            [field1] => Order-Field-1-4-4
+                            [field2] => Order-Field-2-4-4
+                            [field3] => Order-Field-3-4-4
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [64] => Array
+                                        (
+                                            [id] => 64
+                                            [customerId] => 4
+                                            [orderId] => 22
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-4
+                                            [field2] => Item-Field-2-4
+                                            [field3] => Item-Field-3-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [65] => Array
+                                        (
+                                            [id] => 65
+                                            [customerId] => 4
+                                            [orderId] => 22
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 6.00
+                                            [field1] => Item-Field-1-4-4
+                                            [field2] => Item-Field-2-4-4
+                                            [field3] => Item-Field-3-4-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [66] => Array
+                                        (
+                                            [id] => 66
+                                            [customerId] => 4
+                                            [orderId] => 22
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.52
+                                            [field1] => Item-Field-1-4-4
+                                            [field2] => Item-Field-2-4-4
+                                            [field3] => Item-Field-3-4-4
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [23] => Array
+                        (
+                            [id] => 23
+                            [customerId] => 4
+                            [field1] => Order-Field-1-4-5
+                            [field2] => Order-Field-2-4-5
+                            [field3] => Order-Field-3-4-5
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [67] => Array
+                                        (
+                                            [id] => 67
+                                            [customerId] => 4
+                                            [orderId] => 23
+                                            [productCode] => CODE1
+                                            [quantity] => 3
+                                            [totalValue] => 3.36
+                                            [field1] => Item-Field-1-4-5
+                                            [field2] => Item-Field-2-4-5
+                                            [field3] => Item-Field-3-4-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [68] => Array
+                                        (
+                                            [id] => 68
+                                            [customerId] => 4
+                                            [orderId] => 23
+                                            [productCode] => CODE2
+                                            [quantity] => 2
+                                            [totalValue] => 4.80
+                                            [field1] => Item-Field-1-4-5
+                                            [field2] => Item-Field-2-4-5
+                                            [field3] => Item-Field-3-4-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [69] => Array
+                                        (
+                                            [id] => 69
+                                            [customerId] => 4
+                                            [orderId] => 23
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 3.98
+                                            [field1] => Item-Field-1-4-5
+                                            [field2] => Item-Field-2-4-5
+                                            [field3] => Item-Field-3-4-5
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [24] => Array
+                        (
+                            [id] => 24
+                            [customerId] => 4
+                            [field1] => Order-Field-1-4-6
+                            [field2] => Order-Field-2-4-6
+                            [field3] => Order-Field-3-4-6
+                            [createdAt] => 2050-12-31 23:59:59
+                            [createdBy] => 99
+                            [modifiedAt] => 2050-12-31 23:59:59
+                            [modifiedBy] => 99
+                            [items] => Array
+                                (
+                                    [70] => Array
+                                        (
+                                            [id] => 70
+                                            [customerId] => 4
+                                            [orderId] => 24
+                                            [productCode] => CODE1
+                                            [quantity] => 4
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-4-6
+                                            [field2] => Item-Field-2-4-6
+                                            [field3] => Item-Field-3-4-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 1
+                                                    [productCode] => CODE1
+                                                    [description] => Description for productCode CODE1
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [71] => Array
+                                        (
+                                            [id] => 71
+                                            [customerId] => 4
+                                            [orderId] => 24
+                                            [productCode] => CODE2
+                                            [quantity] => 6
+                                            [totalValue] => 4.12
+                                            [field1] => Item-Field-1-4-6
+                                            [field2] => Item-Field-2-4-6
+                                            [field3] => Item-Field-3-4-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 2
+                                                    [productCode] => CODE2
+                                                    [description] => Description for productCode CODE2
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                    [72] => Array
+                                        (
+                                            [id] => 72
+                                            [customerId] => 4
+                                            [orderId] => 24
+                                            [productCode] => POST
+                                            [quantity] => 1
+                                            [totalValue] => 2.56
+                                            [field1] => Item-Field-1-4-6
+                                            [field2] => Item-Field-2-4-6
+                                            [field3] => Item-Field-3-4-6
+                                            [product] => Array
+                                                (
+                                                    [id] => 4
+                                                    [productCode] => POST
+                                                    [description] => Postage and Packaging
+                                                    [createdAt] => 2050-12-31 23:59:59
+                                                    [createdBy] => 99
+                                                    [modifiedAt] => 2050-12-31 23:59:59
+                                                    [modifiedBy] => 99
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+)

@@ -1,0 +1,35 @@
+{
+  "name": "fangface/yii2-concord",
+  "description": "Concord extension for the Yii2 framework",
+  "type": "library",
+  "homepage": "https://github.com/fangface/yii2-concord",
+  "keywords": ["yii", "yii2", "concord", "active", "record", "framework", "eav"],
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/fangface/yii2-concord/issues?state=open",
+    "source": "https://github.com/fangface/yii2-concord"
+  },
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Fangface",
+      "homepage": "https://github.com/fangface",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "yiisoft/yii2": "*",
+    "yiisoft/yii2-swiftmailer" : "*",
+    "yiisoft/yii2-bootstrap" : "*",
+    "yiisoft/yii2-debug" : "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Concord\\": "src/"
+    }
+  }
+}
