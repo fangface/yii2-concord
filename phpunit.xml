@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./tests/bootstrap.php"
+		 backupGlobals="false"
+		 backupStaticAttributes="false"
+		 colors="false"
+		 convertErrorsToExceptions="true"
+		 convertNoticesToExceptions="true"
+		 convertWarningsToExceptions="true"
+		 processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+		 syntaxCheck="false"
+         verbose="true">
+
+	<testsuites>
+		<testsuite name="Concord PHP Add-On for Yii2">
+			<directory>./tests/Unit</directory>
+		</testsuite>
+	</testsuites>
+
+    <filter>
+        <blacklist>
+            <directory>./tests/Unit/Results</directory>
+        </blacklist>
+    </filter>
+
+</phpunit>
