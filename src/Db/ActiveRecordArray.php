@@ -14,15 +14,15 @@
 
 namespace Concord\Db;
 
-use yii\base\ModelEvent;
-use yii\db\ActiveRecord as YiiActiveRecord;
 use Concord\Base\Traits\ActionErrors;
 use Concord\Db\ActiveRecordArrayException;
-use Concord\Db\ActiveRecordParentalTrait;
 use Concord\Db\ActiveRecordParentalInterface;
+use Concord\Db\ActiveRecordParentalTrait;
 use Concord\Db\ActiveRecordReadOnlyInterface;
 use Concord\Db\ActiveRecordReadOnlyTrait;
 use Concord\Db\ActiveRecordSaveAllInterface;
+use yii\base\ModelEvent;
+use yii\db\ActiveRecord as YiiActiveRecord;
 
 class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
 {

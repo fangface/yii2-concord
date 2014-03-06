@@ -24,7 +24,6 @@ trait OffsetAccess
      * var_dump(isset($config['database']));
      *</code>
      *
-     * @param string $offset
      * @return boolean
      */
     public function offsetExists($key)

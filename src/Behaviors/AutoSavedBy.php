@@ -14,10 +14,10 @@
 
 namespace Concord\Behaviors;
 
+use Concord\Db\ActiveRecord;
 use Yii;
 use yii\base\Behavior;
 use yii\db\Expression;
-use Concord\Db\ActiveRecord;
 
 /**
  * AutoSavedBy will automatically fill the relevant attributes during creation and update
