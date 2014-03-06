@@ -116,11 +116,10 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         $calledClass = get_called_class();
         $tablePrefix = $connection->tablePrefix;
         if (isset($calledClass::$dbTableName) && !is_null($calledClass::$dbTableName) && $calledClass::$dbTableName) {
-            $tableName = $calledClass::$dbTableName;
+            $tableName = $tablePrefix . $calledClass::$dbTableName;
         } else {
-            $tableName = \Concord\Tools::getDefaultTableNameFromClass($calledClass, (isset($calledClass::$tableNameMethod) && !is_null($calledClass::$tableNameMethod) && $calledClass::$tableNameMethod ? $calledClass::$tableNameMethod : 'default'));
+            $tableName = $tablePrefix . \Concord\Tools::getDefaultTableNameFromClass($calledClass, (isset($calledClass::$tableNameMethod) && !is_null($calledClass::$tableNameMethod) && $calledClass::$tableNameMethod ? $calledClass::$tableNameMethod : 'default'));
         }
-        $tableName = $tablePrefix . $tableName;
         if (true) {
             preg_match("/dbname=([^;]+)/i", $connection->dsn, $matches);
             return $matches[1] . '.' . $tableName;

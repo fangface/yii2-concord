@@ -390,7 +390,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
 
     /**
-     * @param string $attributeNames
+     * Load all or specific outstanding lazy loaded attributes
+     *
+     * @param string|array|null $attributeNames
      */
     public function loadLazyAttribute($attributeNames = null)
     {
