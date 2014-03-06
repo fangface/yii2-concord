@@ -2,5 +2,7 @@ imports:
     - php
 
 tools:
+    php_cpd: false
     external_code_coverage:
         timeout: 2100 # Timeout in seconds.
+

@@ -1603,8 +1603,6 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      *
      * @param boolean $runValidation
      *        should validations be executed on all models before allowing saveAll()
-     * @param array $attributes
-     *        which attributes should be saved (default null means all changed attributes)
      * @param boolean $hasParentModel
      *        whether this method was called from the top level or by a parent
      *        If false, it means the method was called at the top level

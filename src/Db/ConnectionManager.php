@@ -231,6 +231,8 @@ class ConnectionManager extends Component
 
         } elseif ($resourceName) {
 
+            $dbResource = false;
+
             if ($dbParams && is_array($dbParams)) {
 
                 // use the dbParams provided
@@ -277,31 +279,16 @@ class ConnectionManager extends Component
                 $client = $this->getService('client');
                 if ($client && $client instanceof \Concord\Models\Db\Client) {
                     $connection = $this->getClientConnection(true);
-                    if ($connection && $connection instanceof \Yii\Db\Connection) {
-
-                        $dbResource = \Concord\Models\Db\Client\DbResource::find()
-                            ->where(['resourceName' => $resourceName])
-                            ->one();
-
-                        if ($dbResource) {
-                            $dbParams = array(
-                                'class'                => $dbResource->dbClass,
-                                'dsn'                  => $dbResource->dbDsn,
-                                'username'             => $dbResource->dbUser,
-                                'password'             => $dbResource->dbPass,
-                                'charset'              => $dbResource->dbCharset,
-                                'tablePrefix'          => $dbResource->dbPrefix,
-                                'connect'              => false,
-                                'enableSchemaCache'    => $connection->enableSchemaCache,
-                                'schemaCacheDuration'  => $connection->schemaCacheDuration,
-                                'schemaCacheExclude'   => array(), // $connection->schemaCacheExclude,
-                                'schemaCache'          => $connection->schemaCache,
-                                'enableQueryCache'     => $connection->enableQueryCache,
-                                'queryCacheDuration'   => $connection->queryCacheDuration,
-                                'queryCacheDependency' => $connection->queryCacheDependency,
-                                'queryCache'           => $connection->queryCache,
-                                'emulatePrepare'       => NULL, // $connection->emulatePrepare,
-                            );
+                    if ($connection && $connection instanceof \yii\db\Connection) {
+                        try {
+                            $dbResource = \Concord\Models\Db\Client\DbResource::find()
+                                ->where(['resourceName' => $resourceName])
+                                ->one();
+                        } catch (\yii\db\Exception $e) {
+                            if (strpos($e->getMessage(), 'Base table or view not found') !== false) {
+                                // dbResources table has not been setup in the default dbConnection
+                                throw new \Concord\Db\Exception('client dbResources table not found');
+                            }
                         }
                     }
                 }
@@ -310,7 +297,7 @@ class ConnectionManager extends Component
 
                 $connection = $this->getConnection();
 
-                if ($connection && $connection instanceof \Yii\Db\Connection) {
+                if ($connection && $connection instanceof \yii\db\Connection) {
 
                     try {
                         $dbResource = \Concord\Models\Db\DbResource::find()
@@ -322,28 +309,28 @@ class ConnectionManager extends Component
                             throw new \Concord\Db\Exception('dbResources table not found');
                         }
                     }
-
-                    if ($dbResource) {
-                        $dbParams = array(
-                            'class'                => $dbResource->dbClass,
-                            'dsn'                  => $dbResource->dbDsn,
-                            'username'             => $dbResource->dbUser,
-                            'password'             => $dbResource->dbPass,
-                            'charset'              => $dbResource->dbCharset,
-                            'tablePrefix'          => $dbResource->dbPrefix,
-                            'connect'              => false,
-                            'enableSchemaCache'    => $connection->enableSchemaCache,
-                            'schemaCacheDuration'  => $connection->schemaCacheDuration,
-                            'schemaCacheExclude'   => array(), // $connection->schemaCacheExclude,
-                            'schemaCache'          => $connection->schemaCache,
-                            'enableQueryCache'     => $connection->enableQueryCache,
-                            'queryCacheDuration'   => $connection->queryCacheDuration,
-                            'queryCacheDependency' => $connection->queryCacheDependency,
-                            'queryCache'           => $connection->queryCache,
-                            'emulatePrepare'       => NULL, // $connection->emulatePrepare,
-                        );
-                    }
                 }
+            }
+
+            if ($dbResource) {
+                $dbParams = array(
+                    'class'                => $dbResource->dbClass,
+                    'dsn'                  => $dbResource->dbDsn,
+                    'username'             => $dbResource->dbUser,
+                    'password'             => $dbResource->dbPass,
+                    'charset'              => $dbResource->dbCharset,
+                    'tablePrefix'          => $dbResource->dbPrefix,
+                    'connect'              => false,
+                    'enableSchemaCache'    => $connection->enableSchemaCache,
+                    'schemaCacheDuration'  => $connection->schemaCacheDuration,
+                    'schemaCacheExclude'   => array(), // $connection->schemaCacheExclude,
+                    'schemaCache'          => $connection->schemaCache,
+                    'enableQueryCache'     => $connection->enableQueryCache,
+                    'queryCacheDuration'   => $connection->queryCacheDuration,
+                    'queryCacheDependency' => $connection->queryCacheDependency,
+                    'queryCache'           => $connection->queryCache,
+                    'emulatePrepare'       => NULL, // $connection->emulatePrepare,
+                );
             }
 
             if ($dbParams) {
@@ -414,7 +401,7 @@ class ConnectionManager extends Component
     /**
      * Setup and return the connection for the specified resource name
      *
-     * @param string $resource
+     * @param string $resourceName
      * @param array $dbParams
      * @return \yii\db\Connection|false
      */
@@ -563,8 +550,9 @@ class ConnectionManager extends Component
                 // database connection has been used - we will attempt to set that up now if there is @author Waine
                 // service entry for it
                 if ($this->hasService($resourceName)) {
-                    $tempConnection = $this->getConnection($resourceName, true);
-                    $resourceNameCheck = $this->getResourceNameByAlias($resourceName);
+                    if ($this->getConnection($resourceName, true)) {
+                        $resourceNameCheck = $this->getResourceNameByAlias($resourceName);
+                    }
                 }
             }
 
@@ -669,7 +657,7 @@ class ConnectionManager extends Component
         if ($resourceName && isset($this->resources['Resources'][$resourceName])) {
 
             if ($this->isResourceConnected($resourceName)) {
-                $ok = $this->disconnectResource($resourceName);
+                $this->disconnectResource($resourceName);
             }
 
             $aliases = $this->resources['Resources'][$resourceName]['Aliases'];
@@ -724,7 +712,7 @@ class ConnectionManager extends Component
     {
         $services = $this->getServices();
         foreach ($services as $serviceName => $service) {
-            if ($service instanceof yii\db\Connection) {
+            if ($service instanceof \yii\db\Connection) {
                 if (!isset($this->resources['Resources'][$serviceName])) {
                     $resourceName = $this->getResourceNameByAlias($serviceName);
                     if ($resourceName) {

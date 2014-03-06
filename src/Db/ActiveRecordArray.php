@@ -79,7 +79,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
      * Construct
      *
      * @param string $input
-     * @param number $flags
+     * @param integer $flags
      * @param string $iterator_class
      */
     public function __construct($input = null, $flags = 0, $iterator_class = 'ArrayIterator')

@@ -19,7 +19,6 @@ use yii\base\ModelEvent;
 use yii\db\ActiveRecord as YiiActiveRecord;
 use yii\db\ActiveQuery;
 use Concord\Base\Traits\ActionErrors;
-use Concord\Db\ActiveEavRelation;
 use Concord\Db\ActiveRecord;
 use Concord\Db\ActiveRecordArray;
 use Concord\Db\ActiveRecordParentalInterface;

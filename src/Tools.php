@@ -32,6 +32,8 @@ class Tools
 
     /*
      * Returns the current active client Id @return integer
+     *
+     * @return integer
      */
     public static function getClientId()
     {
@@ -45,6 +47,8 @@ class Tools
 
     /*
      * Returns the current active client code @return string
+     *
+     * @return string
      */
     public static function getClientCode()
     {
@@ -87,11 +91,10 @@ class Tools
     /**
      * Determine default table name for an ActiveRecord class
      * The default method will return the table name the same as the class name with the first character
-     * converted to lower case and 's' or 'ies' added to the end of the table name if it is not alrady
+     * converted to lower case and 's' or 'ies' added to the end of the table name if it is not already
      * The camel method returns the class name as the table name by calling [[Inflector::camel2id()]]
-     * For example, 'Customer' becomes 'customer', and 'OrderItem' becomes
-     * 'order_item'.
-     * @param \Concord\Db\ActiveRecord
+     * For example, 'Customer' becomes 'customer', and 'OrderItem' becomes'order_item'.
+     * @param \Concord\Db\ActiveRecord $object
      * @return string
      */
 
@@ -282,6 +285,20 @@ class Tools
     }
 
 
+    /**
+     *
+     * @param number|string|boolean|null $value
+     * @param string|array $dataType type of attribute or an array of values specifying the column schema
+     * @param integer $length number of characters for the attribute within the db table [OPTIONAL] default 0
+     * @param integer $decimals how many decimal characters exist for this attribute within the db table [OPTIONAL] default 0
+     * @param boolean $unsigned is the atribute unsigned within the db table [OPTIONAL] default false
+     * @param boolean $zerofill is the attribute zerofilled within the db table [OPTIONAL] default false
+     * @param boolean $isNullable is the attribute nullable within the db table [OPTIONAL] default false
+     * @param boolean $autoIncrement is the attribute auto incrementing within the db table [OPTIONAL] default false
+     * @param boolean $primaryKey is the attribute the primary key within the table [OPTIONAL] default false
+     * @param mixed $defaultValue default value [OPTIONAL] default ''
+     * @return number|string|boolean|null
+     */
     public static function formatAttributeValue($value, $dataType, $length = 0, $decimals = 0, $unsigned = false, $zerofill = false, $isNullable = false, $autoIncrement = false, $primaryKey = false, $defaultValue = '')
     {
 
@@ -435,14 +452,21 @@ class Tools
     }
 
 
+    /**
+     * Check the email provided is of a valid syntax and check that the domain portion
+     * of the email exists in DNS
+     *
+     * @param string $email
+     * @return boolean
+     */
     public static function emailsyntax_is_valid($email)
     {
         if (strpos($email, "@") === FALSE) { // no @ in the email address is invalid
-            return 0;
+            // invalid
         } else {
             list ($local, $domain) = explode("@", $email);
             if (strlen($local) == 0 || strlen($domain) == 0) {
-                return 0;
+                // invalid
             } else {
                 $pattern_local = '^([0-9a-z]*([-|_]?[0-9a-z]+)*)(([-|_]?)\.([-|_]?)[0-9a-z]*([-|_]?[0-9a-z]+)+)*([-|_]?)$';
                 $pattern_domain = '^([0-9a-z]+([-]?[0-9a-z]+)*)(([-]?)\.([-]?)[0-9a-z]*([-]?[0-9a-z]+)+)*\.[a-z]{2,4}$';
@@ -452,21 +476,24 @@ class Tools
 
                 if ($match_local && $match_domain) {
                     if (getmxrr($domain, $validate_email_temp)) {
-                        return 1;
+                        return true;
                     } elseif (gethostbyname($domain) != $domain) {
-                        return 1;
-                    } else {
-                        return 0;
+                        return true;
                     }
-                    return 1;
-                } else {
-                    return 0;
                 }
             }
         }
+        return false;
     }
 
 
+    /**
+     * Replicate the provided character the number of times specified
+     *
+     * @param string $strInput
+     * @param integer $intCount
+     * @return string
+     */
     public static function repli($strInput, $intCount)
     {
         $strResult = '';
@@ -477,13 +504,19 @@ class Tools
     }
 
 
+    /**
+     * Sort a multi dimension array by the key specificed
+     * @param array $array
+     * @param integer $options
+     * @return array
+     */
     public static function array_csort()
     {
         $sortarr = array();
         $args = func_get_args();
         $marray = array_shift($args);
         $msortline = "return(array_multisort(";
-        $i = - 1;
+        $i = -1;
         foreach ($args as $arg) {
             $i ++;
             if (is_string($arg)) {
@@ -502,6 +535,14 @@ class Tools
     }
 
 
+    /**
+     * Generate a random string to the specified length and optionally exclude often
+     * mis-read characters
+     *
+     * @param integer $len number of characters to generate
+     * @param boolean $excludeEasyMisRead [OPTIONAL] exclude typically mis-ead characters, default false
+     * @return string
+     */
     public static function randomString($len, $excludeEasyMisRead = false)
     {
         $pass = '';
@@ -547,18 +588,39 @@ class Tools
     }
 
 
+    /**
+     * Format a numeric value to the preferred decimal format
+     *
+     * @param number $value
+     * @param integer $decimals, default 2
+     * @return number
+     */
     public static function decimalFormat($value, $decimals = 2)
     {
         return number_format($value, $decimals, '.', '');
     }
 
 
+    /**
+     * Format a numeric value to the preferred tax rate format
+     *
+     * @param number $value
+     * @param integer $decimals, default 6
+     * @return number
+     */
     public static function rateFormat($value, $decimals = 6)
     {
         return number_format($value, $decimals, '.', '');
     }
 
 
+    /**
+     * Round values up to the specified level of precision
+     *
+     * @param number $value
+     * @param integer $precision
+     * @return number
+     */
     public function roundUp($value, $precision = 0)
     {
         // allows for rounding up to precision for pre PHP 5.3
@@ -571,6 +633,13 @@ class Tools
     }
 
 
+    /**
+     * Round half values up to the specified level of precision
+     *
+     * @param number $value
+     * @param integer $precision
+     * @return number
+     */
     public function roundHalfUp($value, $precision = 0)
     {
         if (true) {
@@ -585,12 +654,32 @@ class Tools
     }
 
 
+    /**
+     * Round the provided number up by the specified level of significance
+     *
+     * @param number $number
+     * @param integer $significance
+     * @return number
+     */
     function roundUpBy($number, $significance = 1)
     {
         return (is_numeric($number) && is_numeric($significance)) ? (double) (ceil($number / $significance) * $significance) : false;
     }
 
 
+    /**
+     * Convert a multi-lined string to an array
+     *
+     * @param string $valuex the string to be converted
+     * @param boolean $isVariableList specify that the string contains a list of variables, default false
+     * @param boolean $returnVariables should array of variables be returned, default false
+     * @param boolean $returnIsInvalidVariables should invalid variables be returned as part of the array, default false
+     * @param boolean $returnLowerVariables convert variables to lower case and return those, default false
+     * @param boolean $returnLowerVariablesAsExtra return lower cases variables as part of the 'extra' array element, default false
+     * @param string $validKeys regular expression of valid keys
+     * @param boolean $keysOnly return only the variable names, default false
+     * @return array|boolean|integer
+     */
     public static function multiLineRecordToArray($valuex, $isVariableList = false, $returnVariables = false, $returnIsInvalidVariables = false, $returnLowerVariables = false, $returnLowerVariablesAsExtra = false, $validKeys = '', $keysOnly = false)
     {
         if (trim($valuex) != '') {
@@ -726,12 +815,26 @@ class Tools
     }
 
 
+    /**
+     * Return string converted to upper case
+     *
+     * @param string $str string to be converted
+     * @param string $enc encoding default UTF-8
+     * @return string
+     */
     public static function fullUpper($str, $enc = 'UTF-8')
     {
         return mb_strtoupper($str, $enc);
     }
 
 
+    /**
+     * Return string converted to lower case
+     *
+     * @param string $str string to be converted
+     * @param string $enc encoding default UTF-8
+     * @return string
+     */
     public static function fullLower($str, $enc = 'UTF-8')
     {
         return mb_strtolower($str, $enc);
