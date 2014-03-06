@@ -84,11 +84,11 @@ $newOrder->items[] = new Item(array(
 
 // add new item
 $newOrder->items['abc']->productCode = 'CODE3';
-$newOrder->items['abc']->quantity'   = 1;
-$newOrder->items['abc']->totalValue' = 3.20;
-$newOrder->items['abc']->field1'     = 'Item-Field-1';
-$newOrder->items['abc']->field2'     = 'Item-Field-2';
-$newOrder->items['abc']->field3'     = 'Item-Field-3';
+$newOrder->items['abc']->quantity    = 1;
+$newOrder->items['abc']->totalValue  = 3.20;
+$newOrder->items['abc']->field1      = 'Item-Field-1';
+$newOrder->items['abc']->field2      = 'Item-Field-2';
+$newOrder->items['abc']->field3      = 'Item-Field-3';
 
 // add new item
 $newOrder->items['xyz'] = new Item(array(
