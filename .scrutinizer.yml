@@ -3,6 +3,20 @@ imports:
 
 tools:
     php_cpd: false
+
+    php_analyzer:
+        config:
+            use_statement_fixes:
+                enabled:              true
+                remove_unused:        true
+                preserve_multiple:    false
+                preserve_blanklines:  false
+                order_alphabetically:  true
+            metrics_coupling:
+                stable_code:
+                    namespace_prefixes:
+                        - yii
+                        
     external_code_coverage:
         timeout: 2100 # Timeout in seconds.
 
