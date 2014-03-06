@@ -94,7 +94,8 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testGetUndefinedDbConnectionFails()
     {
-        $db = Yii::$app->getComponent('dbFactory')->getConnection('db', true, false);
+        $db = Yii::$app->getComponent('dbFactory')->getConnection('db');
+        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX', true, false);
     }
 
 
