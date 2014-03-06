@@ -43,7 +43,7 @@ trait ServiceGetterStatic
     /**
      * Registers a service (component) with this application manager
      * @param string $id component ID
-     * @param yii\base\Component|array|null $component the component to be registered with the module.
+     * @param \yii\base\Component|array|null $component the component to be registered with the module.
      */
     public static function setService($id, $component)
     {
@@ -54,7 +54,7 @@ trait ServiceGetterStatic
     /**
      * Helper method to return all services (components) from the application manager
      * @param boolean $loadedOnly return only loaded services (default is false which will return all services)
-     * @return yii\base\Component
+     * @return \yii\base\Component[]
      */
     public static function getServices($loadedOnly = false)
     {

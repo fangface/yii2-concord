@@ -213,7 +213,6 @@ class ConnectionManager extends Component
      */
     public function addResource($resourceName, $clientResource = false, $checkServices = true, $dbParams = false)
     {
-
         if ($checkServices) {
             if ($this->hasService($resourceName)) {
                 $connection = $this->getService($resourceName);
@@ -223,60 +222,26 @@ class ConnectionManager extends Component
                 }
             }
         }
-
         $resourceNameCheck = $this->getResourceNameByAlias($resourceName);
         if ($resourceName && isset($this->resources['Resources'][$resourceNameCheck])) {
-
             // resource already exists
             return true;
-
         } elseif ($resourceName) {
-
             $dbResource = false;
-
             if ($dbParams && is_array($dbParams)) {
-
                 // use the dbParams provided
-
-            } elseif (isset(Yii::$app->$resourceName) && is_array(Yii::$app->$resourceName)) {
-
-                // connection settings can be taken from the application config
-                $dbParams = Yii::$app->$resourceName;
-
             } elseif ($resourceName == 'dbClient') {
-
                 /*
                  * We need to load up the client DB connection and it is not defined as config
                  * so we will get the details from the db.clients table
                  */
-
-                $client = $this->getService('client');
-                if ($client && $client instanceof \Concord\Models\Db\Client) {
+                $dbResource = $this->getService('client');
+                if ($dbResource && $dbResource instanceof \Concord\Models\Db\Client) {
                     // take some default values form the defaul connection (which would have come from config
                     $connection = $this->getConnection();
-
-                    $dbParams = array(
-                        'class'                => $client->dbClass,
-                        'dsn'                  => $client->dbDsn,
-                        'username'             => $client->dbUser,
-                        'password'             => $client->dbPass,
-                        'charset'              => $client->dbCharset,
-                        'tablePrefix'          => $client->dbPrefix,
-                        'connect'              => false,
-                        'enableSchemaCache'    => $connection->enableSchemaCache,
-                        'schemaCacheDuration'  => $connection->schemaCacheDuration,
-                        'schemaCacheExclude'   => array(), // $connection->schemaCacheExclude,
-                        'schemaCache'          => $connection->schemaCache,
-                        'enableQueryCache'     => $connection->enableQueryCache,
-                        'queryCacheDuration'   => $connection->queryCacheDuration,
-                        'queryCacheDependency' => $connection->queryCacheDependency,
-                        'queryCache'           => $connection->queryCache,
-                        'emulatePrepare'       => NULL, // $connection->emulatePrepare,
-                    );
                 }
 
             } elseif ($clientResource) {
-
                 $client = $this->getService('client');
                 if ($client && $client instanceof \Concord\Models\Db\Client) {
                     $connection = $this->getClientConnection(true);
@@ -288,13 +253,14 @@ class ConnectionManager extends Component
                         } catch (\yii\db\Exception $e) {
                             throw new \Concord\Db\Exception('Unable to load client dbResources');
                         }
+                    } else {
+                        throw new \Concord\Db\Exception('No connections to client db available');
                     }
+                } else {
+                    throw new \Concord\Db\Exception('No client service available');
                 }
-
             } else {
-
                 $connection = $this->getConnection();
-
                 if ($connection && $connection instanceof \yii\db\Connection) {
                     try {
                         $dbResource = \Concord\Models\Db\DbResource::find()
@@ -328,13 +294,10 @@ class ConnectionManager extends Component
             }
 
             if ($dbParams) {
-
                 if (isset($dbParams['password']) && substr($dbParams['password'], 0, 1) == '#') {
                     $dbParams['password'] = $this->decrypt($dbParams['password']);
                 }
-
                 $connection = $this->setupConnection($resourceName, $dbParams);
-
                 if ($connection) {
 
                     $class = get_class($connection);
@@ -348,16 +311,11 @@ class ConnectionManager extends Component
 
                     return true;
                 }
-
             } else {
-
                 throw new \Concord\Db\Exception('Missing dbParams on addResource');
-
             }
         }
-
         return false;
-
     }
 
 

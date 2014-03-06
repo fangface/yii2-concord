@@ -70,6 +70,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        $this->setupApplication();
         $this->localTearDown();
         $this->destroyApplication();
         parent::tearDown();

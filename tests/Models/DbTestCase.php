@@ -56,8 +56,7 @@ abstract class DbTestCase extends TestCase
      */
     protected function localTearDown()
     {
-        // run the down() migration statements
-        //$this->runMigrations($this->dbSetupType, true);
+        $this->runMigrations($this->dbSetupType, true);
     }
 
 

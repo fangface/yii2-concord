@@ -75,7 +75,7 @@ class AutoDatestamp extends Behavior
 
 	/**
 	 * Updates the attributes with the current datetime.
-	 * @param Event $event
+	 * @param \yii\base\Event $event
 	 */
 	public function updateDatestamp($event)
 	{

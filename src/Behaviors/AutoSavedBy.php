@@ -75,7 +75,7 @@ class AutoSavedBy extends Behavior
 
 	/**
 	 * Updates the attributes with the current user id.
-	 * @param Event $event
+	 * @param \yii\base\Event $event
 	 */
 	public function updateSavedBy($event)
 	{

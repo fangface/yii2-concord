@@ -99,6 +99,20 @@ class A1ConnectionManagerTest extends TestCase
 
 
     /**
+     * Fail to obtain the 'db' connection via the connection manager because it has not been
+     * defined in the connection manager and the parameters specify to attempt to add the
+     * resource and not to use anything defined in components and no clients dbResources table
+     * exists
+     * @expectedException        \Concord\Db\Exception
+     * @expectedExceptionMessage No client service available
+     */
+    public function testGetUndefinedDbConnectionWithNoClientDbResourcesFails()
+    {
+        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX3', true, false, true);
+    }
+
+
+    /**
      * Test switching default resource names
      */
     public function testSwitchDefaultConnections()
@@ -286,5 +300,18 @@ class A1ConnectionManagerTest extends TestCase
 
     }
 
+
+    /*
+     * Test addResource on a db specified in config loading it via
+     * the component manager rather than the connection manager
+     */
+    public function testAddResourceOnExistingConfigComponentCheckServices()
+    {
+        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $this->assertTrue($dbFactory->addResource('db2'));
+
+        $db2 = $dbFactory->getConnection('db2');
+        $this->assertInstanceOf('\yii\db\Connection', $db2);
+    }
 
 }
