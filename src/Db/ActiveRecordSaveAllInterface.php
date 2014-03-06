@@ -78,6 +78,7 @@ interface ActiveRecordSaveAllInterface
      * @param boolean $hasParentModel
      *        whether this method was called from the top level or by a parent
      *        If false, it means the method was called at the top level
+     * @return void
      */
     public function afterSaveAllInternal($hasParentModel = false);
 
@@ -85,6 +86,7 @@ interface ActiveRecordSaveAllInterface
     /**
      * Called by afterSaveAllInternal on the current model once the whole of the saveAll() has
      * been successfully processed
+     * @return void
      */
     public function afterSaveAll();
 
@@ -95,6 +97,7 @@ interface ActiveRecordSaveAllInterface
      * @param boolean $hasParentModel
      *        whether this method was called from the top level or by a parent
      *        If false, it means the method was called at the top level
+     * @return void
      */
     public function afterSaveAllFailedInternal($hasParentModel = false);
 
@@ -102,6 +105,7 @@ interface ActiveRecordSaveAllInterface
     /**
      * Called by afterSaveAllFailedInternal on the current model once saveAll() has
      * failed processing
+     * @return void
      */
     public function afterSaveAllFailed();
 
@@ -166,6 +170,7 @@ interface ActiveRecordSaveAllInterface
      * @param boolean $hasParentModel
      *        whether this method was called from the top level or by a parent
      *        If false, it means the method was called at the top level
+     * @return void
      */
     public function afterDeleteFullInternal($hasParentModel = false);
 
@@ -173,6 +178,7 @@ interface ActiveRecordSaveAllInterface
     /**
      * Called by afterDeleteFullInternal on the current model once the whole of the deleteFull() has
      * been successfully processed
+     * @return void
      */
     public function afterDeleteFull();
 
@@ -183,6 +189,7 @@ interface ActiveRecordSaveAllInterface
      * @param boolean $hasParentModel
      *        whether this method was called from the top level or by a parent
      *        If false, it means the method was called at the top level
+     * @return void
      */
     public function afterDeleteFullFailedInternal($hasParentModel = false);
 
@@ -190,6 +197,7 @@ interface ActiveRecordSaveAllInterface
     /**
      * Called by afterDeleteFullFailedInternal on the current model once deleteFull() has
      * failed processing
+     * @return void
      */
     public function afterDeleteFullFailed();
 
@@ -235,6 +243,7 @@ interface ActiveRecordSaveAllInterface
      * Reset current record to state before saveAll() was called in the event
      * that saveAll() fails
      * @param array $data array of data required to rollback the current model
+     * @return void
      */
     public function resetOnFailedSave($data);
 

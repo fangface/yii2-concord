@@ -22,6 +22,7 @@ interface ActiveRecordParentalInterface
      * Set parent model
      *
      * @param \Concord\Db\ActiveRecord $parentModel
+     * @return void
      */
     public function setParentModel($parentModel);
 
@@ -63,6 +64,7 @@ interface ActiveRecordParentalInterface
      *
      * @param boolean $value
      *        whether the record is new or not
+     * @return void
      */
     public function setIsNewRecord($value);
 
@@ -70,6 +72,7 @@ interface ActiveRecordParentalInterface
     /**
      * Reset the array that records if a child has changes as part
      * of the saveAll() handling
+     * @return void
      */
     public function resetChildHasChanges();
 
@@ -81,6 +84,7 @@ interface ActiveRecordParentalInterface
      *
      * @param string|integer $childId
      * @param boolean $hasChanges [OPTIONAL] default true
+     * @return void
      */
     public function setChildHasChanges($childId, $hasChanges = true);
 

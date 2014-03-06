@@ -14,16 +14,16 @@
 
 namespace Concord\Db;
 
-use Yii;
-use yii\base\ModelEvent;
 use Concord\Base\Traits\ActionErrors;
-use Concord\Db\Exception;
 use Concord\Db\ActiveRecordParentalInterface;
 use Concord\Db\ActiveRecordParentalTrait;
 use Concord\Db\ActiveRecordReadOnlyInterface;
 use Concord\Db\ActiveRecordReadOnlyTrait;
 use Concord\Db\ActiveRecordSaveAllInterface;
+use Concord\Db\Exception;
 use Concord\Tools;
+use Yii;
+use yii\base\ModelEvent;
 
 class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
 {
@@ -389,6 +389,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     }
 
 
+    /**
+     * @param string $attributeNames
+     */
     public function loadLazyAttribute($attributeNames = null)
     {
         if ($this->entityId === false) {
@@ -1517,7 +1520,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      *        If false, it means the method was called at the top level
      * @param boolean $push
      *        is saveAll being pushed onto lazy (un)loaded models as well
-     * @return boolean
+     * @return boolean|null
      *        did saveAll() successfully process
      */
     public function saveAll($runValidation = true, $hasParentModel = false, $push = false)
@@ -1589,7 +1592,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      *
      * @param boolean $runValidation
      *        should validations be executed on all models before allowing saveAll()
-     * @return boolean
+     * @return boolean|null
      *        did saveAll() successfully process
      */
     public function push($runValidation = true)

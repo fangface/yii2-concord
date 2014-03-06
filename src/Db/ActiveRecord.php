@@ -14,10 +14,6 @@
 
 namespace Concord\Db;
 
-use Yii;
-use yii\base\ModelEvent;
-use yii\db\ActiveRecord as YiiActiveRecord;
-use yii\db\ActiveQuery;
 use Concord\Base\Traits\ActionErrors;
 use Concord\Db\ActiveRecord;
 use Concord\Db\ActiveRecordArray;
@@ -27,6 +23,10 @@ use Concord\Db\ActiveRecordReadOnlyInterface;
 use Concord\Db\ActiveRecordReadOnlyTrait;
 use Concord\Db\ActiveRecordSaveAllInterface;
 use Concord\Tools;
+use Yii;
+use yii\base\ModelEvent;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord as YiiActiveRecord;
 
 class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
 {
@@ -1951,6 +1951,9 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
 
 
+    /**
+     * @param string $relationName
+     */
     public function getNullLinkCheckOk($relationName, $relationInfo = null)
     {
         $success = true;
@@ -2022,7 +2025,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * indexBy can be used on multiple responses
      * @see \yii\db\ActiveRecord::createQuery()
      * @param array $config
-     * @return \Concord\Db\ActiveQuery
+     * @return ActiveQuery
      */
     public static function createQuery($config = [])
     {

@@ -506,8 +506,6 @@ class Tools
 
     /**
      * Sort a multi dimension array by the key specificed
-     * @param array $array
-     * @param integer $options
      * @return array
      */
     public static function array_csort()
@@ -593,7 +591,7 @@ class Tools
      *
      * @param decimal $value
      * @param integer $decimals, default 2
-     * @return decimal
+     * @return string
      */
     public static function decimalFormat($value, $decimals = 2)
     {
@@ -606,7 +604,7 @@ class Tools
      *
      * @param decimal $value
      * @param integer $decimals, default 6
-     * @return decimal
+     * @return string
      */
     public static function rateFormat($value, $decimals = 6)
     {
@@ -619,7 +617,7 @@ class Tools
      *
      * @param decimal $value
      * @param integer $precision
-     * @return decimal
+     * @return double
      */
     public function roundUp($value, $precision = 0)
     {
@@ -638,7 +636,7 @@ class Tools
      *
      * @param decimal $value
      * @param integer $precision
-     * @return decimal
+     * @return double
      */
     public function roundHalfUp($value, $precision = 0)
     {
@@ -883,7 +881,7 @@ class Tools
      * @param integer $width
      * @param boolean $cut
      * @param string $break
-     * @param string $charset
+     * @param string $charSet
      * @return string
      */
     public static function convertLongTextToLines($inputText, $lines = 5, $width = 35, $cut = true, $break = "\n", $charSet = 'utf-8')

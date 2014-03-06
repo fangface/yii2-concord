@@ -23,7 +23,7 @@ trait ServiceGetter
      * Helper method to return a service (component) from the application manager
      * @param string $service
      * @param boolean $load should service be loaded if it has not been already default true
-     * @return mixed
+     * @return \yii\base\Component|null
      */
     public function getService($service, $load = true)
     {

@@ -22,6 +22,7 @@ interface ActiveRecordReadOnlyInterface
      *
      * @param boolean $value
      *        [OPTIONAL] default true
+     * @return void
      */
     public function setReadOnly($value = true);
 
@@ -39,6 +40,7 @@ interface ActiveRecordReadOnlyInterface
      *
      * @param boolean $value
      *        [OPTIONAL] default true
+     * @return void
      */
     public function setCanDelete($value = true);
 

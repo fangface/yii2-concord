@@ -25,7 +25,6 @@ trait MagicAccess
      *</code>
      *
      * @param string $key
-     * @param mixed $value
      */
     public function &__get($key)
     {
@@ -56,7 +55,6 @@ trait MagicAccess
      * var_dump(isset($config->database));
      *</code>
      *
-     * @param string $offset
      * @return boolean
      */
     public function __isset($key)
@@ -73,7 +71,6 @@ trait MagicAccess
      *</code>
      *
      * @param string $key
-     * @param mixed $value
      */
     public function __unset($key)
     {
