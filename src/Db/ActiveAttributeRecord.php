@@ -608,9 +608,17 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      *
      * @return array:
      */
-    public function toArray()
+    public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
         $this->checkAndLoad(true);
+        if ($fields) {
+            $data = array();
+            foreach ($fields as $field) {
+                if (array_key_exists($field, $this->data)) {
+                    $data[$field] = $this->data[$field];
+                }
+            }
+        }
         return $this->data;
     }
 

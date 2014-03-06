@@ -3,6 +3,8 @@ imports:
 
 tools:
     php_cpd: false
+    php_pdepend: false
+    php_cs_fixer: false
     php_analyzer:
         config:
             check_access_control:
@@ -36,7 +38,7 @@ tools:
                 assignment_in_condition:   true
                 comparison_of_bit_result:  true
             reflection_checks:
-                enabled:               true
+                enabled:               false
             checkstyle:
                 enabled:               false
             suspicious_code:

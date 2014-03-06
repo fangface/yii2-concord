@@ -120,6 +120,8 @@ abstract class DbTestCase extends TestCase
                     echo $ob . "\n";
                     trigger_error('Error in test migration data of ' . $migration['class'] . ($tearDown ? ' (tearDown)' : ''), E_USER_WARNING);
                     ob_start();
+                } else {
+                    $this->getDbConnection($migration['db'])->close();
                 }
             }
             ob_end_clean();

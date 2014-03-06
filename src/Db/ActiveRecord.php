@@ -1746,12 +1746,17 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     }
 
 
-    public function toArray()
+    /**
+     * (non-PHPdoc)
+     * @see \yii\base\Model::toArray()
+     */
+    public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
         if ($this->getIsNewRecord() && $this->applyDefaults && !$this->defaultsApplied) {
             $this->applyDefaults();
         }
-        return parent::toArray();
+        $recursive = false;
+        return parent::toArray($fields, $expand, $recursive);
     }
 
 
@@ -1802,7 +1807,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                                         } elseif (method_exists($value, 'allToArray')) {
                                             $data[$relationName][$key] = $value->allToArray($loadedOnly, $excludeNewAndBlankRelations);
                                         } elseif (method_exists($value, 'toArray')) {
-                                            $data[$relationName][$key] = $value->toArray();
+                                            $data[$relationName][$key] = $value->toArray(array(), array(), false);
                                         }
                                     }
                                 }

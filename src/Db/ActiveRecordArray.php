@@ -934,14 +934,14 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
         $data = array();
         if ($this->count()) {
             $iterator = $this->getIterator();
             while ($iterator->valid()) {
                 if (method_exists($iterator->current(), 'toArray')) {
-                    $data[$iterator->key()] = $iterator->current()->toArray();
+                    $data[$iterator->key()] = $iterator->current()->toArray($fields, $expand, $recursive);
                 }
                 $iterator->next();
             }
@@ -981,7 +981,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
                 } elseif (method_exists($iterator->current(), 'allToArray')) {
                     $data[$iterator->key()] = $iterator->current()->allToArray($loadedOnly, $excludeNewAndBlankRelations);
                 } elseif (method_exists($iterator->current(), 'toArray')) {
-                    $data[$iterator->key()] = $iterator->current()->toArray();
+                    $data[$iterator->key()] = $iterator->current()->toArray(array(), array(), false);
                 }
                 $iterator->next();
             }
