@@ -111,6 +111,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     public static function tableName()
     {
 
+        /** @var \yii\db\Connection $connection */
         $connection = static::getDb();
         $calledClass = get_called_class();
         $tablePrefix = $connection->tablePrefix;
@@ -885,6 +886,8 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
              * All saveAll() calls are treated as transactional and a transaction
              * will be started if one has not already been on the db connection
              */
+
+            /** @var \yii\db\Connection $db */
             $db = static::getDb();
             $transaction = $db->getTransaction() === null ? $db->beginTransaction() : null;
 
@@ -1413,6 +1416,8 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
              * All deleteFull() calls are treated as transactional and a transaction
              * will be started if one has not already been on the db connection
              */
+
+            /** @var \yii\db\Connection $db */
             $db = static::getDb();
             $transaction = $db->getTransaction() === null ? $db->beginTransaction() : null;
 
