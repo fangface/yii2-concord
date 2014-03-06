@@ -88,7 +88,15 @@ $newOrder->items['abc']->quantity    = 1;
 $newOrder->items['abc']->totalValue  = 3.20;
 $newOrder->items['abc']->field1      = 'Item-Field-1';
 $newOrder->items['abc']->field2      = 'Item-Field-2';
-$newOrder->items['abc']->field3      = 'Item-Field-3';
+$newOrder->items->get('abc')->field3 = 'Item-Field-3';
+
+// add new item
+$newKey = $newOrder->items->newElement();
+$newOrder->items[$newKey]->productCode = 'CODE3';
+$newOrder->items[$newKey]->quantity    = 1;
+$newOrder->items[$newKey]->totalValue  = 1.90;
+$newOrder->items[$newKey]->field1      = 'Item-Field-1';
+$newOrder->items[$newKey]->field2      = 'Item-Field-2';
 
 // add new item
 $newOrder->items['xyz'] = new Item(array(
@@ -123,8 +131,8 @@ Array
     [modifiedBy] => 99
     [customerAttributes] => Array
         (
-            [field1] => Field1
-            [field2] => Field2
+            [field1] => CAField1
+            [field2] => CAField2
             [createdAt] => 2050-12-31 23:59:59
             [createdBy] => 99
             [modifiedAt] => 2050-12-31 23:59:59
@@ -261,6 +269,30 @@ Array
                             [4] => Array
                                 (
                                     [id] => 4
+                                    [customerId] => 1
+                                    [orderId] => 1
+                                    [productCode] => CODE3
+                                    [quantity] => 1
+                                    [totalValue] => 1.9
+                                    [field1] => Item-Field-1
+                                    [field2] => Item-Field-2
+                                    [field3] =>
+                                    [product] => Array
+                                        (
+                                            [id] => 3
+                                            [productCode] => CODE3
+                                            [description] => Description for productCode CODE3
+                                            [createdAt] => 2050-12-31 23:59:59
+                                            [createdBy] => 99
+                                            [modifiedAt] => 2050-12-31 23:59:59
+                                            [modifiedBy] => 99
+                                        )
+
+                                )
+
+                            [5] => Array
+                                (
+                                    [id] => 5
                                     [customerId] => 1
                                     [orderId] => 1
                                     [productCode] => POST
