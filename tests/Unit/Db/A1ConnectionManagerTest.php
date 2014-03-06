@@ -90,7 +90,7 @@ class A1ConnectionManagerTest extends TestCase
      * defined in the connection manager and the parameters specify to attempt to add the
      * resource and not to use anything defined in components and no dbResources table exists
      * @expectedException        \Concord\Db\Exception
-     * @expectedExceptionMessage dbResources table not found
+     * @expectedExceptionMessage Unable to load dbResources
      */
     public function testGetUndefinedDbConnectionWithNoDbResourcesFails()
     {

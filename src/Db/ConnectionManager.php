@@ -296,7 +296,6 @@ class ConnectionManager extends Component
                 $connection = $this->getConnection();
 
                 if ($connection && $connection instanceof \yii\db\Connection) {
-
                     try {
                         $dbResource = \Concord\Models\Db\DbResource::find()
                             ->where(['resourceName' => $resourceName])
