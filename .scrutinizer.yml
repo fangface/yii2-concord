@@ -14,7 +14,7 @@ tools:
             simplify_boolean_return:
                 enabled:               false
             dead_assignments:
-                enabled:               true
+                enabled:               false
             deprecation_checks:
                 enabled:               true
             typo_checks:

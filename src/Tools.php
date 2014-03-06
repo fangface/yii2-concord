@@ -277,7 +277,7 @@ class Tools
      */
     public static function listServices($lineBreak = "\n") {
         print '<hr/>';
-        $services = self::getDI()->getServices();
+        $services = self::getServices();
         foreach ($services as $service => $serviceDefinition) {
             print 'Service: ' . $service . $lineBreak;
         }
