@@ -148,6 +148,7 @@ class ConnectionManager extends Component
             if ($checkServices && $this->hasService($resourceNameIn)) {
                 $connection = $this->getService($resourceNameIn);
                 if ($connection) {
+                    /* @var \yii\db\Connection $connection */
                     $class = get_class($connection);
                     $this->extendResourceArray($resourceNameIn, $connection, $class);
                     return $connection;
@@ -285,10 +286,7 @@ class ConnectionManager extends Component
                                 ->where(['resourceName' => $resourceName])
                                 ->one();
                         } catch (\yii\db\Exception $e) {
-                            if (strpos($e->getMessage(), 'Base table or view not found') !== false) {
-                                // dbResources table has not been setup in the default dbConnection
-                                throw new \Concord\Db\Exception('client dbResources table not found');
-                            }
+                            throw new \Concord\Db\Exception('Unable to load client dbResources');
                         }
                     }
                 }
@@ -304,10 +302,7 @@ class ConnectionManager extends Component
                             ->where(['resourceName' => $resourceName])
                             ->one();
                     } catch (\yii\db\Exception $e) {
-                        if (strpos($e->getMessage(), 'Base table or view not found') !== false) {
-                            // dbResources table has not been setup in the default dbConnection
-                            throw new \Concord\Db\Exception('dbResources table not found');
-                        }
+                        throw new \Concord\Db\Exception('Unable to load dbResources');
                     }
                 }
             }

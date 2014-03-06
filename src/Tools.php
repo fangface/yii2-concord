@@ -591,9 +591,9 @@ class Tools
     /**
      * Format a numeric value to the preferred decimal format
      *
-     * @param number $value
+     * @param decimal $value
      * @param integer $decimals, default 2
-     * @return number
+     * @return decimal
      */
     public static function decimalFormat($value, $decimals = 2)
     {
@@ -604,9 +604,9 @@ class Tools
     /**
      * Format a numeric value to the preferred tax rate format
      *
-     * @param number $value
+     * @param decimal $value
      * @param integer $decimals, default 6
-     * @return number
+     * @return decimal
      */
     public static function rateFormat($value, $decimals = 6)
     {
@@ -617,9 +617,9 @@ class Tools
     /**
      * Round values up to the specified level of precision
      *
-     * @param number $value
+     * @param decimal $value
      * @param integer $precision
-     * @return number
+     * @return decimal
      */
     public function roundUp($value, $precision = 0)
     {
@@ -636,9 +636,9 @@ class Tools
     /**
      * Round half values up to the specified level of precision
      *
-     * @param number $value
+     * @param decimal $value
      * @param integer $precision
-     * @return number
+     * @return decimal
      */
     public function roundHalfUp($value, $precision = 0)
     {
@@ -657,9 +657,9 @@ class Tools
     /**
      * Round the provided number up by the specified level of significance
      *
-     * @param number $number
+     * @param decimal $number
      * @param integer $significance
-     * @return number
+     * @return decimal
      */
     function roundUpBy($number, $significance = 1)
     {
