@@ -6,17 +6,24 @@ tools:
 
     php_analyzer:
         config:
+            unreachable_code:
+                enabled:               false
+            unused_code:
+                enabled:               false
             use_statement_fixes:
-                enabled:              true
-                remove_unused:        true
-                preserve_multiple:    false
-                preserve_blanklines:  false
+                enabled:               true
+                remove_unused:         true
+                preserve_multiple:     false
+                preserve_blanklines:   false
                 order_alphabetically:  true
             metrics_coupling:
                 stable_code:
                     namespace_prefixes:
                         - yii
-                        
+                        - Concord\Base\Traits
+            metrics_lack_of_cohesion_methods:
+                enabled:               false
+
     external_code_coverage:
         timeout: 2100 # Timeout in seconds.
 

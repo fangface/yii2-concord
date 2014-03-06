@@ -214,11 +214,11 @@ class ConnectionManager extends Component
     {
 
         if ($checkServices) {
-            if ($this->hasService($resourceNameIn)) {
-                $connection = $this->getService($resourceNameIn);
+            if ($this->hasService($resourceName)) {
+                $connection = $this->getService($resourceName);
                 if ($connection) {
                     $class = get_class($connection);
-                    $this->extendResourceArray($resourceNameIn, $connection, $class);
+                    $this->extendResourceArray($resourceName, $connection, $class);
                 }
             }
         }

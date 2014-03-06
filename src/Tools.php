@@ -351,22 +351,22 @@ class Tools
                 $defaultValue = $options['defaultValue'];
             }
 
-            if ($value == '__DEFAULT__') {
-                if (is_null($defaultValue) && $isNullable) {
-                    $value = null;
-                } elseif ($autoIncrement && $primaryKey) {
-                    $value = 0;
-                } else {
-                    $value = $defaultValue;
-                }
-            }
-
         } else {
             $dataType = strtolower($dataType);
         }
 
         if ($dataType == 'char' && $length == 0) {
             $dataType = 'longtext';
+        }
+
+        if ($value == '__DEFAULT__') {
+            if (is_null($defaultValue) && $isNullable) {
+                $value = null;
+            } elseif ($autoIncrement && $primaryKey) {
+                $value = 0;
+            } else {
+                $value = $defaultValue;
+            }
         }
 
         if ($isNullable && ($value == '__NULL__' || is_null($value))) {

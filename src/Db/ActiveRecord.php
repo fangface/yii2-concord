@@ -1863,7 +1863,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     /**
      * Automatically establish the relationship if defined in the $modelRelationMap array
      *
-     * @param unknown $name
+     * @param string $name
      * @return mixed NULL
      */
     public function getDefinedRelationship($name, $new = false)
