@@ -3,12 +3,55 @@ imports:
 
 tools:
     php_cpd: false
-
     php_analyzer:
         config:
+            check_access_control:
+                enabled:               true
+            basic_semantic_checks:
+                enabled:               true
+            simplify_boolean_return:
+                enabled:               false
+            dead_assignments:
+                enabled:               true
+            deprecation_checks:
+                enabled:               true
+            typo_checks:
+                enabled:               true
+            check_calls:
+                enabled:               true
+                too_many_arguments:    true
+                missing_argument:      true
+                argument_type_checks:  lenient
+            check_usage_context:
+                enabled:               true
+                foreach:
+                    value_as_reference:   true
+                    traversable:          true
+                missing_argument:      true
+                argument_type_checks:  lenient
+            parameter_reference_check:
+                enabled:               true
+            precedence_checks:
+                enabled:               true
+                assignment_in_condition:   true
+                comparison_of_bit_result:  true
+            reflection_checks:
+                enabled:               true
+            checkstyle:
+                enabled:               false
+            suspicious_code:
+                enabled:               true
             unreachable_code:
                 enabled:               false
             unused_code:
+                enabled:               false
+            useless_function_calls:
+                enabled:               false
+            check_variables:
+                enabled:               false
+            doc_comment_fixes:
+                enabled:               true
+            reflection_fixes:
                 enabled:               false
             use_statement_fixes:
                 enabled:               true
@@ -17,13 +60,9 @@ tools:
                 preserve_blanklines:   false
                 order_alphabetically:  true
             metrics_coupling:
-                stable_code:
-                    namespace_prefixes:
-                        - yii
-                        - Concord\Base\Traits
+                enabled:               false
             metrics_lack_of_cohesion_methods:
                 enabled:               false
-
     external_code_coverage:
-        timeout: 2100 # Timeout in seconds.
+        timeout: 3000 # Timeout in seconds.
 

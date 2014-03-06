@@ -590,7 +590,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     /**
      * Check to see if the attributes have been loaded and if not trigger the loading process
      *
-     * @param string $forceLoadLazyLoad
+     * @param boolean $forceLoadLazyLoad
      *        [OPTIONAL] should lazy load attributes be forced to load, default is false
      */
     public function checkAndLoad($forceLoadLazyLoad = false)
@@ -691,14 +691,18 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             return false;
         }
 
-        return ($ok ? $result : false);
+        if (!$ok) {
+            $result = false;
+        }
+
+        return $result;
     }
 
 
     /**
      * Obtain a mapping array that tells us which attribute name belongs to which id and vice versa
      *
-     * @param integer $entityId
+     * @param integer|null|false $entityId
      * @return array false
      */
     public function getEntityAttributeMap($entityId = null)
