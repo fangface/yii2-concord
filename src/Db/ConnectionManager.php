@@ -312,9 +312,16 @@ class ConnectionManager extends Component
 
                 if ($connection && $connection instanceof \Yii\Db\Connection) {
 
-                    $dbResource = \Concord\Models\Db\DbResource::find()
-                        ->where(['resourceName' => $resourceName])
-                        ->one();
+                    try {
+                        $dbResource = \Concord\Models\Db\DbResource::find()
+                            ->where(['resourceName' => $resourceName])
+                            ->one();
+                    } catch (\yii\db\Exception $e) {
+                        if (strpos($e->getMessage(), 'Base table or view not found') !== false) {
+                            // dbResources table has not been setup in the default dbConnection
+                            throw new \Concord\Db\Exception('dbResources table not found');
+                        }
+                    }
 
                     if ($dbResource) {
                         $dbParams = array(

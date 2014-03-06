@@ -88,14 +88,13 @@ class A1ConnectionManagerTest extends TestCase
     /**
      * Fail to obtain the 'db' connection via the connection manager because it has not been
      * defined in the connection manager and the parameters specify to attempt to add the
-     * resource and not to use anything defined in components
+     * resource and not to use anything defined in components and no dbResources table exists
      * @expectedException        \Concord\Db\Exception
-     * @expectedExceptionMessage Missing dbParams on addResource
+     * @expectedExceptionMessage dbResources table not found
      */
-    public function testGetUndefinedDbConnectionFails()
+    public function testGetUndefinedDbConnectionWithNoDbResourcesFails()
     {
-        $db = Yii::$app->getComponent('dbFactory')->getConnection('db');
-        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX', true, false);
+        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX2', true, false);
     }
 
 

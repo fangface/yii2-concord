@@ -264,5 +264,18 @@ class A2MultiDbResourcesTest extends DbTestCase
 
     }
 
+
+    /**
+     * Fail to obtain the 'db' connection via the connection manager because it has not been
+     * defined in the connection manager and the parameters specify to attempt to add the
+     * resource and not to use anything defined in components
+     * @expectedException        \Concord\Db\Exception
+     * @expectedExceptionMessage Missing dbParams on addResource
+     */
+    public function testGetUndefinedDbConnectionFails()
+    {
+        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX', true, false);
+    }
+
 }
 
