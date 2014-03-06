@@ -215,6 +215,7 @@ class ConnectionManager extends Component
     {
         if ($checkServices) {
             if ($this->hasService($resourceName)) {
+                /* @var \yii\db\Connection $connection */
                 $connection = $this->getService($resourceName);
                 if ($connection) {
                     $class = get_class($connection);
@@ -321,6 +322,7 @@ class ConnectionManager extends Component
 
     /**
      * Extend internal resources array
+     *
      * @param string $resourceName
      * @param \yii\db\Connection $connection
      * @param string $className
