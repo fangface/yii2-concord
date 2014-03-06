@@ -151,7 +151,9 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
 
         if (Yii::$app->hasComponent('dbFactory')) {
-            return Yii::$app->getComponent('dbFactory')->getConnection($dbResourceName, true, true, $isClientResource);
+            /** @var \Concord\Db\ConnectionManager $dbFactory */
+            $dbFactory = Yii::$app->getComponent('dbFactory');
+            return $dbFactory->getConnection($dbResourceName, true, true, $isClientResource);
         } elseif (Yii::$app->hasComponent($dbResourceName)) {
             return Yii::$app->getComponent($dbResourceName);
         }
@@ -1728,6 +1730,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     /**
      * Get defined relation info by relation name or return false if the name is not a defined relation
      * @param string $name
+     * @param string|false $key
      * @return array|false
      */
     public function getDefinedRelationInfo($name, $key = false)

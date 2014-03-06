@@ -288,7 +288,7 @@ class Tools
     /**
      *
      * @param number|string|boolean|null $value
-     * @param string|array $dataType type of attribute or an array of values specifying the column schema
+     * @param string|array|\yii\db\ColumnSchema $dataType type of attribute or an array of values specifying the column schema
      * @param integer $length number of characters for the attribute within the db table [OPTIONAL] default 0
      * @param integer $decimals how many decimal characters exist for this attribute within the db table [OPTIONAL] default 0
      * @param boolean $unsigned is the atribute unsigned within the db table [OPTIONAL] default false
