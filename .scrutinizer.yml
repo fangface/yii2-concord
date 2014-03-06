@@ -23,7 +23,7 @@ tools:
                 enabled:               true
                 too_many_arguments:    true
                 missing_argument:      true
-                argument_type_checks:  lenient
+                argument_type_checks:  disabled
             check_usage_context:
                 enabled:               true
                 foreach:

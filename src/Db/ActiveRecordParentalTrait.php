@@ -150,7 +150,7 @@ trait ActiveRecordParentalTrait
      * in the event of a saveAll failing midway and needing to be reverted
      *
      * @param string|integer $childId
-     * @param array|integer $value
+     * @param mixed $value
      * @param string $option (default null means set all options)
      * @return array
      */
