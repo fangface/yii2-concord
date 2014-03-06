@@ -65,11 +65,11 @@ $newOrder = new Order(array(
 // add new item
 $newItem = new Item();
 $newItem->productCode = 'CODE1';
-$newItem->quantity'   = 3;
-$newItem->totalValue' = 3.36;
-$newItem->field1'     = 'Item-Field-1';
-$newItem->field2'     = 'Item-Field-2';
-$newItem->field3'     = 'Item-Field-3';
+$newItem->quantity    = 3;
+$newItem->totalValue  = 3.36;
+$newItem->field1      = 'Item-Field-1';
+$newItem->field2      = 'Item-Field-2';
+$newItem->field3      = 'Item-Field-3';
 $newOrder->items[] = $newItem;
 
 // add new item
