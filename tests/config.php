@@ -6,8 +6,8 @@ return [
 
         'id' => 'app-test',
 
-        'basePath' => realpath(__DIR__ . '/../../../../'),
-        'vendorPath' => realpath(__DIR__ . '/../../../../vendor'),
+        'basePath' => APPLICATION_PATH,
+        'vendorPath' => APPLICATION_PATH . '/vendor',
 
         'components' => [
 

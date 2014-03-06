@@ -1,0 +1,22 @@
+language: php
+
+php:
+  - 5.5
+
+install:
+  - composer self-update && composer --version
+  - composer install --prefer-dist
+
+before_script:
+  - mysql -e 'CREATE DATABASE dbTestMain;';
+  - mysql -e 'CREATE DATABASE dbTestClient1;';
+  - mysql -e 'CREATE DATABASE dbTestClient2;';
+  - mysql -e 'CREATE DATABASE dbTestRemote1;';
+  - mysql -e 'CREATE DATABASE dbTestRemote2;';
+
+script:
+  - vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

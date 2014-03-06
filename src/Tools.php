@@ -479,6 +479,7 @@ class Tools
 
     public static function array_csort()
     {
+        $sortarr = array();
         $args = func_get_args();
         $marray = array_shift($args);
         $msortline = "return(array_multisort(";
@@ -486,6 +487,7 @@ class Tools
         foreach ($args as $arg) {
             $i ++;
             if (is_string($arg)) {
+                $sortarr[$i] = array();
                 foreach ($marray as $row) {
                     $sortarr[$i][] = $row[$arg];
                 }

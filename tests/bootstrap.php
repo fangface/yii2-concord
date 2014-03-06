@@ -20,7 +20,13 @@ define('YII_ENABLE_ERROR_HANDLER', false);
 define('YII_DEBUG', true);
 
 // application path based on default install into vendor structure immediately off of the base
-define('APPLICATION_PATH', realpath(__DIR__ . '/../../../../'));
+if (file_exists('./vendor/autoload.php')) {
+	// yii2-concord is the base application
+	define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
+} else {
+	// yii2-concord is a vendor
+	define('APPLICATION_PATH', realpath(__DIR__ . '/../../../../'));
+}
 
 $_SERVER['SCRIPT_NAME'] = substr(__FILE__, strlen(APPLICATION_PATH));
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
@@ -35,6 +41,11 @@ if (is_file($composerAutoload)) {
 $yii_php = APPLICATION_PATH . '/vendor/yiisoft/yii2/yii/Yii.php';
 if (is_file($yii_php)) {
     require_once($yii_php);
+} else {
+	$yii_php = APPLICATION_PATH . '/vendor/yiisoft/yii2/Yii.php';
+	if (is_file($yii_php)) {
+	    require_once($yii_php);
+	}
 }
 
 Yii::setAlias('@Concord/Tests', __DIR__);
