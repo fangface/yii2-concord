@@ -1279,7 +1279,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      */
     public function afterDeleteFullInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->commit();
@@ -1323,7 +1323,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      */
     public function afterDeleteFullFailedInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->rollback();
@@ -1861,7 +1861,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      */
     public function afterSaveAllInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->commit();
@@ -1914,7 +1914,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      */
     public function afterSaveAllFailedInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->rollback();

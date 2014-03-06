@@ -106,30 +106,26 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
     /**
      * Get the name of the table associated with this ActiveRecord class.
+     *
      * @return string
      */
     public static function tableName()
     {
-
         /** @var \yii\db\Connection $connection */
         $connection = static::getDb();
         $calledClass = get_called_class();
         $tablePrefix = $connection->tablePrefix;
-
         if (isset($calledClass::$dbTableName) && !is_null($calledClass::$dbTableName) && $calledClass::$dbTableName) {
             $tableName = $calledClass::$dbTableName;
         } else {
             $tableName = \Concord\Tools::getDefaultTableNameFromClass($calledClass, (isset($calledClass::$tableNameMethod) && !is_null($calledClass::$tableNameMethod) && $calledClass::$tableNameMethod ? $calledClass::$tableNameMethod : 'default'));
         }
-
         $tableName = $tablePrefix . $tableName;
-
         if (true) {
             preg_match("/dbname=([^;]+)/i", $connection->dsn, $matches);
             return $matches[1] . '.' . $tableName;
-        } else {
-            return $tableName;
         }
+        return $tableName;
     }
 
 
@@ -1035,7 +1031,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public function afterSaveAllInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->commit();
@@ -1098,7 +1094,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public function afterSaveAllFailedInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->rollback();
@@ -1542,7 +1538,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public function afterDeleteFullInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->commit();
@@ -1607,7 +1603,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public function afterDeleteFullFailedInternal($hasParentModel = false)
     {
-
+        /** @var \yii\db\Transaction $transaction */
         $transaction = $this->getChildOldValues('_transaction_');
         if ($transaction) {
             $transaction->rollback();
@@ -2114,7 +2110,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             if ($value !== null) {
 
                 if ($value instanceof \yii\db\ActiveQueryInterface) {
-
                     if ($value->multiple) {
                         // put result into a special ArrayObject extended object
                         $value2 = new ActiveRecordArray($value->all());
@@ -2125,15 +2120,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                             $value2 = $this->getDefinedRelationship($name, true);
                         }
                     }
-
                     if ($value2 instanceof ActiveRecordArray) {
                         $value2->setDefaultObjectClass($this->getDefinedRelationInfo($name, 'class'));
                     }
-
                     if ($value2 instanceof ActiveRecordParentalInterface) {
                         $value2->setParentModel($this);
                     }
-
                     if ($value2 instanceof ActiveRecordReadOnlyInterface) {
                         $readOnly = $this->getDefinedRelationInfo($name, 'readOnly');
                         if ($readOnly !== null) {
@@ -2144,7 +2136,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                             $value2->setCanDelete($canDelete);
                         }
                     }
-
                     $this->populateRelation($name, $value2);
                     return $value2;
 
