@@ -174,23 +174,19 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
         if (!empty($config)) {
 
             if (is_array($config)) {
-
                 $this->configure($config);
             } elseif (is_numeric($config)) {
-
                 $this->objectId = $config;
             }
         }
-
         $this->init();
-
-        if (false) {
+        /*
             if ($this->objectId && $this->entityId !== false) {
                 if (!$this->loaded && !$this->isNewPrepared) {
                     $this->loadAttributeValues();
                 }
             }
-        }
+        */
     }
 
 
@@ -304,6 +300,13 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     }
 
 
+    /**
+     * Load attribute values into the object either from the db or assign the default values
+     * if this is a new record
+     *
+     * @param boolean $forceLoadLazyLoad
+     * @throws Exception
+     */
     public function loadAttributeValues($forceLoadLazyLoad = false)
     {
         $this->reset();
@@ -352,17 +355,11 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             }
 
             if ($excludeAttributeIDList) {
-                if (count($excludeAttributeIDList) > 1) {
-                    $query->andWhere(array(
-                        'NOT IN',
-                        'attributeId',
-                        $excludeAttributeIDList
-                    ));
-                } else {
-                    $query->andWhere(array(
-                        'attributeId' => $excludeAttributeIDList[0]
-                    ));
-                }
+                $query->andWhere(array(
+                    'NOT IN',
+                    'attributeId',
+                    $excludeAttributeIDList
+                ));
             }
 
             $rows = $query->all();
@@ -376,9 +373,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
             $this->loaded = true;
             $this->isNewRecord = false;
-
         } else {
-
             $this->isNewPrepared = true;
         }
 
@@ -399,14 +394,11 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
         if ($this->entityId === false) {
             throw new Exception('No entity id available for ' . __METHOD__ . '()');
         }
-
         if (!$this->objectId) {
             throw new Exception('No object id available for ' . __METHOD__ . '()');
         }
-
         $singleAttributeName = false;
         $newAttributes = array();
-
         if (is_null($attributeNames) && $this->lazyAttributes) {
             $attributeNames = array_flip($this->lazyAttributes);
         } elseif (!is_array($attributeNames) && is_string($attributeNames) && $attributeNames) {
@@ -417,9 +409,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
         } elseif (is_array($attributeNames) && count($attributeNames) == 1) {
             $singleAttributeName = $attributeNames[0];
         }
-
         if ($attributeNames) {
-
             $attributeIdList = array();
             $leftOverAttributeIdToNameMap = array();
             foreach ($attributeNames as $k => $v) {
@@ -428,12 +418,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                     $leftOverAttributeIdToNameMap[$this->lazyAttributes[$v]] = $v;
                 }
             }
-
             if ($attributeIdList) {
-
                 $attributeValuesClass = $this->attributeValuesClass;
                 $query = $attributeValuesClass::find();
-
                 if ($this->entityId) {
                     $query->where(array(
                         'entityId' => $this->entityId,
@@ -444,7 +431,6 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                         'objectId' => $this->objectId
                     ));
                 }
-
                 if (count($attributeIdList) > 1) {
                     $query->andWhere(array(
                         'attributeId' => $attributeIdList
@@ -454,9 +440,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                         'attributeId' => $attributeIdList[0]
                     ));
                 }
-
                 $rows = $query->all();
-
                 if ($rows) {
                     foreach ($rows as $k => $v) {
                         if (isset($leftOverAttributeIdToNameMap[$v->attributeId])) {
@@ -466,19 +450,14 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                         }
                     }
                 }
-
                 if ($newAttributes || $leftOverAttributeIdToNameMap) {
-
                     $attributeDefs = $this->getEntityAttributeList();
-
                     if ($attributeDefs) {
-
                         if ($leftOverAttributeIdToNameMap) {
                             foreach ($leftOverAttributeIdToNameMap as $k => $v) {
                                 $newAttributes[$v] = $attributeDefs[$v]['defaultValue'];
                             }
                         }
-
                         // now apply value formatters because all values are trpically stores in string fields
                         foreach ($newAttributes as $k => $v) {
                             $this->data[$k] = \Concord\Tools::formatAttributeValue($v, $attributeDefs[$k]);
@@ -487,7 +466,6 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                     }
                 }
             }
-
             if ($singleAttributeName && isset($newAttributes[$singleAttributeName])) {
                 return true;
             } elseif (!$singleAttributeName && $newAttributes) {
@@ -713,7 +691,8 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      * Obtain a mapping array that tells us which attribute name belongs to which id and vice versa
      *
      * @param integer|null|false $entityId
-     * @return array false
+     * @throws Exception if entity id is not set
+     * @return array|false
      */
     public function getEntityAttributeMap($entityId = null)
     {
@@ -736,9 +715,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
         if ($attributeList) {
             foreach ($attributeList as $k => $v) {
-                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['id'][$v['attributeId']] = $v['attributeName'];
-                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['name'][$v['attributeName']] = $v['attributeId'];
-                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName]['__ALL__'][$v['attributeId']] = array(
+                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['id'][$v['id']] = $v['attributeName'];
+                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['name'][$v['attributeName']] = $v['id'];
+                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName]['__ALL__'][$v['id']] = array(
                     'name' => $v['attributeName'],
                     'entity' => $v['entityId']
                 );
@@ -994,22 +973,17 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     public function &__get($property)
     {
         if (!$this->loaded && !$this->isNewPrepared) {
-
             $this->loadAttributeValues();
             return $this->__get($property);
         } elseif (array_key_exists($property, $this->data)) {
-
             return $this->data[$property];
         } elseif (array_key_exists($property, $this->lazyAttributes)) {
-
             if ($this->loadLazyAttribute($property)) {
                 return $this->__get($property);
             }
         }
-
         $trace = debug_backtrace();
         trigger_error('Undefined relation property via __get() in ' . get_class($this) . '::' . $property . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'], E_USER_NOTICE);
-
         $null = null;
         return $null;
     }
@@ -1026,12 +1000,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     public function __set($property, $value)
     {
         if (!$this->loaded && !$this->isNewPrepared) {
-
             $this->loadAttributeValues();
             $this->__set($property, $value);
-
         } elseif (array_key_exists($property, $this->data)) {
-
             if (!array_key_exists($property, $this->changedData) && $value != $this->data[$property]) {
                 // changed for the first time since loaded
                 $this->changedData[$property] = $this->data[$property];
@@ -1044,15 +1015,11 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                 // previously changed and changing again
                 $this->data[$property] = $value;
             }
-
         } elseif (array_key_exists($property, $this->lazyAttributes)) {
-
             if ($this->loadLazyAttribute($property)) {
                 $this->__set($property, $value);
             }
-
         } else {
-
             $trace = debug_backtrace();
             trigger_error('Undefined relation property via __set() in ' . get_class($this) . '::' . $property . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'], E_USER_NOTICE);
         }
@@ -1093,11 +1060,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
         if (is_array($inputData) && $inputData) {
 
             if (!$this->loaded && !$this->isNewPrepared) {
-
                 $this->loadAttributeValues();
                 $this->setValuesByArray($inputData, $inputDataOnChange);
             } else {
-
                 foreach ($inputData as $k => $v) {
                     if (array_key_exists($k, $this->data)) {
                         if ($this->data[$k] != $v) {
@@ -1112,11 +1077,8 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                         }
                     }
                 }
-
                 if ($hasChanges) {
-
                     if (is_array($inputDataOnChange) && $inputDataOnChange) {
-
                         foreach ($inputDataOnChange as $k => $v) {
                             $this->__set($k, $v);
                         }
@@ -1411,10 +1373,12 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
         if ($clearErrors) {
             $this->clearErrors();
         }
-        if (false) {
-            $this->addError('fieldx', 'Forced error on fieldx as proof of concept on activeattributerecord');
-            $this->addError('fieldx', 'Another error value');
-        }
+
+        /*
+        $this->addError('fieldx', 'Forced error on fieldx as proof of concept on activeattributerecord');
+        $this->addError('fieldx', 'Another error value');
+        */
+
         return !$this->hasErrors();
     }
 
