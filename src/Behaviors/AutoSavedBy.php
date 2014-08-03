@@ -99,7 +99,7 @@ class AutoSavedBy extends Behavior
         } elseif ($this->userId !== null) {
             return call_user_func($this->userId);
         } else {
-            if (Yii::$app->hasComponent('user')) {
+            if (Yii::$app->has('user')) {
                 try {
                     if (Yii::$app->user->isGuest) {
                         return 0;

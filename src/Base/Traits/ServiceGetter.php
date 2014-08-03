@@ -27,7 +27,7 @@ trait ServiceGetter
      */
     public function getService($service, $load = true)
     {
-        return Yii::$app->getComponent($service, $load);
+        return Yii::$app->get($service, $load);
     }
 
     /**
@@ -37,7 +37,7 @@ trait ServiceGetter
      */
     public function hasService($service)
     {
-        return Yii::$app->hasComponent($service);
+        return Yii::$app->has($service);
     }
 
     /**
@@ -47,7 +47,7 @@ trait ServiceGetter
      */
     public function setService($id, $component)
     {
-        Yii::$app->setComponent($id, $component);
+        Yii::$app->set($id, $component);
     }
 
 

@@ -31,7 +31,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
      */
     public function testGetEntityAttributeListAsStructure()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -55,7 +55,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
      */
     public function testLoadLazyAttribute()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -155,7 +155,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
      */
     public function testGetEntityAttributeMap()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -174,7 +174,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
      */
     public function testGetEntityAttributeIdByName()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
         $customerAttributes = New CustomerAttributes();
@@ -190,7 +190,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
      */
     public function testGetEntityAttributeNameById()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
         $customerAttributes = New CustomerAttributes();
@@ -203,7 +203,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
      */
     public function testSetValuesByArray()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
         $customerAttributes = New CustomerAttributes();

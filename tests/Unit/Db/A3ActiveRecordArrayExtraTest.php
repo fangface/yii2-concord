@@ -40,7 +40,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
      */
     function testActiveRecordArrayAddInvalidObjectToNewArray()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -57,7 +57,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
      */
     function testActiveRecordArrayAddInvalidObjectToExistingArray()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -66,7 +66,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
 
         $this->checkBaseCounts('full', $client->clientCode);
 
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOne($customerId);
         $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
         $this->assertEquals(3, $customer->orders[1]->items->count());
 
@@ -79,7 +79,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
      */
     function testActiveRecordArrayAddValidObjectToExistingArray()
     {
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -88,7 +88,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
 
         $this->checkBaseCounts('full', $client->clientCode);
 
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOne($customerId);
         $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
         $this->assertEquals(3, $customer->orders[1]->items->count());
 
@@ -105,7 +105,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
 
         $this->assertTrue($customer->saveAll());
 
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOne($customerId);
         $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
         $this->assertEquals(4, $customer->orders[1]->items->count());
     }
@@ -120,7 +120,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     function testActiveRecordSetAttributeViaMagicSetOnReadOnlyFails()
     {
 
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -129,7 +129,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
 
         $this->checkBaseCounts('full', $client->clientCode);
 
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOne($customerId);
         $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
 
         $customer->orders[1]->items->setReadOnly(true);
@@ -150,7 +150,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     function testActiveRecordSaveAllOnReadOnlyArrayFails()
     {
 
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -159,7 +159,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
 
         $this->checkBaseCounts('full', $client->clientCode);
 
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOne($customerId);
         $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
 
         $customer->orders[1]->items->setReadOnly(true);
@@ -176,7 +176,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     function testActiveRecordDeleteFullOnReadOnlyArrayFails()
     {
 
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -185,7 +185,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
 
         $this->checkBaseCounts('full', $client->clientCode);
 
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOne($customerId);
         $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
 
         $customer->orders[1]->items->setReadOnly(true);
@@ -202,7 +202,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     function testActiveRecordDeleteFullOnNonCanDeleteArrayFails()
     {
 
-        $client = Client::find(1);
+        $client = Client::findOne(1);
         $this->assertInstanceOf('Concord\Models\Db\Client', $client);
         $this->setService('client', $client);
 
@@ -211,7 +211,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
 
         $this->checkBaseCounts('full', $client->clientCode);
 
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOne($customerId);
         $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
 
         $customer->orders[1]->items->setCanDelete(false);

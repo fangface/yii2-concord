@@ -34,7 +34,7 @@ class A2MultiDbResourcesTest extends DbTestCase
     public function testLoopThroughDifferentDbResources()
     {
 
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
 
         $dbResources = \Concord\Models\Db\DbResource::find()
             ->orderBy('id')
@@ -90,7 +90,6 @@ class A2MultiDbResourcesTest extends DbTestCase
                 'schemaCache'          => $dbClient->schemaCache,
                 'enableQueryCache'     => $dbClient->enableQueryCache,
                 'queryCacheDuration'   => $dbClient->queryCacheDuration,
-                'queryCacheDependency' => $dbClient->queryCacheDependency,
                 'queryCache'           => $dbClient->queryCache,
                 'emulatePrepare'       => NULL, // $connection->emulatePrepare,
             );
@@ -114,7 +113,7 @@ class A2MultiDbResourcesTest extends DbTestCase
                 $this->assertRegExp('/dbTestRemote2/', $dbRemote->dsn);
             }
 
-            $robot = \Concord\Tests\Models\Robot::find(1);
+            $robot = \Concord\Tests\Models\Robot::findOne(1);
             if ($dbResource->resourceName == 'dbClient1') {
                 $this->assertTrue(!$robot->hasAttribute('extraField'));
             } else {
@@ -143,7 +142,7 @@ class A2MultiDbResourcesTest extends DbTestCase
     public function testLoopThroughDifferentClients()
     {
 
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
 
         $clients = \Concord\Models\Db\Client::find()
             ->orderBy('id')
@@ -203,7 +202,7 @@ class A2MultiDbResourcesTest extends DbTestCase
                 $this->assertRegExp('/dbTestRemote2/', $dbRemote->dsn);
             }
 
-            $robot = \Concord\Tests\Models\Robot::find(1);
+            $robot = \Concord\Tests\Models\Robot::findOne(1);
             if ($client->clientCode == 'CLIENT1') {
                 $this->assertTrue(!$robot->hasAttribute('extraField'));
             } else {
@@ -230,7 +229,7 @@ class A2MultiDbResourcesTest extends DbTestCase
     public function testLoopThroughDifferentClientsAutoActiveRecordDbResource()
     {
 
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
 
         $clients = \Concord\Models\Db\Client::find()
             ->orderBy('id')
@@ -244,7 +243,7 @@ class A2MultiDbResourcesTest extends DbTestCase
             // when required to determine the clients dbRemote connection for the Robot model
             $this->setService('client', $client);
 
-            $robot = \Concord\Tests\Models\Robot::find(1);
+            $robot = \Concord\Tests\Models\Robot::findOne(1);
 
             if ($client->clientCode == 'CLIENT1') {
                 $this->assertTrue(!$robot->hasAttribute('extraField'));
@@ -274,7 +273,7 @@ class A2MultiDbResourcesTest extends DbTestCase
      */
     public function testGetUndefinedDbConnectionFails()
     {
-        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX', true, false);
+        $db = Yii::$app->get('dbFactory')->getConnection('dbX', true, false);
     }
 
 }

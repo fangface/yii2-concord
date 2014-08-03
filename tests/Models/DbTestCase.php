@@ -15,7 +15,7 @@
 namespace Concord\Tests\Models;
 
 use Concord\Tests\Models\TestCase;
-use Concord\Tests\Models\DbTestCase;
+use Concord\Tests\Models\ConnectionTestCase;
 use Concord\Tests\Models\Customer;
 use Concord\Tests\Models\Eav\AttributeValues;
 use Concord\Tests\Models\Address;
@@ -28,7 +28,7 @@ use Concord\Tests\Models\Product;
 /**
  * This is the base class for all Concord database unit tests
  */
-abstract class DbTestCase extends TestCase
+abstract class DbTestCase extends ConnectionTestCase
 {
 
     /**
@@ -68,7 +68,7 @@ abstract class DbTestCase extends TestCase
      */
     protected function getDbConnection($db = 'db')
     {
-        return \Yii::$app->getComponent($db);
+        return \Yii::$app->get($db);
     }
 
 
@@ -341,6 +341,9 @@ abstract class DbTestCase extends TestCase
             file_put_contents(str_replace('.json', '.txt', $resultsFile), print_r($fullDataCheck, true));
         } else {
             $expectedResult = json_decode(file_get_contents($resultsFile), true);
+                //if ($fullDataCheck != $expectedResult) {
+            //    file_put_contents(str_replace('.json', '-testing.txt', $resultsFile), print_r($fullDataCheck, true));
+            //}
             $this->assertEquals($expectedResult, $fullDataCheck, 'Failed to match createTestCustomerAndOrder() result for ' . strtolower($clientCode));
         }
 

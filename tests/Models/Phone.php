@@ -32,10 +32,10 @@ class Phone extends ActiveRecord
         $dbResourceName = 'dbClient';
         $isClientResource = true;
 
-        if (Yii::$app->hasComponent('dbFactory')) {
-            return Yii::$app->getComponent('dbFactory')->getConnection($dbResourceName, true, true, $isClientResource);
-        } elseif (Yii::$app->hasComponent($dbResourceName)) {
-            return Yii::$app->getComponent($dbResourceName);
+        if (Yii::$app->has('dbFactory')) {
+            return Yii::$app->get('dbFactory')->getConnection($dbResourceName, true, true, $isClientResource);
+        } elseif (Yii::$app->has($dbResourceName)) {
+            return Yii::$app->get($dbResourceName);
         }
 
         throw new \Concord\Db\Exception('Database resource \'' . $dbResourceName . '\' not found');

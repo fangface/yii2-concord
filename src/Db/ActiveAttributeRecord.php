@@ -172,7 +172,6 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     public function __construct($config = array())
     {
         if (!empty($config)) {
-
             if (is_array($config)) {
                 $this->configure($config);
             } elseif (is_numeric($config)) {
@@ -180,13 +179,6 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             }
         }
         $this->init();
-        /*
-            if ($this->objectId && $this->entityId !== false) {
-                if (!$this->loaded && !$this->isNewPrepared) {
-                    $this->loadAttributeValues();
-                }
-            }
-        */
     }
 
 
@@ -1630,7 +1622,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             // we do not record modified, modifiedBy, created or createdBy against individual attributes but we will support
             // automatically updating them if these attributeNames have been setup as their own attributes for this entity
 
-            if (Yii::$app->hasComponent('user')) {
+            if (Yii::$app->has('user')) {
                 try {
                     if (Yii::$app->user->isGuest) {
                         $userId = 0;

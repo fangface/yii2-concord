@@ -146,12 +146,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             $isClientResource = (isset($calledClass::$isClientResource) ? $calledClass::$isClientResource : false);
         }
 
-        if (Yii::$app->hasComponent('dbFactory')) {
+        if (Yii::$app->has('dbFactory')) {
             /** @var \Concord\Db\ConnectionManager $dbFactory */
-            $dbFactory = Yii::$app->getComponent('dbFactory');
+            $dbFactory = Yii::$app->get('dbFactory');
             return $dbFactory->getConnection($dbResourceName, true, true, $isClientResource);
-        } elseif (Yii::$app->hasComponent($dbResourceName)) {
-            return Yii::$app->getComponent($dbResourceName);
+        } elseif (Yii::$app->has($dbResourceName)) {
+            return Yii::$app->get($dbResourceName);
         }
 
         throw new \Concord\Db\Exception('Database resource \'' . $dbResourceName . '\' not found');
@@ -2000,6 +2000,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $success;
     }
 
+
     /**
      * Declares a `has-eav` relation.
      * @param string $class the class name of the related record (must not be 'attributes')
@@ -2029,23 +2030,27 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
 
     /**
-     * Creates an [[ActiveQuery]] instance. Overrides Yii version so that
-     * indexBy can be used on multiple responses
-     * @see \yii\db\ActiveRecord::createQuery()
-     * @param array $config
-     * @return ActiveQuery
+     * Declares a `has-many` relation.
+     * @param string $class the class name of the related record
+     * @param array $link the primary-foreign key constraint. The keys of the array refer to
+     * the attributes of the record associated with the `$class` model, while the values of the
+     * array refer to the corresponding attributes in **this** AR class.
+     * adjust the result to use the primary key as the array key
+     * @return ActiveQueryInterface the relational query object.
      */
-    public static function createQuery($config = [])
+    public function hasMany($class, $link)
     {
-        $config['modelClass'] = get_called_class();
-        if (isset($config['multiple']) && $config['multiple']) {
-            $modelClass = $config['modelClass'];
+        /* @var $class ActiveRecordInterface */
+        /* @var $query ActiveQuery */
+        $query = parent::hasMany($class, $link);
+        if ($query->multiple) {
+            $modelClass = get_called_class();
             $keys = $modelClass::primaryKey();
             if (count($keys) === 1) {
-                $config['indexBy'] = $keys[0];
+                $query->indexBy = $keys[0];
             }
         }
-        return new ActiveQuery($config);
+        return $query;
     }
 
 
@@ -2064,6 +2069,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
         parent::__set($name, $value);
     }
+
 
     /**
      * PHP getter magic method. Override \yii\db\ActiveRecord so that we can automatically
@@ -2173,6 +2179,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
         return parent::__get($name);
     }
+
 
     /**
      * Call the debugTest method on all objects in the model map (used for testing)

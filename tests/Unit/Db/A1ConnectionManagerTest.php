@@ -15,14 +15,14 @@
 namespace Concord\Tests\Unit\Db;
 
 use Yii;
-use Concord\Tests\Models\TestCase as TestCase;
+use Concord\Tests\Models\DbTestCase as DbTestCase;
 use Concord\Db\ConnectionManager;
 use PDO;
 
 /**
  * Test Concord Connection Manager class and methods
  */
-class A1ConnectionManagerTest extends TestCase
+class A1ConnectionManagerTest extends DbTestCase
 {
 
     /**
@@ -30,7 +30,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testGetConnectionManager()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
         $this->assertInstanceOf('\Concord\Db\ConnectionManager', new ConnectionManager);
         $this->assertEquals(0, $dbFactory->getResourceCount());
     }
@@ -42,7 +42,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testDefaultConnectionUsage()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
         $db = $dbFactory->getConnection();
         $this->assertInstanceOf('\yii\db\Connection', $db);
 
@@ -79,7 +79,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testGetDefaultUndefinedConnectionFails()
     {
-        $db = Yii::$app->getComponent('dbFactory')->getConnection('db', false, false);
+        $db = Yii::$app->get('dbFactory')->getConnection('db', false, false);
         // should get false returned
         $this->assertFalse($db);
     }
@@ -89,12 +89,13 @@ class A1ConnectionManagerTest extends TestCase
      * Fail to obtain the 'db' connection via the connection manager because it has not been
      * defined in the connection manager and the parameters specify to attempt to add the
      * resource and not to use anything defined in components and no dbResources table exists
+     * was 'Unable to load dbResources'
      * @expectedException        \Concord\Db\Exception
-     * @expectedExceptionMessage Unable to load dbResources
+     * @expectedExceptionMessage Missing dbParams on addResource
      */
     public function testGetUndefinedDbConnectionWithNoDbResourcesFails()
     {
-        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX2', true, false);
+        $db = Yii::$app->get('dbFactory')->getConnection('dbX2', true, false);
     }
 
 
@@ -103,12 +104,12 @@ class A1ConnectionManagerTest extends TestCase
      * defined in the connection manager and the parameters specify to attempt to add the
      * resource and not to use anything defined in components and no clients dbResources table
      * exists
-     * @expectedException        \Concord\Db\Exception
-     * @expectedExceptionMessage No client service available
+     * @expectedException        yii\base\InvalidConfigException
+     * @expectedExceptionMessage Unknown component ID: client
      */
     public function testGetUndefinedDbConnectionWithNoClientDbResourcesFails()
     {
-        $db = Yii::$app->getComponent('dbFactory')->getConnection('dbX3', true, false, true);
+        $db = Yii::$app->get('dbFactory')->getConnection('dbX3', true, false, true);
     }
 
 
@@ -117,7 +118,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testSwitchDefaultConnections()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
 
         // no resources should exist yet
         $this->assertEquals(0, $dbFactory->getResourceCount());
@@ -170,7 +171,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testAddManualResourcesAndAliases()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
         $dbConfig = $this->getDbParam('db', null, false);
         $this->assertNotEmpty($dbConfig);
         if ($dbConfig && is_array($dbConfig)) {
@@ -245,7 +246,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testRemoveAllResourcesExceptCore()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
 
         $db = $dbFactory->getConnection('db');
         $this->assertInstanceOf('\yii\db\Connection', $db);
@@ -264,7 +265,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testRemoveAllResourcesIncludingCore()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
 
         $db = $dbFactory->getConnection('db');
         $this->assertInstanceOf('\yii\db\Connection', $db);
@@ -284,7 +285,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testCheckMethodsWhereResourceDoesNotExist()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
 
         $this->assertFalse($dbFactory->isResource('dbRandom'));
         $this->assertFalse($dbFactory->isResourceConnected('dbRandom'));
@@ -307,7 +308,7 @@ class A1ConnectionManagerTest extends TestCase
      */
     public function testAddResourceOnExistingConfigComponentCheckServices()
     {
-        $dbFactory = Yii::$app->getComponent('dbFactory');
+        $dbFactory = Yii::$app->get('dbFactory');
         $this->assertTrue($dbFactory->addResource('db2'));
 
         $db2 = $dbFactory->getConnection('db2');

@@ -28,8 +28,8 @@ use \yii\helpers\Security;
  * New connections are by default added to yii components so they can be accessed
  * as typical yii db connections would be accessed e.g.
  *
- *     \Yii::$app->getComponent('db2');
- *     \Yii::$app->getComponent('dbFactory')->getConnection('db2');
+ *     \Yii::$app->get('db2');
+ *     \Yii::$app->get('dbFactory')->getConnection('db2');
  *
  * Ideally suited when multiple database connections are required within an
  * application and especially if those connections dynamically change but models
@@ -270,6 +270,8 @@ class ConnectionManager extends Component
                     } catch (\yii\db\Exception $e) {
                         throw new \Concord\Db\Exception('Unable to load dbResources');
                     }
+                } else {
+                    throw new \Concord\Db\Exception('No connections to load dbResources');
                 }
             }
 
@@ -288,7 +290,6 @@ class ConnectionManager extends Component
                     'schemaCache'          => $connection->schemaCache,
                     'enableQueryCache'     => $connection->enableQueryCache,
                     'queryCacheDuration'   => $connection->queryCacheDuration,
-                    'queryCacheDependency' => $connection->queryCacheDependency,
                     'queryCache'           => $connection->queryCache,
                     'emulatePrepare'       => NULL, // $connection->emulatePrepare,
                 );
@@ -337,6 +338,7 @@ class ConnectionManager extends Component
             'dsn'                  => $connection->dsn,
             'username'             => $connection->username,
             'password'             => $connection->password,
+            'attributes'           => $connection->attributes,
             'charset'              => $connection->charset,
             'enableSchemaCache'    => $connection->enableSchemaCache,
             'schemaCacheDuration'  => $connection->schemaCacheDuration,
@@ -344,7 +346,6 @@ class ConnectionManager extends Component
             'schemaCache'          => $connection->schemaCache,
             'enableQueryCache'     => $connection->enableQueryCache,
             'queryCacheDuration'   => $connection->queryCacheDuration,
-            'queryCacheDependency' => $connection->queryCacheDependency,
             'queryCache'           => $connection->queryCache,
             'emulatePrepare'       => $connection->emulatePrepare,
             'tablePrefix'          => $connection->tablePrefix,
@@ -764,7 +765,7 @@ class ConnectionManager extends Component
     /**
      * Obtain the last error code info on the specified connection
      * <code>
-     *      list($pdoErrorCode, $dbErrorCode, $dbErrorString) = Yii::$app->getComponent('dbFactory')->getLastError('db');
+     *      list($pdoErrorCode, $dbErrorCode, $dbErrorString) = Yii::$app->get('dbFactory')->getLastError('db');
      * </code>
      * @param string $resourceName [OPTIONAL] (default is the current default resource name)
      * @return array|false
