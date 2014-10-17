@@ -44,6 +44,27 @@ trait ActionErrors {
 
 
     /**
+     * Returns the action errors  (those errors logged during predetermined actions such
+     * as saveAll() and deleteFull() as a simplifed message array
+     *
+     * @param boolean $noAttribute Exclude attribute name from error text
+     * @return array array of action errors message and code
+     */
+    public function getBasicActionErrors($noAttribute = false)
+    {
+        $array = [];
+        if ($this->actionErrors) {
+            foreach ($this->actionErrors as $k => $error) {
+                foreach ($error['message'] as $k2 => $message) {
+                    $array[] = ($noAttribute ? '' : ($error['attribute'] ? $error['attribute'] . ' - ' : '')) . $message . ($error['code'] ? ' (' . $error['code'] . ')' : '');
+                }
+            }
+        }
+        return $array;
+    }
+
+
+    /**
      * Returns the first action error
      *
      * @return array
@@ -121,6 +142,27 @@ trait ActionErrors {
     public function getActionWarnings()
     {
         return $this->actionWarnings;
+    }
+
+
+    /**
+     * Returns the action warnings  (those warnings logged during predetermined actions such
+     * as saveAll() and deleteFull() as a simplifed message array
+     *
+     * @param boolean $noAttribute Exclude attribute name from error text
+     * @return array array of action warnings message and code
+     */
+    public function getBasicActionWarnings($noAttribute = false)
+    {
+        $array = [];
+        if ($this->actionWarnings) {
+            foreach ($this->actionWarnings as $k => $error) {
+                foreach ($error['message'] as $k2 => $message) {
+                    $array[] = ($noAttribute ? '' : ($error['attribute'] ? $error['attribute'] . ' - ' : '')) . $message . ($error['code'] ? ' (' . $error['code'] . ')' : '');
+                }
+            }
+        }
+        return $array;
     }
 
 

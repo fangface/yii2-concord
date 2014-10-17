@@ -15,6 +15,8 @@
 namespace Concord\Tests\Models;
 
 use Concord\Db\ActiveRecord;
+use Concord\Tests\Models\Item;
+use Concord\Tests\Models\Customer;
 
 /**
  * Active Record class for the clients dbClient.{prefix}orders table
@@ -36,34 +38,37 @@ class Order extends ActiveRecord
 
     protected static $dbResourceName    = 'dbClient';
 
-    protected $modelRelationMap = array(
+    public function modelRelationMap()
+    {
+        return [
 
-        'items' => array(
-            'type' => 'hasMany',
-            'class' => 'Concord\Tests\Models\Item',
-            'link' => array(
-                'orderId' => 'id' // child->var => parent->var (remote => local)
-            ),
-            'onSaveAll' => ActiveRecord::SAVE_CASCADE,
-            'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
-            'autoLinkType' => ActiveRecord::LINK_FROM_PARENT_MAINT,
-            'allToArray' => true,
-            'autoLink' => array(
-                'fromParent' => array(
-                    'orderId' => 'id', // child->var => parent->var (remote => local)
-                    'customerId' => 'customerId', // child->var => parent->var (remote => local)
+            'items' => array(
+                'type' => 'hasMany',
+                'class' => Item::className(),
+                'link' => array(
+                    'orderId' => 'id' // child->var => parent->var (remote => local)
+                ),
+                'onSaveAll' => ActiveRecord::SAVE_CASCADE,
+                'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
+                'autoLinkType' => ActiveRecord::LINK_FROM_PARENT_MAINT,
+                'allToArray' => true,
+                'autoLink' => array(
+                    'fromParent' => array(
+                        'orderId' => 'id', // child->var => parent->var (remote => local)
+                        'customerId' => 'customerId', // child->var => parent->var (remote => local)
+                    ),
                 ),
             ),
-        ),
 
-        'customer' => array(
-            'type' => 'belongsTo',
-            'class' => 'Concord\Tests\Models\Customer',
-            'link' => array(
-                'id' => 'customerId'
+            'customer' => array(
+                'type' => 'belongsTo',
+                'class' => Customer::className(),
+                'link' => array(
+                    'id' => 'customerId'
+                ),
             ),
-        ),
 
-    );
+        ];
+    }
 
 }

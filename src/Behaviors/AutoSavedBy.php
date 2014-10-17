@@ -83,7 +83,13 @@ class AutoSavedBy extends Behavior
 		if (!empty($attributes)) {
 			$savedBy = $this->evaluateSavedBy();
 			foreach ($attributes as $attribute) {
-				$this->owner->$attribute = $savedBy;
+			    if (isset($this->owner->$attribute)) {
+			        $this->owner->$attribute = $savedBy;
+			    } elseif ($attribute == 'createdBy' && isset($this->owner->created_by)) {
+			        $this->owner->created_by = $savedBy;
+			    } elseif ($attribute == 'modifiedBy' && isset($this->owner->modified_by)) {
+			        $this->owner->modified_by = $savedBy;
+			    }
 			}
 		}
 	}

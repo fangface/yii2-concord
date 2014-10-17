@@ -341,7 +341,7 @@ abstract class DbTestCase extends ConnectionTestCase
             file_put_contents(str_replace('.json', '.txt', $resultsFile), print_r($fullDataCheck, true));
         } else {
             $expectedResult = json_decode(file_get_contents($resultsFile), true);
-                //if ($fullDataCheck != $expectedResult) {
+            //if ($fullDataCheck != $expectedResult) {
             //    file_put_contents(str_replace('.json', '-testing.txt', $resultsFile), print_r($fullDataCheck, true));
             //}
             $this->assertEquals($expectedResult, $fullDataCheck, 'Failed to match createTestCustomerAndOrder() result for ' . strtolower($clientCode));

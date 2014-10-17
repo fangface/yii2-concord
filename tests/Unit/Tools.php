@@ -15,6 +15,7 @@
 namespace Concord\Tests\Unit;
 
 use Concord\Tests\Models\TestCase as TestCase;
+use Concord\Tests\Models\Item;
 
 /**
  * Test Concord Tools class
@@ -27,7 +28,7 @@ class Tools extends TestCase
      */
     public function testDebugDoesNotFail()
     {
-        $var = array('a'=>100, 'b'=>200);
+        $var = array('a' => 100, 'b' => 200);
         $debug = \Concord\Tools::debug($var, 'My Label', false);
         $this->assertInternalType('string', $actual);
     }
@@ -46,7 +47,7 @@ class Tools extends TestCase
     /**
      * Test getClientCode returns '' when no client has been set
      */
-    public function testGetClientIdForNonClient()
+    public function testGetClientCodeForNonClient()
     {
         $code = \Concord\Tools::getClientCode();
         $this->assertEquals('', $code);
@@ -61,7 +62,7 @@ class Tools extends TestCase
         $this->assertFalse(\Concord\Tools::is_closure(array()));
         $this->assertFalse(\Concord\Tools::is_closure(5));
         $this->assertFalse(\Concord\Tools::is_closure('string'));
-        $this->assertFalse(\Concord\Tools::is_closure(new \Concord\Tests\Models\Item()));
+        $this->assertFalse(\Concord\Tools::is_closure(new Item));
         $this->assertTrue(\Concord\Tools::is_closure(function(){$a=1;}));
     }
 

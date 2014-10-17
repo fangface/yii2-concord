@@ -15,6 +15,9 @@
 namespace Concord\Tests\Models;
 
 use Concord\Db\ActiveRecord;
+use Concord\Tests\Models\Product;
+use Concord\Tests\Models\Order;
+use Concord\Tests\Models\Customer;
 
 /**
  * Active Record class for the clients dbCLIENT.{prefix}items table
@@ -40,33 +43,35 @@ class Item extends ActiveRecord
     protected $disableCreatedUpd  = true;
     protected $disableModifiedUpd = true;
 
-    protected $modelRelationMap = array(
+    public function modelRelationMap()
+    {
+        return [
 
-        'product' => array(
-            'type' => 'hasOne',
-            'class' => 'Concord\Tests\Models\Product',
-            'link' => array(
-                'productCode' => 'productCode' // child->var => parent->var (remote => local)
+            'product' => array(
+                'type' => 'hasOne',
+                'class' => Product::className(),
+                'link' => array(
+                    'productCode' => 'productCode' // child->var => parent->var (remote => local)
+                ),
+                'allToArray' => true,
             ),
-            'allToArray' => true,
-        ),
 
-        'order' => array(
-            'type' => 'belongsTo',
-            'class' => 'Concord\Tests\Models\Order',
-            'link' => array(
-                'id' => 'orderId'
+            'order' => array(
+                'type' => 'belongsTo',
+                'class' => Order::className(),
+                'link' => array(
+                    'id' => 'orderId'
+                ),
             ),
-        ),
 
-        'customer' => array(
-            'type' => 'belongsTo',
-            'class' => 'Concord\Tests\Models\Customer',
-            'link' => array(
-                'id' => 'customerId'
+            'customer' => array(
+                'type' => 'belongsTo',
+                'class' => Customer::className(),
+                'link' => array(
+                    'id' => 'customerId'
+                ),
             ),
-        ),
 
-    );
-
+        ];
+    }
 }

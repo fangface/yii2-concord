@@ -15,6 +15,8 @@
 namespace Concord\Tests\Models;
 
 use Concord\Db\ActiveRecord;
+use Concord\Tests\Models\Country;
+use Concord\Tests\Models\Customer;
 
 /**
  * Active Record class for the clients dbClient.{prefix}addresses table
@@ -44,27 +46,30 @@ class Address extends ActiveRecord
 
     protected static $dbResourceName    = 'dbClient';
 
-    protected $modelRelationMap = array(
+    public function modelRelationMap()
+    {
+        return [
 
-        'country' => array(
-            'type' => 'hasOne',
-            'class' => 'Concord\Tests\Models\Country',
-            'link' => array(
-                'countryCode' => 'countryCode' // child->var => parent->var (remote => local)
+            'country' => array(
+                'type' => 'hasOne',
+                'class' => Country::className(),
+                'link' => array(
+                    'countryCode' => 'countryCode' // child->var => parent->var (remote => local)
+                ),
+                'readOnly' => true,
+                'canDelete' => false,
+                'allToArray' => true,
             ),
-            'readOnly' => true,
-            'canDelete' => false,
-            'allToArray' => true,
-        ),
 
-        'customer' => array(
-            'type' => 'belongsTo',
-            'class' => 'Concord\Tests\Models\Customer',
-            'link' => array(
-                'id' => 'customerId'
+            'customer' => array(
+                'type' => 'belongsTo',
+                'class' => Customer::className(),
+                'link' => array(
+                    'id' => 'customerId'
+                ),
             ),
-        ),
 
-    );
+        ];
+    }
 
 }

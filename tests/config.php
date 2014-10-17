@@ -71,13 +71,15 @@ return [
                 'class' => 'Concord\Db\ConnectionManager',
             ],
 
-            /* ideally in production dbCache should always be setup
             'dbCache' => [
-                'class' => 'yii\caching\ApcCache',
+                'class' => 'yii\caching\DummyCache',
                 'keyPrefix' => 'concord_prefix',
             ],
-            */
 
+        ],
+
+        'params' => [
+            'db.defaultTableNameType' => 'plural',
         ],
 
     ],

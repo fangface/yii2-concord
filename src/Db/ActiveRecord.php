@@ -15,6 +15,10 @@
 namespace Concord\Db;
 
 use Concord\Base\Traits\ActionErrors;
+use Concord\Base\Traits\AttributeHintBlocks;
+use Concord\Base\Traits\AttributeIcons;
+use Concord\Base\Traits\AttributePlaceholders;
+use Concord\Base\Traits\AttributeTooltips;
 use Concord\Db\ActiveRecord;
 use Concord\Db\ActiveRecordArray;
 use Concord\Db\ActiveRecordParentalInterface;
@@ -27,6 +31,9 @@ use Yii;
 use yii\base\ModelEvent;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as YiiActiveRecord;
+use yii\base\UnknownMethodException;
+use yii\base\InvalidParamException;
+
 
 class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
 {
@@ -34,13 +41,17 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     use ActionErrors;
     use ActiveRecordParentalTrait;
     use ActiveRecordReadOnlyTrait;
+    use AttributeHintBlocks;
+    use AttributeIcons;
+    use AttributePlaceholders;
+    use AttributeTooltips;
 
     protected static $dbResourceName    = false;
     protected static $isClientResource  = false;
     protected static $dbTableName       = false;
     protected static $dbTableNameMethod = false; // yii, camel, default
 
-    protected $modelRelationMap         = array();
+    private $modelRelationMap           = [];
 
     protected $disableCreatedUpd        = false;
     protected $disableModifiedUpd       = false;
@@ -52,7 +63,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     protected $applyDefaults            = true;
     protected $defaultsApplied          = false;
 
-    private $savedNewChildRelations     = array();
+    private $savedNewChildRelations     = [];
 
 
     const SAVE_NO_ACTION                = 1;
@@ -104,12 +115,14 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     const EVENT_AFTER_DELETE_FULL_FAILED = 'afterDeleteFullFailed';
 
+
     /**
      * Get the name of the table associated with this ActiveRecord class.
      *
+     * @param boolean $includeDbName
      * @return string
      */
-    public static function tableName()
+    public static function tableName($includeDbName = true)
     {
         /** @var \yii\db\Connection $connection */
         $connection = static::getDb();
@@ -118,9 +131,9 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         if (isset($calledClass::$dbTableName) && !is_null($calledClass::$dbTableName) && $calledClass::$dbTableName) {
             $tableName = $tablePrefix . $calledClass::$dbTableName;
         } else {
-            $tableName = $tablePrefix . \Concord\Tools::getDefaultTableNameFromClass($calledClass, (isset($calledClass::$tableNameMethod) && !is_null($calledClass::$tableNameMethod) && $calledClass::$tableNameMethod ? $calledClass::$tableNameMethod : 'default'));
+            $tableName = $tablePrefix . Tools::getDefaultTableNameFromClass($calledClass, (isset($calledClass::$tableNameMethod) && !is_null($calledClass::$tableNameMethod) && $calledClass::$tableNameMethod ? $calledClass::$tableNameMethod : 'default'));
         }
-        if (true) {
+        if ($includeDbName) {
             preg_match("/dbname=([^;]+)/i", $connection->dsn, $matches);
             return $matches[1] . '.' . $tableName;
         }
@@ -160,7 +173,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
     public function init()
     {
-        $this->processModelMap();
         parent::init();
     }
 
@@ -244,7 +256,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     public function setAttribute($name, $value)
     {
         if ($this->getReadOnly()) {
-            throw new \Concord\Db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . \Concord\Tools::getClassName($this) . ' model');
+            throw new \Concord\Db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . Tools::getClassName($this) . ' model');
         }
 
         parent::setAttribute($name, $value);
@@ -259,10 +271,46 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     public function setAttributes($values, $safeOnly = true)
     {
         if ($this->getReadOnly()) {
-            throw new \Concord\Db\Exception('Attempting to set attributes on a read only ' . \Concord\Tools::getClassName($this) . ' model');
+            throw new \Concord\Db\Exception('Attempting to set attributes on a read only ' . Tools::getClassName($this) . ' model');
         }
 
         parent::setAttributes($values, $safeOnly);
+    }
+
+
+    /**
+     * Overriding BaseActiveRecord::setOldAttributes() because
+     * we do not want to lose other old attributes following a call to this
+     * function after a save which may have been limited to only some attributes effectively
+     * marking all other attributes as dirty when they might not actually be
+     * @see \yii\db\BaseActiveRecord::setOldAttributes($values)
+     */
+    public function setOldAttributes($values)
+    {
+        if ($values !== null && is_array($values) && $values) {
+            parent::setOldAttributes(array_merge($this->getOldAttributes(), $values));
+        } else {
+            parent::setOldAttributes($values);
+        }
+    }
+
+
+    /**
+     * (non-PHPdoc)
+     * @see \yii\base\Model::load($data, $formName)
+     * @throws \Concord\Db\Exception if the current record is read only
+     */
+    public function load($data, $formName = null)
+    {
+        if ($this->getReadOnly()) {
+            throw new \Concord\Db\Exception('Attempting to load attributes on a read only ' . Tools::getClassName($this) . ' model');
+        }
+
+        if ($this->getIsNewRecord() && $this->applyDefaults && !$this->defaultsApplied) {
+            $this->applyDefaults();
+        }
+
+        return parent::load($data, $formName);
     }
 
     /**
@@ -300,14 +348,16 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                         // leave as null
                     } else {
                         $this->setAttribute($colName, $defaultValue);
-                        $this->setOldAttribute($colName, $defaultValue);
+                        if ($spec->type != 'text' && $defaultValue == '') {
+                            // some fields need to have the default set and included in the sql statements even if not set to anything yet
+                            $this->setOldAttribute($colName, $defaultValue);
+                        }
                     }
                 }
             }
 
         }
     }
-
 
     /**
      * Default ActiveRecord behaviors (typically createdBy, createdAt, modifiedBy and modifiedAt
@@ -376,43 +426,64 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * @param boolean $checkRelations should changes in relations be checked as well
      * @return boolean
      */
-    public function hasChanges($checkRelations=false)
+    public function hasChanges($checkRelations = false)
     {
 
-        $hasChanges = $this->getDirtyAttributes();
+        $hasChanges = ($this->getOldAttributes() == [] ? false : $this->getDirtyAttributes());
+
         if (!$hasChanges) {
             /*
              * check to see if any of our sub relations have unsaved changes that would be saved
              * if we called saveAll()
              */
-            if ($checkRelations && $this->modelRelationMap) {
-                foreach ($this->modelRelationMap as $relation => $relationInfo) {
-                    if ($relationInfo['onSaveAll'] == self::SAVE_CASCADE && $this->isRelationPopulated($relation)) {
+            if ($checkRelations) {
+                $this->processModelMap();
+                if ($this->modelRelationMap) {
+                    foreach ($this->modelRelationMap as $relation => $relationInfo) {
+                        if ($relationInfo['onSaveAll'] == self::SAVE_CASCADE && $this->isRelationPopulated($relation)) {
 
-                        $isReadOnly = ($relationInfo['readOnly'] === null || !$relationInfo['readOnly'] ? false : true);
-                        if ($this->$relation instanceof ActiveRecordReadOnlyInterface) {
-                            $isReadOnly = $this->$relation->getReadOnly();
-                        }
+                            $isReadOnly = ($relationInfo['readOnly'] === null || !$relationInfo['readOnly'] ? false : true);
+                            if ($this->$relation instanceof ActiveRecordReadOnlyInterface) {
+                                $isReadOnly = $this->$relation->getReadOnly();
+                            }
 
-                        if (!$isReadOnly) {
-                            if ($this->$relation instanceof ActiveRecordSaveAllInterface) {
-                                $hasChanges = $this->$relation->hasChanges($checkRelations);
-                            } elseif (method_exists($this->$relation, 'getDirtyAttributes')) {
-                                if ($this->$relation->getDirtyAttributes()) {
-                                    $hasChanges = true;
+                            if (!$isReadOnly) {
+                                if ($this->$relation instanceof ActiveRecordSaveAllInterface) {
+                                    $hasChanges = $this->$relation->hasChanges($checkRelations);
+                                } elseif (method_exists($this->$relation, 'getDirtyAttributes')) {
+                                    if ($this->$relation->getDirtyAttributes()) {
+                                        $hasChanges = true;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    if ($hasChanges) {
-                        break;
+                        if ($hasChanges) {
+                            break;
+                        }
                     }
                 }
             }
         }
 
         return ($hasChanges ? true : false);
+    }
+
+
+    /**
+     * Return if an attribute has changed
+     * @param string $attribute [optional] if not specified returns true if anything within the currect AR has changed
+     * @return boolean
+     */
+    public function hasChanged($attribute = null)
+    {
+        $hasChanges = $this->getDirtyAttributes();
+        if (is_null($attribute)) {
+            return ($hasChanges ? true : false);
+        } elseif (isset($hasChanges[$attribute])) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -426,6 +497,20 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         $this->setIsNewRecord(false);
         parent::afterFind();
+    }
+
+    /**
+     * Extended to allow for a default message to be returned if no errors yet exist
+     *
+     * @see \yii\base\Model::getFirstError($attribute)
+     */
+    public function getFirstError($attribute)
+    {
+        $error = parent::getFirstError($attribute);
+        if (is_null($error)) {
+            $error = $this->getHintBlock($attribute);
+        }
+        return $error;
     }
 
 
@@ -452,13 +537,13 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
             // return failure if we are at the top of the tree and should not be asking to saveAll
             // not allowed to amend or delete
-            $message = 'Attempting to save on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Attempting to save on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
             throw new \Concord\Db\Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
-            $message = 'Skipping save on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Skipping save on ' . Tools::getClassName($this) . ' readOnly model';
             $this->addActionWarning($message);
             return true;
 
@@ -475,7 +560,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                 }
                 return $ok;
             } elseif ($this->getIsNewRecord() && !$hasParentModel) {
-                $message = 'Attempting to save an empty ' . \Concord\Tools::getClassName($this) . ' model';
+                $message = 'Attempting to save an empty ' . Tools::getClassName($this) . ' model';
                 //$this->addActionError($message);
                 throw new \Concord\Db\Exception($message);
             }
@@ -483,6 +568,89 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
         return true;
     }
+
+    /**
+     * (non-PHPdoc)
+     * @see \yii\db\ActiveRecord::update()
+     */
+    public function update($runValidation = true, $attributeNames = null, $hasParentModel = false, $fromUpdateAll = false)
+    {
+        if ($this->getReadOnly() && !$hasParentModel) {
+
+            // return failure if we are at the top of the tree and should not be asking to supdateAll
+            // not allowed to amend or delete
+            $message = 'Attempting to update on ' . Tools::getClassName($this) . ' readOnly model';
+            //$this->addActionError($message);
+            throw new \Concord\Db\Exception($message);
+
+        } elseif ($this->getReadOnly() && $hasParentModel) {
+
+            $message = 'Skipping update on ' . Tools::getClassName($this) . ' readOnly model';
+            $this->addActionWarning($message);
+            return true;
+
+        } else {
+            try {
+                $ok = parent::update($runValidation, $attributeNames);
+            } catch (\Exception $e) {
+                $ok = false;
+                $this->addActionError($e->getMessage(), $e->getCode());
+            }
+            return $ok;
+        }
+    }
+
+    /**
+     * Optionally fix and truncate strings for fields that may contain unknown responses
+     *
+     * @see \yii\db\BaseActiveRecord::beforeSave($insert)
+     */
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            $beforeSaveStringFields = $this->beforeSaveStringFields();
+            if ($beforeSaveStringFields) {
+                $this->checkAndFixLongStrings($beforeSaveStringFields);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * (non-PHPdoc)
+     * @see \yii\db\BaseActiveRecord::afterSave($insert, $changedAttributes)
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        $this->setIsNewRecord(false);
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+
+    /**
+     * Check changed attributes and compare the table schema, truncating any fields as required
+     *
+     * @param array $attributes Array of attributes to limit checking to those only
+     */
+    public function checkAndFixLongStrings($attributes = false) {
+        $hasChanges = $this->getDirtyAttributes();
+        if ($hasChanges) {
+            $columns = self::getTableSchema()->columns;
+            foreach ($hasChanges as $name => $value) {
+                if (array_key_exists($name, $columns)) {
+                    if (!$attributes || in_array($name, $attributes) !== false) {
+                        if ($columns[$name]->type == 'string' && $columns[$name]->size) {
+                            if (Tools::strlen($value) > $columns[$name]->size) {
+                                $this->setAttribute($name, Tools::substr($value, 0, $columns[$name]->size));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * Perform a saveAll() call but push the request down the model map including
@@ -523,13 +691,13 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
             // return failure if we are at the top of the tree and should not be asking to saveAll
             // not allowed to amend or delete
-            $message = 'Attempting to saveAll on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Attempting to saveAll on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
             throw new \Concord\Db\Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
-            $message = 'Skipping saveAll on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Skipping saveAll on ' . Tools::getClassName($this) . ' readOnly model';
             $this->addActionWarning($message);
             return true;
 
@@ -614,6 +782,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         $allOk = true;
 
+        $this->processModelMap();
         if ($this->modelRelationMap) {
 
             $limitAutoLinkType = self::LINK_NONE;
@@ -701,7 +870,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                                             if ($this->getAttribute($v) !== null) {
                                                 if ($isActiveRecordArray) {
                                                     // only update objects in the array if they already have other changes, we don't want to save records that were otherwise not used
-                                                    $this->$relation->setAttribute($k, $this->getAttribute($v), (!$push), $applyLinksNewOnly);
+                                                    if ($v == '__KEY__') {
+                                                        $this->$relation->setAttribute($k, $v, (!$push), $applyLinksNewOnly);
+                                                    } else {
+                                                        $this->$relation->setAttribute($k, $this->getAttribute($v), (!$push), $applyLinksNewOnly);
+                                                    }
                                                 } else {
                                                     if ($this->$relation->getAttribute($k) != $this->getAttribute($v)) {
                                                         $this->$relation->setAttribute($k, $this->getAttribute($v));
@@ -909,6 +1082,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     }
                 }
 
+                $this->processModelMap();
                 if ($this->modelRelationMap) {
 
                     foreach ($this->modelRelationMap as $relation => $relationInfo) {
@@ -967,7 +1141,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                                         if (!$canSaveThis) {
                                             $errors = $this->$relation->getErrors();
                                             foreach ($errors as $errorField => $errorDescription) {
-                                                $this->addActionError($errorDescription, 0, $errorField, \Concord\Tools::getClassName($this->$relation));
+                                                $this->addActionError($errorDescription, 0, $errorField, Tools::getClassName($this->$relation));
                                             }
                                         }
                                     }
@@ -1040,6 +1214,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // will be ignored during saveAll()
         } else {
 
+            $this->processModelMap();
             if ($this->modelRelationMap) {
 
                 foreach ($this->modelRelationMap as $relation => $relationInfo) {
@@ -1103,6 +1278,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // will be ignored during saveAll()
         } else {
 
+            $this->processModelMap();
             if ($this->modelRelationMap) {
 
                 foreach ($this->modelRelationMap as $relation => $relationInfo) {
@@ -1211,11 +1387,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                 $this->deleteWrapUp();
             }
         } elseif (!$hasParentModel) {
-            $message = 'Attempting to delete ' . \Concord\Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
+            $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             //$this->addActionError($message);
             throw new \Concord\Db\Exception($message);
         } else {
-            $this->addActionWarning('Skipped delete of ' . \Concord\Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
+            $this->addActionWarning('Skipped delete of ' . Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
         }
 
         return $ok;
@@ -1230,7 +1406,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         foreach ($attributes as $name) {
             $this->setAttribute($name, null);
         }
-        $this->setOldAttributes(null);
+        //$this->setOldAttributes(null); // now done in Yii::ActiveRecord::deleteInternal()
         $this->setIsNewRecord(true);
         $this->defaultsApplied = false;
         $relations = $this->getRelatedRecords();
@@ -1264,14 +1440,14 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         } elseif (!$hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
             // not allowed to amend or delete
-            $message = 'Attempting to delete ' . \Concord\Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
+            $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             //$this->addActionError($message);
             throw new \Concord\Db\Exception($message);
 
         } elseif ($hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
             // not allowed to amend or delete but is a child model so we will treat as okay without deleting the record
-            $this->addActionWarning('Skipped delete of ' . \Concord\Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
+            $this->addActionWarning('Skipped delete of ' . Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
             $allOk = true;
 
         } else {
@@ -1287,6 +1463,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
                 $allOk = true;
 
+                $this->processModelMap();
                 if ($this->modelRelationMap) {
 
                     foreach ($this->modelRelationMap as $relation => $relationInfo) {
@@ -1425,6 +1602,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     $this->setChildOldValues('this', $this->getResetDataForFailedSave());
                 }
 
+                $this->processModelMap();
                 if ($this->modelRelationMap) {
 
                     foreach ($this->modelRelationMap as $relation => $relationInfo) {
@@ -1477,7 +1655,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                                         if (!$canDeleteThis) {
                                             $errors = $this->$relation->getErrors();
                                             foreach ($errors as $errorField => $errorDescription) {
-                                                $this->addActionError($errorDescription, 0, $errorField, \Concord\Tools::getClassName($this->$relation));
+                                                $this->addActionError($errorDescription, 0, $errorField, Tools::getClassName($this->$relation));
                                             }
                                         }
                                     }
@@ -1551,6 +1729,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // will have been ignored during deleteFull()
         } else {
 
+            $this->processModelMap();
             if ($this->modelRelationMap) {
                 foreach ($this->modelRelationMap as $relation => $relationInfo) {
                     if ($relationInfo['onDeleteFull'] == self::DELETE_CASCADE) {
@@ -1616,6 +1795,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // will have been ignored during deleteFull()
         } else {
 
+            $this->processModelMap();
             if ($this->modelRelationMap) {
 
                 foreach ($this->modelRelationMap as $relation => $relationInfo) {
@@ -1674,37 +1854,62 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
 
     /**
-     * Process model map to ensure all absent values have their defaults applied
+     * Obtain list of fields that need to have string lengths checked as part of beforeSave()
+     * @return array
+     */
+    public function beforeSaveStringFields()
+    {
+        return [];
+    }
+
+
+    /**
+     * Obtain the model relation map array (this function should be overwritten inside AR classes)
+     * @return array
+     */
+    public function modelRelationMap()
+    {
+        return [];
+    }
+
+
+    /**
+     * Process model map to ensure all missing values have their defaults applied
      * (saves on isset() checking attributes when ever the model map is used
      */
     public function processModelMap()
     {
         if ($this->modelRelationMap) {
-            foreach ($this->modelRelationMap as $relation => $relationInfo) {
-                $this->modelRelationMap[$relation] = array_merge(
-                    array(
-                        'type' => 'hasOne',
-                        'class' => '',
-                        'link' => array(),
-                        'config' => array(),
-                        'onSaveAll' => self::SAVE_NO_ACTION,
-                        'onDeleteFull' => self::DELETE_NO_ACTION,
-                        'autoLinkType' => self::LINK_NONE,
-                        'autoLink' => array(),
-                        'allToArray' => false,
-                        'skipNullLinkCheck' => false,
-                        'readOnly' => null,
-                        'canDelete' => null,
-                        'activeAttributesInParent' => false,
-                ),
-                    $relationInfo
-                );
-                // for now we do not want to cascade save or delete on belongsTo relations
-                if ($this->modelRelationMap[$relation]['type'] == 'belongsTo' && $this->modelRelationMap[$relation]['onSaveAll'] != self::SAVE_NO_ACTION) {
-                    $this->modelRelationMap[$relation]['onSaveAll'] = self::SAVE_NO_ACTION;
-                }
-                if ($this->modelRelationMap[$relation]['type'] == 'belongsTo' && $this->modelRelationMap[$relation]['onDeleteFull'] != self::DELETE_NO_ACTION) {
-                    $this->modelRelationMap[$relation]['onDeleteFull'] = self::DELETE_NO_ACTION;
+            // already processed
+        } else {
+            $this->modelRelationMap = $this->modelRelationMap();
+            if ($this->modelRelationMap) {
+                foreach ($this->modelRelationMap as $relation => $relationInfo) {
+                    $this->modelRelationMap[$relation] = array_merge(
+                        array(
+                            'type' => 'hasOne',
+                            'class' => '',
+                            'link' => array(),
+                            'config' => array(),
+                            'onSaveAll' => self::SAVE_NO_ACTION,
+                            'onDeleteFull' => self::DELETE_NO_ACTION,
+                            'autoLinkType' => self::LINK_NONE,
+                            'autoLink' => array(),
+                            'allToArray' => false,
+                            'skipNullLinkCheck' => false,
+                            'readOnly' => null,
+                            'canDelete' => null,
+                            'activeAttributesInParent' => false,
+                    ),
+                        $relationInfo
+                    );
+                    // for now we do not want to cascade save or delete on belongsTo relations
+                    if ($this->modelRelationMap[$relation]['type'] == 'belongsTo' && $this->modelRelationMap[$relation]['onSaveAll'] != self::SAVE_NO_ACTION) {
+                        $this->modelRelationMap[$relation]['onSaveAll'] = self::SAVE_NO_ACTION;
+                    }
+                    if ($this->modelRelationMap[$relation]['type'] == 'belongsTo' && $this->modelRelationMap[$relation]['onDeleteFull'] != self::DELETE_NO_ACTION) {
+                        $this->modelRelationMap[$relation]['onDeleteFull'] = self::DELETE_NO_ACTION;
+                    }
                 }
             }
         }
@@ -1717,6 +1922,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * @return boolean
      */
     public function isDefinedRelation($name) {
+        $this->processModelMap();
         if ($this->modelRelationMap && array_key_exists($name, $this->modelRelationMap)) {
             if (is_array($this->modelRelationMap[$name]) && $this->modelRelationMap[$name]) {
                 // relation is included in the defined array along with some setup information
@@ -1735,6 +1941,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public function getDefinedRelationInfo($name, $key = false)
     {
+        $this->processModelMap();
         if ($this->modelRelationMap && array_key_exists($name, $this->modelRelationMap)) {
             if ($key) {
                 if (is_array($this->modelRelationMap[$name]) && array_key_exists($key, $this->modelRelationMap[$name])) {
@@ -1770,10 +1977,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * @param boolean $excludeNewAndBlankRelations [OPTIONAL] exclude new blank records, default true
      * @return array
      */
-    public function allToArray($loadedOnly=false, $excludeNewAndBlankRelations = true) {
+    public function allToArray($loadedOnly = false, $excludeNewAndBlankRelations = true) {
 
         $data = $this->toArray();
 
+        $this->processModelMap();
         if ($this->modelRelationMap) {
 
             foreach ($this->modelRelationMap as $relationName => $relationInfo) {
@@ -1783,7 +1991,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     switch ($relationInfo['type'])
                     {
                         case 'hasMany':
-
                             if (($loadedOnly && $this->isRelationPopulated($relationName)) || (!$loadedOnly && isset($this->$relationName))) {
 
                                 if ($this->$relationName instanceof ActiveRecordArray) {
@@ -1872,9 +2079,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * Automatically establish the relationship if defined in the $modelRelationMap array
      *
      * @param string $name
+     * @param boolean $new Is this a new record
+     * @prarm boolean $fromGetCall Has request come from a get request via __call()
      * @return mixed NULL
      */
-    public function getDefinedRelationship($name, $new = false)
+    public function getDefinedRelationship($name, $new = false, $fromGetCall = false)
     {
         if ($this->isDefinedRelation($name)) {
 
@@ -1884,7 +2093,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
                 if ($relationInfo['class'] && $relationInfo['link']) {
 
-                    if ($new) {
+                    if ($new && !$fromGetCall) {
 
                         switch ($relationInfo['autoLinkType']) {
 
@@ -1929,7 +2138,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                         }
                     } else {
 
-                        $canLoad = $this->getNullLinkCheckOk($name, $relationInfo);
+                        $canLoad = ($fromGetCall ? true : $this->getNullLinkCheckOk($name, $relationInfo));
 
                         if ($canLoad) {
 
@@ -2044,10 +2253,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         /* @var $query ActiveQuery */
         $query = parent::hasMany($class, $link);
         if ($query->multiple) {
-            $modelClass = get_called_class();
-            $keys = $modelClass::primaryKey();
+            $keys = $class::primaryKey();
             if (count($keys) === 1) {
                 $query->indexBy = $keys[0];
+            } elseif (count($keys) === 2) {
+                $query->indexBy = $keys[1];
             }
         }
         return $query;
@@ -2065,7 +2275,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     public function __set($name, $value)
     {
         if ($this->getReadOnly()) {
-            throw new \Concord\Db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . \Concord\Tools::getClassName($this) . ' model');
+            throw new \Concord\Db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . Tools::getClassName($this) . ' model');
         }
         parent::__set($name, $value);
     }
@@ -2182,6 +2392,68 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
 
     /**
+     * PHP magic method to handle calls to functions that do not exist
+     * Initially here to allow successful self::getRelation() call when using the model
+     * map array but also used to allow AR variables to get set/get via a set/get call
+     * if the method does not already exist
+     * @see \yii\base\Component::__call()
+     */
+    public function __call($methodName, $args) {
+        if (preg_match('~^(set|get)(.*)$~', $methodName, $matches)) {
+            $name = lcfirst($matches[2]);
+            if ($this->isDefinedRelation($name)) {
+                if ($matches[1] == 'get') {
+                    return $this->getDefinedRelationship($name, true, true);
+                } else {
+                    throw new UnknownMethodException('Calling unknown method: ' . get_class($this) . "::$methodName()");
+                }
+            } else {
+
+                $allow = false;
+                if ($this->hasAttribute($name)) {
+                    $allow = true;
+                } else {
+                    $name = ucfirst($name);
+                    if ($this->hasAttribute($name)) {
+                        $allow = true;
+                    }
+                }
+
+                if ($allow) {
+                    switch($matches[1]) {
+                        case 'set':
+                            $this->checkArguments($args, 1, 1, $methodName);
+                            $this->setAttribute($name, $args[0]);
+                            return $this;
+                        case 'get':
+                            $this->checkArguments($args, 0, 0, $methodName);
+                            return $this->getAttribute($name);
+                    }
+                }
+            }
+        }
+        return parent::__call($methodName, $args);
+    }
+
+
+    /**
+     * Quickly validate method argument count matches expectations else throw exception
+     *
+     * @param array $args
+     * @param number $min
+     * @param number $max
+     * @param string $methodName
+     * @throws InvalidParamException
+     */
+    protected function checkArguments(array $args, $min, $max, $methodName) {
+        $argc = count($args);
+        if ($argc < $min || $argc > $max) {
+            throw new InvalidParamException('Method ' . $methodName . ' needs min ' . $min . ' and max ' . $max . ' arguments. ' . $argc . ' arguments given.');
+        }
+    }
+
+
+    /**
      * Call the debugTest method on all objects in the model map (used for testing)
      *
      * @param boolean $loadedOnly [OPTIONAL] only include populated relations default is false
@@ -2192,6 +2464,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
         $data = $this->debugTest();
 
+        $this->processModelMap();
         if ($this->modelRelationMap) {
 
             foreach ($this->modelRelationMap as $relationName => $relationInfo) {

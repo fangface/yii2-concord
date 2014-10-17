@@ -1,6 +1,10 @@
 imports:
     - php
 
+checks:
+    php:
+        code_rating: true
+
 tools:
     php_cpd: false
     php_pdepend: false

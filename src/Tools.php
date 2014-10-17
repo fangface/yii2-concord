@@ -17,6 +17,7 @@ namespace Concord;
 use Concord\Tools;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
+use Yii;
 
 class Tools
 {
@@ -90,10 +91,6 @@ class Tools
 
     /**
      * Determine default table name for an ActiveRecord class
-     * The default method will return the table name the same as the class name with the first character
-     * converted to lower case and 's' or 'ies' added to the end of the table name if it is not already
-     * The camel method returns the class name as the table name by calling [[Inflector::camel2id()]]
-     * For example, 'Customer' becomes 'customer', and 'OrderItem' becomes'order_item'.
      * @param \Concord\Db\ActiveRecord $object
      * @return string
      */
@@ -103,21 +100,27 @@ class Tools
         $str = self::getClassName($object);
 
         $method = 'default';
+        if (isset(\Yii::$app->params['db.defaultTableNameType'])) {
+            $method = \Yii::$app->params['db.defaultTableNameType'];
+        }
 
         switch ($method) {
-          case 'yii':
-              $tableName = 'tbl_' . Inflector::camel2id($str, '_');
-              break;
 
-          case 'camel':
+          case 'camel': // OrderItem => order_items
               $tableName = Inflector::camel2id($str, '_');
-                $tableName = Inflector::pluralize($tableName);
+              $tableName = Inflector::pluralize($tableName);
               break;
 
-          default:
-                $tableName = lcfirst($str);
-                $tableName = Inflector::pluralize($tableName);
+          case 'plural': // OrderItem => orderItems
+              $tableName = lcfirst($str);
+              $tableName = Inflector::pluralize($tableName);
               break;
+
+          case 'yii': // OrderItem => order_item
+          default:
+              $tableName = Inflector::camel2id($str, '_');
+              break;
+
         }
 
         return $tableName;
@@ -222,7 +225,7 @@ class Tools
             }
         } else {
             if (isset($object->$index)) {
-                return ($check_index_exists) ? TRUE : $object->$index;
+                return ($check_index_exists) ? true : $object->$index;
             }
         }
 
@@ -237,36 +240,35 @@ class Tools
      * @param string $expected_type
      * @return boolean
      */
-    public static function isValid($mixed, $expected_type = INT)
+    public static function isValid($mixed, $expected_type = 'INT')
     {
-        if (is_numeric($mixed) || $expected_type === INT) {
+        $expected_type = strtoupper($expected_type);
+        if (is_numeric($mixed) || $expected_type === 'INT') {
             return is_numeric($mixed) && strlen($mixed) && (int) $mixed > 0;
-        } elseif ($expected_type === STRING) {
+        } elseif ($expected_type === 'STRING') {
             return is_string($mixed) && strlen($mixed) > 0;
-        } elseif ($expected_type === DATE) {
+        } elseif ($expected_type === 'DATE') {
             // check if date is of form YYYY-MM-DD HH:MM:SS and that it
             // is not 0000-00-00 00:00:00.
             //
-            if (strlen($mixed) === 19 && !\Common\Tools::strEqual($mixed, '0000-00-00 00:00:00')) {
-                return TRUE;
+            if (strlen($mixed) === 19 && !static::strEquals($mixed, '0000-00-00 00:00:00')) {
+                return true;
             }
 
             // check for MM/DD/YYYY type dates
-            //
             $parts = explode("/", $mixed);
 
             return count($parts) === 3 && checkdate($parts[0], $parts[1], $parts[2]);
-        } elseif ($expected_type === OBJECT) {
+        } elseif ($expected_type === 'OBJECT') {
             // iterate through object and check if there are any properties
-            //
             foreach ($mixed as $property) {
                 if ($property) {
-                    return TRUE;
+                    return true;
                 }
             }
         }
 
-        return FALSE;
+        return false;
     }
 
 
@@ -400,6 +402,10 @@ class Tools
                     return $value;
 
                 case 'char':
+                case 'varchar':
+                case 'text':
+                case 'tinytext':
+                case 'mediumtext':
                 case 'longtext':
                 case 'blob':
                 case 'longblob':
@@ -457,10 +463,11 @@ class Tools
      * mis-read characters
      *
      * @param integer $len number of characters to generate
-     * @param boolean $excludeEasyMisRead [OPTIONAL] exclude typically mis-ead characters, default false
+     * @param boolean $excludeEasyMisRead [optional] exclude typically mis-ead characters, default false
+     * @param boolean $upperCase [optional] force to upper case
      * @return string
      */
-    public static function randomString($len, $excludeEasyMisRead = false)
+    public static function randomString($len, $excludeEasyMisRead = false, $upperCase = false)
     {
         $pass = '';
         $lchar = 0;
@@ -498,7 +505,7 @@ class Tools
                     $charOK = true;
                 }
             }
-            $pass .= chr($char);
+            $pass .= ($upperCase ? strtoupper(chr($char)) : chr($char));
             $lchar = $char;
         }
         return $pass;
@@ -869,12 +876,12 @@ class Tools
      * Return string converted to upper case
      *
      * @param string $str string to be converted
-     * @param string $enc encoding default UTF-8
+     * @param string $encoding encoding default UTF-8
      * @return string
      */
-    public static function fullUpper($str, $enc = 'UTF-8')
+    public static function fullUpper($str, $encoding = 'UTF-8')
     {
-        return mb_strtoupper($str, $enc);
+        return mb_strtoupper($str, $encoding);
     }
 
 
@@ -882,12 +889,40 @@ class Tools
      * Return string converted to lower case
      *
      * @param string $str string to be converted
-     * @param string $enc encoding default UTF-8
+     * @param string $encoding encoding default UTF-8
      * @return string
      */
-    public static function fullLower($str, $enc = 'UTF-8')
+    public static function fullLower($str, $encoding = 'UTF-8')
     {
         return mb_strtolower($str, $enc);
+    }
+
+
+    /**
+     * Return length of a string
+     *
+     * @param string $str string to be checked
+     * @param string $encoding encoding default UTF-8
+     * @return string
+     */
+    public static function strlen($str, $encoding = 'UTF-8')
+    {
+        return mb_strlen($str, $encoding);
+    }
+
+
+    /**
+     * Return a substring of a string
+     *
+     * @param string $str string to be conerted
+     * @param integer $start
+     * @param integer|null $length
+     * @param string $encoding encoding default UTF-8
+     * @return string
+     */
+    public static function substr($str, $start, $length = null, $encoding = 'UTF-8')
+    {
+        return mb_substr($str, $start, $length, $encoding);
     }
 
 
@@ -1036,5 +1071,66 @@ class Tools
         return unserialize(serialize($object));
     }
 
+
+    /**
+     * Given a string in datetime format YYYY-MM-DD HH:MM:SS return a string
+     * that represents how by default the app would like such values to be shown
+     *
+     * @param string $datetime
+     * @return string
+     */
+    public static function stdDateTimeFormat($datetime)
+    {
+        $time = strtotime($datetime);
+        $format = 'd-m-Y H:i:s';
+        if (isset(\Yii::$app->params['app.dateTimeFormat'])) {
+            $format = \Yii::$app->params['app.dateTimeFormat'];
+        }
+        return date($format, $time);
+    }
+
+
+    /**
+     *
+     * @param string $key the key identifying the flash message. Note that flash messages
+     * and normal session variables share the same name space. If you have a normal
+     * session variable using the same name, its value will be overwritten by this method.
+     * Can be [alert|note]-[success|info|warning|danger|error] e.g. alert-success, note-success or success
+     * @param mixed $value flash message
+     * @param string $title [optional] Title to be used in flash message when supported
+     * @param boolean $dismiss [optional] Allow flash message to be dismissable
+     * @param string $class [optional] Extra class attribute to be added to flash message div when supported
+     * @param string:array $extra [optional] Array of extra values to be listed (li) with the flash message when supported
+     */
+    public static function setFlash($key, $value, $title = false, $dismiss = true, $class = false, $extra = false)
+    {
+        $values = [
+            $value,
+            $title,
+            $dismiss,
+            $class,
+            $extra,
+        ];
+        Yii::$app->session->setFlash($key, $values);
+    }
+
+
+    /**
+     * Check to see if a string exists within another that has been structured for such a search
+     * @param string $needle 'stack'
+     * @param string $haystack '/hay/stack/to/search/'
+     * @param string $delimiter [optional] default '/'
+     * @return boolean
+     */
+    public static function in($needle, $haystack, $delimiter = '/')
+    {
+        if (substr($haystack, 0, 1) != $delimiter) {
+            $haystack = $delimiter . $haystack;
+        }
+        if (substr($haystack, -1, 1) != $delimiter) {
+            $haystack = $haystack . $delimiter;
+        }
+        return (strpos($haystack, $delimiter . $needle . $delimiter) !== false ? true : false);
+    }
 
 }

@@ -83,7 +83,13 @@ class AutoDatestamp extends Behavior
 		if (!empty($attributes)) {
 			$datestamp = $this->evaluateDatestamp();
 			foreach ($attributes as $attribute) {
-				$this->owner->$attribute = $datestamp;
+                if (isset($this->owner->$attribute)) {
+                    $this->owner->$attribute = $datestamp;
+                } elseif ($attribute == 'createdAt' && isset($this->owner->created_at)) {
+                    $this->owner->created_at = $datestamp;
+                } elseif ($attribute == 'modifiedAt' && isset($this->owner->modified_at)) {
+                    $this->owner->modified_at = $datestamp;
+                }
 			}
 		}
 	}

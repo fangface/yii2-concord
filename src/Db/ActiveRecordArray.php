@@ -249,16 +249,32 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
 
     /**
-     * Create a new entry of the relevant object in the array and return the
-     * temp array key to that new object
+     * Remove existing element
      *
      * @param mixed $index
-     *       specify index/key of the array element to remove - this will not delete data from the db though
-     *        if it already exists then return false. default to assigning a temp key
+     *       specify index/key of the array element to remove - this will not delete data from the db
      */
     public function removeElement($index)
     {
         $this->offsetUnset($index);
+    }
+
+    /**
+     * Delete existing element if it exists in the db and then Remove existing element from array
+     *
+     * @param mixed $index
+     *       specify index/key of the array element to remove - this will not delete data from the db
+     * @return boolean Success
+     */
+    public function deleteOne($index)
+    {
+        if ($this->offsetExists($index)) {
+            if ($this->offsetGet($index)->delete()) {
+                $this->offsetUnset($index);
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -1091,6 +1107,10 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
             $iterator = $this->getIterator();
             while ($iterator->valid()) {
                 if (method_exists($iterator->current(), 'setAttribute')) {
+
+                    if ($value == '__KEY__') {
+                        $value = $iterator->key();
+                    }
 
                     $hasChanges = true;
 

@@ -15,6 +15,10 @@
 namespace Concord\Tests\Models;
 
 use Concord\Db\ActiveRecord;
+use Concord\Tests\Models\CustomerAttributes;
+use Concord\Tests\Models\Address;
+use Concord\Tests\Models\Phone;
+use Concord\Tests\Models\Order;
 
 /**
  * Active Record class for the clients dbClient.{prefix}customers table
@@ -37,73 +41,75 @@ class Customer extends ActiveRecord
 
     protected static $dbResourceName    = 'dbClient';
 
-    protected $modelRelationMap = array(
+    public function modelRelationMap()
+    {
+        return [
 
-        'customerAttributes' => array(
-            'type' => 'hasEav',
-            'class' => 'Concord\Tests\Models\CustomerAttributes',
-            'link' => array(
-                'objectId' => 'id' // child->var => parent->var (remote => local)
-            ),
-            'onSaveAll' => ActiveRecord::SAVE_CASCADE,
-            'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
-            'autoLinkType' => ActiveRecord::LINK_FROM_PARENT_MAINT,
-            'allToArray' => true,
-            'activeAttributesInParent' => true
-        ),
-
-        'address' => array(
-            'type' => 'hasOne',
-            'class' => 'Concord\Tests\Models\Address',
-            'link' => array(
-                'id' => 'addressId' // child->var => parent->var (remote => local)
-            ),
-            'onSaveAll' => ActiveRecord::SAVE_CASCADE,
-            'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
-            'autoLinkType' => ActiveRecord::LINK_BI_DIRECT_MAINT_FROM_PARENT,
-            'autoLink' => array( // used in the case of LINK_BI_DIRECT, LINK_BI_DIRECT_MAINT, LINK_BI_DIRECT_MAINT_FROM_PARENT and LINK_BI_DIRECT_MAINT_FROM_CHILD or when 'link' alone does not specify the keys that need to be updated
-                'fromParent' => array(
-                    'customerId' => 'id' // child->var => parent->var (remote => local)
+            'customerAttributes' => array(
+                'type' => 'hasEav',
+                'class' => CustomerAttributes::className(),
+                'link' => array(
+                    'objectId' => 'id' // child->var => parent->var (remote => local)
                 ),
-                'fromChild' => array(
+                'onSaveAll' => ActiveRecord::SAVE_CASCADE,
+                'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
+                'autoLinkType' => ActiveRecord::LINK_FROM_PARENT_MAINT,
+                'allToArray' => true,
+                'activeAttributesInParent' => true
+            ),
+
+            'address' => array(
+                'type' => 'hasOne',
+                'class' => Address::className(),
+                'link' => array(
                     'id' => 'addressId' // child->var => parent->var (remote => local)
-                )
+                ),
+                'onSaveAll' => ActiveRecord::SAVE_CASCADE,
+                'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
+                'autoLinkType' => ActiveRecord::LINK_BI_DIRECT_MAINT_FROM_PARENT,
+                'autoLink' => array( // used in the case of LINK_BI_DIRECT, LINK_BI_DIRECT_MAINT, LINK_BI_DIRECT_MAINT_FROM_PARENT and LINK_BI_DIRECT_MAINT_FROM_CHILD or when 'link' alone does not specify the keys that need to be updated
+                    'fromParent' => array(
+                        'customerId' => 'id' // child->var => parent->var (remote => local)
+                    ),
+                    'fromChild' => array(
+                        'id' => 'addressId' // child->var => parent->var (remote => local)
+                    )
+                ),
+                'allToArray' => true,
             ),
-            'allToArray' => true,
-        ),
 
-        'phone' => array( // standard yii\db\ActiveRecord
-            'type' => 'hasOne',
-            'class' => 'Concord\Tests\Models\Phone',
-            'link' => array(
-                'id' => 'phoneId' // child->var => parent->var (remote => local)
+            'phone' => array( // standard yii\db\ActiveRecord
+                'type' => 'hasOne',
+                'class' => Phone::className(),
+                'link' => array(
+                    'id' => 'phoneId' // child->var => parent->var (remote => local)
+                ),
+                'onSaveAll' => ActiveRecord::SAVE_CASCADE,
+                'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
+                'autoLinkType' => ActiveRecord::LINK_BI_DIRECT_MAINT_FROM_PARENT,
+                'autoLink' => array( // used in the case of LINK_BI_DIRECT, LINK_BI_DIRECT_MAINT, LINK_BI_DIRECT_MAINT_FROM_PARENT and LINK_BI_DIRECT_MAINT_FROM_CHILD or when 'link' alone does not specify the keys that need to be updated
+                    'fromParent' => array(
+                        'customerId' => 'id' // child->var => parent->var (remote => local)
+                    ),
+                    'fromChild' => array(
+                        'id' => 'phoneId' // child->var => parent->var (remote => local)
+                    )
+                ),
+                'allToArray' => true,
             ),
-            'onSaveAll' => ActiveRecord::SAVE_CASCADE,
-            'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
-            'autoLinkType' => ActiveRecord::LINK_BI_DIRECT_MAINT_FROM_PARENT,
-            'autoLink' => array( // used in the case of LINK_BI_DIRECT, LINK_BI_DIRECT_MAINT, LINK_BI_DIRECT_MAINT_FROM_PARENT and LINK_BI_DIRECT_MAINT_FROM_CHILD or when 'link' alone does not specify the keys that need to be updated
-                'fromParent' => array(
+
+            'orders' => array(
+                'type' => 'hasMany',
+                'class' => Order::className(),
+                'link' => array(
                     'customerId' => 'id' // child->var => parent->var (remote => local)
                 ),
-                'fromChild' => array(
-                    'id' => 'phoneId' // child->var => parent->var (remote => local)
-                )
+                'onSaveAll' => ActiveRecord::SAVE_CASCADE,
+                'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
+                'autoLinkType' => ActiveRecord::LINK_FROM_PARENT_MAINT,
+                'allToArray' => true,
             ),
-            'allToArray' => true,
-        ),
 
-        'orders' => array(
-            'type' => 'hasMany',
-            'class' => 'Concord\Tests\Models\Order',
-            'link' => array(
-                'customerId' => 'id' // child->var => parent->var (remote => local)
-            ),
-            'onSaveAll' => ActiveRecord::SAVE_CASCADE,
-            'onDeleteFull' => ActiveRecord::DELETE_CASCADE,
-            'autoLinkType' => ActiveRecord::LINK_FROM_PARENT_MAINT,
-            'allToArray' => true,
-        ),
-
-    );
-
+        ];
+    }
 }
