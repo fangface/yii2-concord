@@ -3,5 +3,5 @@ imports:
 tools:
     php_sim: false
     php_cpd: false
-external_code_coverage:
-    timeout: 3000 # Timeout in seconds.
+    external_code_coverage:
+        timeout: 3000 # Timeout in seconds.
