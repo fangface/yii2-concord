@@ -22,7 +22,7 @@
     "yiisoft/yii2": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "3.7.*",
+    "phpunit/phpunit": "4.3.*",
     "yiisoft/yii2-debug" : "*"
   },
   "autoload": {
