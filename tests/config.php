@@ -72,7 +72,7 @@ return [
             ],
 
             'dbCache' => [
-                'class' => 'yii\caching\MemCache',
+                'class' => 'yii\caching\DummyCache',
                 'keyPrefix' => 'concord_prefix',
             ],
 
