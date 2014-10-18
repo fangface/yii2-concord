@@ -14,16 +14,16 @@
 
 namespace fangface\concord\db;
 
-use Yii;
 use fangface\concord\Tools;
-use fangface\concord\base\traits\ServiceGetter;
 use fangface\concord\base\traits\ActionErrors;
+use fangface\concord\base\traits\ServiceGetter;
 use fangface\concord\db\ActiveRecordParentalInterface;
 use fangface\concord\db\ActiveRecordParentalTrait;
 use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
 use fangface\concord\db\Exception;
+use yii\base\InvalidConfigException;
 use yii\base\ModelEvent;
 
 class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
@@ -1639,14 +1639,14 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             // we do not record modified, modifiedBy, created or createdBy against individual attributes but we will support
             // automatically updating them if these attributeNames have been setup as their own attributes for this entity
 
-            if (Yii::$app->has('user')) {
+            if (\Yii::$app->has('user')) {
                 try {
-                    if (Yii::$app->user->isGuest) {
+                    if (\Yii::$app->user->isGuest) {
                         $userId = 0;
                     } else {
-                        $userId = Yii::$app->user->getId();
+                        $userId = \Yii::$app->user->getId();
                     }
-                } catch (\yii\base\InvalidConfigException $e) {
+                } catch (InvalidConfigException $e) {
                     if ($e->getMessage() == 'User::identityClass must be set.') {
                         $userId = 0;
                     } else {

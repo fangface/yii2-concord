@@ -32,8 +32,8 @@ use fangface\concord\db\Exception;
 use yii\base\InvalidParamException;
 use yii\base\ModelEvent;
 use yii\base\UnknownMethodException;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as YiiActiveRecord;
+use yii\db\ActiveQuery;
 use yii\db\ActiveQueryInterface;
 use yii\db\Connection;
 

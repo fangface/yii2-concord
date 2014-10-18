@@ -1097,10 +1097,10 @@ class Tools
      * session variable using the same name, its value will be overwritten by this method.
      * Can be [alert|note]-[success|info|warning|danger|error] e.g. alert-success, note-success or success
      * @param mixed $value flash message
-     * @param string $title [optional] Title to be used in flash message when supported
+     * @param string|false $title [optional] Title to be used in flash message when supported
      * @param boolean $dismiss [optional] Allow flash message to be dismissable
-     * @param string $class [optional] Extra class attribute to be added to flash message div when supported
-     * @param string:array $extra [optional] Array of extra values to be listed (li) with the flash message when supported
+     * @param string|false $class [optional] Extra class attribute to be added to flash message div when supported
+     * @param string|array|false $extra [optional] Array of extra values to be listed (li) with the flash message when supported
      */
     public static function setFlash($key, $value, $title = false, $dismiss = true, $class = false, $extra = false)
     {

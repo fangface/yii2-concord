@@ -3,7 +3,7 @@ imports:
 
 checks:
     php:
-        code_rating: false
+        code_rating: true
 
 tools:
     php_sim: false

@@ -16,8 +16,8 @@ namespace fangface\concord\db;
 
 use fangface\concord\Tools;
 use fangface\concord\base\traits\ActionErrors;
-use fangface\concord\db\ActiveRecord;
 use fangface\concord\db\ActiveAttributeRecord;
+use fangface\concord\db\ActiveRecord;
 use fangface\concord\db\ActiveRecordArrayException;
 use fangface\concord\db\ActiveRecordParentalInterface;
 use fangface\concord\db\ActiveRecordParentalTrait;
