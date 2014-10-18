@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\tests\Migrations\General;
+namespace fangface\concord\tests\migrations\general;
 
 use fangface\concord\db\Migration;
 use yii\db\Schema;

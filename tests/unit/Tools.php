@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\tests\Unit;
+namespace fangface\concord\tests\unit;
 
 use fangface\concord\tests\models\TestCase as TestCase;
 use fangface\concord\tests\models\Item;

@@ -17,7 +17,7 @@ namespace fangface\concord\tests\models;
 use fangface\concord\tests\models\TestCase;
 use fangface\concord\tests\models\ConnectionTestCase;
 use fangface\concord\tests\models\Customer;
-use fangface\concord\tests\models\Eav\AttributeValues;
+use fangface\concord\tests\models\eav\AttributeValues;
 use fangface\concord\tests\models\Address;
 use fangface\concord\tests\models\Country;
 use fangface\concord\tests\models\Order;
@@ -75,7 +75,7 @@ abstract class DbTestCase extends ConnectionTestCase
     /**
      * Prepare db tables required to perform the tests
      *
-     * @param string $dbSetupType migration directory name within /Migrations to run
+     * @param string $dbSetupType migration directory name within /migrations to run
      * @param boolean $tearDown [OPTIONAL] should the migration be ran as down()
      */
     protected function runMigrations($dbSetupType, $tearDown = false)

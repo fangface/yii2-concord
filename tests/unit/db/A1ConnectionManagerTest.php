@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\tests\Unit\Db;
+namespace fangface\concord\tests\unit\db;
 
 use fangface\concord\tests\models\DbTestCase;
 use fangface\concord\db\ConnectionManager;
