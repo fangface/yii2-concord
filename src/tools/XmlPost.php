@@ -44,7 +44,7 @@ class XmlPost extends Model {
     public $remote_status = '';
 
     /**
-     * @var integer The response status description
+     * @var string The response status description
      */
     public $remote_reason = '';
 

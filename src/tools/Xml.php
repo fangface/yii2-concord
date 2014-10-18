@@ -245,7 +245,6 @@ class Xml
     {
         $xml = '';
         $indent = ($level > 0 ? $this->repli($indentString, $level) : '');
-        $wasArray = false;
         foreach ($array as $k => $v) {
             $branch = ($branchIn != '' ? $branchIn . '.' : '') . $k;
             $isMulti = false;
@@ -274,12 +273,10 @@ class Xml
                         }
                     }
                 }
-                $wasArray = false;
             } elseif ($isArray) {
                 $xml .= $indent . '<' . $k . $this->setXMLAttr($v) . '>' . "\n";
                 $xml .= $this->writeXML($v['@data'], $branch, ($level + 1), $useLongTag, $indentString);
                 $xml .= $indent . '</' . $k . '>' . "\n";
-                $wasArray = true;
             } else {
                 if ((isset($v['@data']) && $v['@data']) || (isset($v['@attribs']) && $v['@attribs']) || $useLongTag) {
                     $xml .= $indent . '<' . $k . $this->setXMLAttr($v) . '>';
@@ -290,7 +287,6 @@ class Xml
                 } else {
                     $xml .= $indent . '<' . $k . '/>' . "\n";
                 }
-                $wasArray = false;
             }
         }
         return $xml;
