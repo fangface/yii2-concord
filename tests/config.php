@@ -72,7 +72,8 @@ return [
             ],
 
             'dbCache' => [
-                'class' => 'yii\caching\DummyCache',
+                'class' => 'yii\caching\MemCache',
+                'useMemcached' => true,
                 'keyPrefix' => 'concord_prefix',
             ],
 
