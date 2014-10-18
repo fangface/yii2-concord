@@ -32,9 +32,9 @@ abstract class DbTestCase extends ConnectionTestCase
 {
 
     /**
-     * @var string default sub directory from which to take /Migrations
+     * @var string default sub directory from which to take /migrations
      */
-    public $dbSetupType = 'General';
+    public $dbSetupType = 'general';
 
 
     /**
