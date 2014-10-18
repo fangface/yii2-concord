@@ -34,6 +34,8 @@ use yii\base\ModelEvent;
 use yii\base\UnknownMethodException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as YiiActiveRecord;
+use yii\db\ActiveQueryInterface;
+use yii\db\Connection;
 
 
 class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
@@ -125,7 +127,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public static function tableName($includeDbName = true)
     {
-        /** @var \yii\db\Connection $connection */
+        /** @var Connection $connection */
         $connection = static::getDb();
         $calledClass = get_called_class();
         $tablePrefix = $connection->tablePrefix;
@@ -1056,7 +1058,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
              * will be started if one has not already been on the db connection
              */
 
-            /** @var \yii\db\Connection $db */
+            /** @var Connection $db */
             $db = static::getDb();
             $transaction = $db->getTransaction() === null ? $db->beginTransaction() : null;
 
@@ -1590,7 +1592,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
              * will be started if one has not already been on the db connection
              */
 
-            /** @var \yii\db\Connection $db */
+            /** @var Connection $db */
             $db = static::getDb();
             $transaction = $db->getTransaction() === null ? $db->beginTransaction() : null;
 
@@ -2325,7 +2327,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
             if ($value !== null) {
 
-                if ($value instanceof \yii\db\ActiveQueryInterface) {
+                if ($value instanceof ActiveQueryInterface) {
                     if ($value->multiple) {
                         // put result into a special ArrayObject extended object
                         $value2 = new ActiveRecordArray($value->all());
@@ -2376,7 +2378,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     }
                     $this->populateRelation($name, $value);
 
-                } elseif ($value instanceof \yii\db\ActiveRecord) {
+                } elseif ($value instanceof YiiActiveRecord) {
 
                     $this->populateRelation($name, $value);
 

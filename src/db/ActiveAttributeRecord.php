@@ -181,7 +181,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
     /**
      * Constructor
-     * @param mixed $config
+     * @param array|integer|false $config
      */
     public function __construct($config = array())
     {
