@@ -14,6 +14,8 @@
 
 namespace fangface\concord\db;
 
+use Yii;
+use fangface\concord\Tools;
 use fangface\concord\base\traits\ActionErrors;
 use fangface\concord\base\traits\AttributeHintBlocks;
 use fangface\concord\base\traits\AttributeIcons;
@@ -26,13 +28,11 @@ use fangface\concord\db\ActiveRecordParentalTrait;
 use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
-use fangface\concord\Tools;
-use Yii;
+use yii\base\InvalidParamException;
 use yii\base\ModelEvent;
+use yii\base\UnknownMethodException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as YiiActiveRecord;
-use yii\base\UnknownMethodException;
-use yii\base\InvalidParamException;
 
 
 class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
@@ -2440,8 +2440,8 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * Quickly validate method argument count matches expectations else throw exception
      *
      * @param array $args
-     * @param number $min
-     * @param number $max
+     * @param integer $min
+     * @param integer $max
      * @param string $methodName
      * @throws InvalidParamException
      */

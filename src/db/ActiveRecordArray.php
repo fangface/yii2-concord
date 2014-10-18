@@ -14,6 +14,7 @@
 
 namespace fangface\concord\db;
 
+use fangface\concord\Tools;
 use fangface\concord\base\traits\ActionErrors;
 use fangface\concord\db\ActiveRecordArrayException;
 use fangface\concord\db\ActiveRecordParentalInterface;
@@ -21,7 +22,6 @@ use fangface\concord\db\ActiveRecordParentalTrait;
 use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
-use fangface\concord\Tools;
 use yii\base\ModelEvent;
 use yii\db\ActiveRecord as YiiActiveRecord;
 

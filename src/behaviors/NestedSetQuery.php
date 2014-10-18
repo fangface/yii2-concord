@@ -7,8 +7,8 @@
 
 namespace fangface\concord\behaviors;
 
-use yii\base\Behavior;
 use fangface\concord\db\ActiveRecord;
+use yii\base\Behavior;
 use yii\db\ActiveQuery;
 
 /**

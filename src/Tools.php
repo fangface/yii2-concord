@@ -15,8 +15,8 @@
 namespace fangface\concord;
 
 use fangface\concord\Tools;
-use fangface\concord\base\traits\Singleton;
 use fangface\concord\base\traits\ServiceGetterStatic;
+use fangface\concord\base\traits\Singleton;
 use fangface\concord\models\db\Client;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
@@ -905,7 +905,7 @@ class Tools
      *
      * @param string $str string to be checked
      * @param string $encoding encoding default UTF-8
-     * @return string
+     * @return integer
      */
     public static function strlen($str, $encoding = 'UTF-8')
     {

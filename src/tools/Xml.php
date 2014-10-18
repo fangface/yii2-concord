@@ -488,6 +488,10 @@ class Xml
     }
 
 
+    /**
+     * @param string $strInput
+     * @param integer $intCount
+     */
     public function repli($strInput, $intCount)
     {
         $strResult = '';
