@@ -14,6 +14,8 @@
 
 namespace fangface\concord\db;
 
+use Yii;
+use fangface\concord\Tools;
 use fangface\concord\base\traits\ActionErrors;
 use fangface\concord\db\ActiveRecordParentalInterface;
 use fangface\concord\db\ActiveRecordParentalTrait;
@@ -21,8 +23,6 @@ use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
 use fangface\concord\db\Exception;
-use fangface\concord\Tools;
-use Yii;
 use yii\base\ModelEvent;
 
 class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface

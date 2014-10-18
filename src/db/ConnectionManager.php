@@ -14,13 +14,12 @@
 
 namespace fangface\concord\db;
 
-use yii\base\Component;
-use yii\helpers\Security;
-use fangface\concord\models\db\Client;
 use fangface\concord\base\traits\ServiceGetter;
 use fangface\concord\db\Exception;
-use fangface\concord\models\db\client\DbResource as ClientDbResource;
+use fangface\concord\models\db\Client;
 use fangface\concord\models\db\DbResource;
+use fangface\concord\models\db\client\DbResource as ClientDbResource;
+use yii\base\Component;
 
 /**
  * ConnectionManager Class

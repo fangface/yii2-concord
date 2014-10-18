@@ -7,13 +7,13 @@
 
 namespace fangface\concord\behaviors;
 
+use fangface\concord\Tools;
+use fangface\concord\db\ActiveRecord;
 use yii\base\Behavior;
 use yii\base\Event;
-use fangface\concord\db\ActiveRecord;
 use yii\db\ActiveQuery;
-use yii\db\Expression;
 use yii\db\Exception;
-use fangface\concord\Tools;
+use yii\db\Expression;
 
 /**
  * @author Alexander Kochetov <creocoder@gmail.com>
