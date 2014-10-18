@@ -21,10 +21,4 @@
         </testsuite>
     </testsuites>
 
-    <!-- filter>
-        <blacklist>
-            <directory>./tests/unit/xyz</directory>
-        </blacklist>
-    </filter -->
-
 </phpunit>
