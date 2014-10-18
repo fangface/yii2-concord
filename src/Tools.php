@@ -76,7 +76,7 @@ class Tools
      * Return a class name with namespace removed
      *
      * @param object $object
-     * @return string
+     * @return string|false
      */
     public static function getClassName($object = null)
     {
@@ -134,7 +134,7 @@ class Tools
      * Typically used when the class name needs to be used as a key for anything
      *
      * @param object $object
-     * @return string
+     * @return string|false
      */
     public static function getCleanClassNameWithNamespace($object)
     {
@@ -217,7 +217,7 @@ class Tools
      * @param string $index
      * @param mixed $default
      * @param boolean $check_index_exists
-     * @return boolean or mixed
+     * @return boolean|mixed
      */
     public static function get($object, $index, $default = FALSE, $check_index_exists = FALSE)
     {
@@ -542,8 +542,6 @@ class Tools
         }
         return $str;
     }
-
-
 
 
     /**

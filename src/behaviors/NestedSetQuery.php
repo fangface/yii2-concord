@@ -21,7 +21,7 @@ class NestedSetQuery extends Behavior
 	 */
 	public $owner;
 	/**
-	 * @var bool
+	 * @var boolean
 	 */
 	public $hasManyRoots = false;
 	/**
@@ -42,8 +42,8 @@ class NestedSetQuery extends Behavior
 	public $levelAttribute = 'level';
 
 	/**
-	 * Gets root node(s).
-	 * @return ActiveRecord the owner.
+	 * Gets root node(s)
+	 * @return ActiveRecord the owner
 	 */
 	public function roots()
 	{

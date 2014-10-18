@@ -25,7 +25,7 @@ class NestedSet extends Behavior
 	 */
 	public $owner;
 	/**
-	 * @var bool
+	 * @var boolean
 	 */
 	public $hasManyRoots = false;
 	/**
@@ -45,15 +45,15 @@ class NestedSet extends Behavior
 	 */
 	public $levelAttribute = 'level';
 	/**
-	 * @var bool
+	 * @var boolean
 	 */
 	private $_ignoreEvent = false;
 	/**
-	 * @var bool
+	 * @var boolean
 	 */
 	private $_deleted = false;
 	/**
-	 * @var int
+	 * @var integer
 	 */
 	private $_id;
 	/**
@@ -61,7 +61,7 @@ class NestedSet extends Behavior
 	 */
 	private static $_cached;
 	/**
-	 * @var int
+	 * @var integer
 	 */
 	private static $_c = 0;
 
@@ -88,10 +88,10 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Gets descendants for node.
-	 * @param int $depth the depth.
+	 * Gets descendants for node
+	 * @param integer $depth the depth
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @param int $limit [optional] limit results (typically used when only after limited number of immediate children)
+	 * @param integer $limit [optional] limit results (typically used when only after limited number of immediate children)
 	 * @return ActiveQuery
 	 */
 	public function descendants($depth = null, $object = null, $limit = 0)
@@ -125,9 +125,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Gets children for node (direct descendants only).
+	 * Gets children for node (direct descendants only)
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @param int $limit [optional] limit results (typically used when only after limited number of immediate children)
+	 * @param integer $limit [optional] limit results (typically used when only after limited number of immediate children)
 	 * @return ActiveQuery
 	 */
 	public function children($object = null, $limit = 0)
@@ -146,8 +146,8 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Gets ancestors for node.
-	 * @param int $depth the depth.
+	 * Gets ancestors for node
+	 * @param integer $depth the depth
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @param boolean $reverse Should the result be in reverse order i.e. root first
 	 * @param boolean $idOnly Should an array of IDs be returned only
@@ -192,7 +192,7 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Gets parent of node.
+	 * Gets parent of node
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @param boolean $idOnly Should only the id be returned
 	 * @return ActiveQuery
@@ -203,7 +203,7 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Gets previous sibling of node.
+	 * Gets previous sibling of node
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @return ActiveQuery
 	 */
@@ -226,7 +226,7 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Gets next sibling of node.
+	 * Gets next sibling of node
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @return ActiveQuery
 	 */
@@ -249,7 +249,7 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Create root node if multiple-root tree mode. Update node if it's not new.
+	 * Create root node if multiple-root tree mode. Update node if it's not new
 	 *
      * @param boolean $runValidation
      *        should validations be executed on all models before allowing saveAll()
@@ -301,10 +301,10 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Create root node if multiple-root tree mode. Update node if it's not new.
-	 * @param boolean $runValidation whether to perform validation.
-	 * @param array $attributes list of attributes.
-	 * @return boolean whether the saving succeeds.
+	 * Create root node if multiple-root tree mode. Update node if it's not new
+	 * @param boolean $runValidation whether to perform validation
+	 * @param array $attributes list of attributes
+	 * @return boolean whether the saving succeeds
 	 */
 	public function saveNode($runValidation = true, $attributes = null)
 	{
@@ -312,7 +312,7 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Deletes node and it's descendants.
+	 * Deletes node and it's descendants
 	 * @throws Exception.
 	 * @throws \Exception.
      * @param boolean $hasParentModel
@@ -436,11 +436,11 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Prepends node to target as first child.
-	 * @param ActiveRecord $target the target.
-	 * @param boolean $runValidation whether to perform validation.
-	 * @param array $attributes list of attributes.
-	 * @return boolean whether the prepending succeeds.
+	 * Prepends node to target as first child
+	 * @param ActiveRecord $target the target
+	 * @param boolean $runValidation whether to perform validation
+	 * @param array $attributes list of attributes
+	 * @return boolean whether the prepending succeeds
 	 */
 	public function prependTo($target, $runValidation = true, $attributes = null)
 	{
@@ -454,11 +454,11 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Prepends target to node as first child.
-	 * @param ActiveRecord $target the target.
-	 * @param boolean $runValidation whether to perform validation.
-	 * @param array $attributes list of attributes.
-	 * @return boolean whether the prepending succeeds.
+	 * Prepends target to node as first child
+	 * @param ActiveRecord $target the target
+	 * @param boolean $runValidation whether to perform validation
+	 * @param array $attributes list of attributes
+	 * @return boolean whether the prepending succeeds
 	 */
 	public function prepend($target, $runValidation = true, $attributes = null)
 	{
@@ -470,11 +470,11 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Appends node to target as last child.
-	 * @param ActiveRecord $target the target.
-	 * @param boolean $runValidation whether to perform validation.
-	 * @param array $attributes list of attributes.
-	 * @return boolean whether the appending succeeds.
+	 * Appends node to target as last child
+	 * @param ActiveRecord $target the target
+	 * @param boolean $runValidation whether to perform validation
+	 * @param array $attributes list of attributes
+	 * @return boolean whether the appending succeeds
 	 */
 	public function appendTo($target, $runValidation = true, $attributes = null)
 	{
@@ -488,11 +488,11 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Appends target to node as last child.
-	 * @param ActiveRecord $target the target.
-	 * @param boolean $runValidation whether to perform validation.
-	 * @param array $attributes list of attributes.
-	 * @return boolean whether the appending succeeds.
+	 * Appends target to node as last child
+	 * @param ActiveRecord $target the target
+	 * @param boolean $runValidation whether to perform validation
+	 * @param array $attributes list of attributes
+	 * @return boolean whether the appending succeeds
 	 */
 	public function append($target, $runValidation = true, $attributes = null)
 	{
@@ -522,11 +522,11 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Inserts node as next sibling of target.
-	 * @param ActiveRecord $target the target.
-	 * @param boolean $runValidation whether to perform validation.
-	 * @param array $attributes list of attributes.
-	 * @return boolean whether the inserting succeeds.
+	 * Inserts node as next sibling of target
+	 * @param ActiveRecord $target the target
+	 * @param boolean $runValidation whether to perform validation
+	 * @param array $attributes list of attributes
+	 * @return boolean whether the inserting succeeds
 	 */
 	public function insertAfter($target, $runValidation = true, $attributes = null)
 	{
@@ -540,9 +540,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Move node as previous sibling of target.
-	 * @param ActiveRecord $target the target.
-	 * @return boolean whether the moving succeeds.
+	 * Move node as previous sibling of target
+	 * @param ActiveRecord $target the target
+	 * @return boolean whether the moving succeeds
 	 */
 	public function moveBefore($target)
 	{
@@ -554,9 +554,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Move node as next sibling of target.
-	 * @param ActiveRecord $target the target.
-	 * @return boolean whether the moving succeeds.
+	 * Move node as next sibling of target
+	 * @param ActiveRecord $target the target
+	 * @return boolean whether the moving succeeds
 	 */
 	public function moveAfter($target)
 	{
@@ -568,9 +568,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Move node as first child of target.
-	 * @param ActiveRecord $target the target.
-	 * @return boolean whether the moving succeeds.
+	 * Move node as first child of target
+	 * @param ActiveRecord $target the target
+	 * @return boolean whether the moving succeeds
 	 */
 	public function moveAsFirst($target)
 	{
@@ -582,9 +582,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Move node as last child of target.
-	 * @param ActiveRecord $target the target.
-	 * @return boolean whether the moving succeeds.
+	 * Move node as last child of target
+	 * @param ActiveRecord $target the target
+	 * @return boolean whether the moving succeeds
 	 */
 	public function moveAsLast($target)
 	{
@@ -596,10 +596,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Move node as new root.
-	 * @throws Exception.
-	 * @throws \Exception.
-	 * @return boolean whether the moving succeeds.
+	 * Move node as new root
+	 * @throws Exception
+	 * @return boolean whether the moving succeeds
 	 */
 	public function moveAsRoot()
 	{
@@ -664,10 +663,10 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Determines if node is descendant of subject node.
-	 * @param ActiveRecord $subj the subject node.
+	 * Determines if node is descendant of subject node
+	 * @param ActiveRecord $subj the subject node
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @return boolean whether the node is descendant of subject node.
+	 * @return boolean whether the node is descendant of subject node
 	 */
 	public function isDescendantOf($subj, $object = null)
 	{
@@ -684,9 +683,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Determines if node is leaf.
+	 * Determines if node is leaf
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @return boolean whether the node is leaf.
+	 * @return boolean whether the node is leaf
 	 */
 	public function isLeaf($object = null)
 	{
@@ -696,9 +695,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Determines if node is root.
+	 * Determines if node is root
 	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @return boolean whether the node is root.
+	 * @return boolean whether the node is root
 	 */
 	public function isRoot($object = null)
 	{
@@ -707,8 +706,8 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Returns if the current node is deleted.
-	 * @return boolean whether the node is deleted.
+	 * Returns if the current node is deleted
+	 * @return boolean whether the node is deleted
 	 */
 	public function getIsDeletedRecord()
 	{
@@ -716,8 +715,8 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Sets if the current node is deleted.
-	 * @param boolean $value whether the node is deleted.
+	 * Sets if the current node is deleted
+	 * @param boolean $value whether the node is deleted
 	 */
 	public function setIsDeletedRecord($value)
 	{
@@ -725,8 +724,8 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Handle 'afterFind' event of the owner.
-	 * @param Event $event event parameter.
+	 * Handle 'afterFind' event of the owner
+	 * @param Event $event event parameter
 	 */
 	public function afterFind($event)
 	{
@@ -734,10 +733,10 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Handle 'beforeInsert' event of the owner.
-	 * @param Event $event event parameter.
-	 * @throws Exception.
-	 * @return boolean.
+	 * Handle 'beforeInsert' event of the owner
+	 * @param Event $event event parameter
+	 * @throws Exception
+	 * @return boolean
 	 */
 	public function beforeInsert($event)
 	{
@@ -749,10 +748,10 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Handle 'beforeUpdate' event of the owner.
-	 * @param Event $event event parameter.
-	 * @throws Exception.
-	 * @return boolean.
+	 * Handle 'beforeUpdate' event of the owner
+	 * @param Event $event event parameter
+	 * @throws Exception
+	 * @return boolean
 	 */
 	public function beforeUpdate($event)
 	{
@@ -764,10 +763,10 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Handle 'beforeDelete' event of the owner.
-	 * @param Event $event event parameter.
-	 * @throws Exception.
-	 * @return boolean.
+	 * Handle 'beforeDelete' event of the owner
+	 * @param Event $event event parameter
+	 * @throws Exception
+	 * @return boolean
 	 */
 	public function beforeDelete($event)
 	{
@@ -779,8 +778,8 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * @param int $key.
-	 * @param int $delta.
+	 * @param integer $key.
+	 * @param integer $delta.
 	 */
 	private function shiftLeftRight($key, $delta)
 	{
@@ -804,14 +803,13 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * @param ActiveRecord $target.
-	 * @param int $key.
-	 * @param int $levelUp.
-	 * @param boolean $runValidation.
-	 * @param array $attributes.
-	 * @throws Exception.
-	 * @throws \Exception.
-	 * @return boolean.
+	 * @param ActiveRecord $target
+	 * @param int $key
+	 * @param int $levelUp
+	 * @param boolean $runValidation
+	 * @param array $attributes
+	 * @throws Exception
+	 * @return boolean
 	 */
 	private function addNode($target, $key, $levelUp, $runValidation, $attributes)
 	{
@@ -885,10 +883,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * @param array $attributes.
-	 * @throws Exception.
-	 * @throws \Exception.
-	 * @return boolean.
+	 * @param array $attributes
+	 * @throws Exception
+	 * @return boolean
 	 */
 	private function makeRoot($attributes)
 	{
@@ -960,12 +957,11 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * @param ActiveRecord $target.
-	 * @param int $key.
-	 * @param int $levelUp.
-	 * @throws Exception.
-	 * @throws \Exception.
-	 * @return boolean.
+	 * @param ActiveRecord $target
+	 * @param int $key
+	 * @param int $levelUp
+	 * @throws Exception
+	 * @return boolean
 	 */
 	private function moveNode($target, $key, $levelUp)
 	{
@@ -1149,8 +1145,8 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Correct cache for [[addNode()]].
-	 * @param int $key.
+	 * Correct cache for [[addNode()]]
+	 * @param int $key
 	 */
 	private function correctCachedOnAddNode($key)
 	{
@@ -1186,9 +1182,9 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Correct cache for [[moveNode()]].
-	 * @param int $key.
-	 * @param int $levelDelta.
+	 * Correct cache for [[moveNode()]]
+	 * @param int $key
+	 * @param int $levelDelta
 	 */
 	private function correctCachedOnMoveNode($key, $levelDelta)
 	{
@@ -1269,10 +1265,10 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Correct cache for [[moveNode()]].
-	 * @param int $key.
-	 * @param int $levelDelta.
-	 * @param int $root.
+	 * Correct cache for [[moveNode()]]
+	 * @param int $key
+	 * @param int $levelDelta
+	 * @param int $root
 	 */
 	private function correctCachedOnMoveBetweenTrees($key, $levelDelta, $root)
 	{
@@ -1339,7 +1335,7 @@ class NestedSet extends Behavior
 	}
 
 	/**
-	 * Destructor.
+	 * Destructor
 	 */
 	public function __destruct()
 	{

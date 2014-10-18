@@ -20,6 +20,7 @@ use fangface\concord\models\db\Client;
 use fangface\concord\models\db\DbResource;
 use fangface\concord\models\db\client\DbResource as ClientDbResource;
 use yii\base\Component;
+use yii\db\Connection;
 
 /**
  * ConnectionManager Class
@@ -126,7 +127,7 @@ class ConnectionManager extends Component
      * @param boolean $addResource [OPTIONAL] add resource if it is not already loaded (default false)
      * @param boolean $checkServices [OPTIONAL] check services for db connections that have not been registered via the connection manager (default true)
      * @param boolean $clientResource if $addResource is true default to loading the resource from the clients resources table rather than the master resources table
-     * @return \yii\db\Connection
+     * @return Connection|false
      */
     public function getConnection($resourceName='', $addResource = false, $checkServices = true, $clientResource = false)
     {
@@ -151,7 +152,7 @@ class ConnectionManager extends Component
             if ($checkServices && $this->hasService($resourceNameIn)) {
                 $connection = $this->getService($resourceNameIn);
                 if ($connection) {
-                    /* @var \yii\db\Connection $connection */
+                    /* @var Connection $connection */
                     $class = get_class($connection);
                     $this->extendResourceArray($resourceNameIn, $connection, $class);
                     return $connection;
@@ -184,7 +185,7 @@ class ConnectionManager extends Component
      * Obtain the current client main db connection
      *
      * @param boolean $addResource [OPTIONAL] add resource if it is not already loaded (default false)
-     * @return \yii\db\Connection
+     * @return Connection|false
      */
     public function getClientConnection($addResource = false)
     {
@@ -196,7 +197,7 @@ class ConnectionManager extends Component
      *
      * @param string $resourceName [OPTIONAL] (default is the current default resource name)
      * @param boolean $addResource [OPTIONAL] add resource if it is not already loaded (default false)
-     * @return \yii\db\Connection
+     * @return Connection|false
      */
     public function getClientResourceConnection($resourceName='', $addResource = false)
     {
@@ -218,7 +219,7 @@ class ConnectionManager extends Component
     {
         if ($checkServices) {
             if ($this->hasService($resourceName)) {
-                /* @var \yii\db\Connection $connection */
+                /* @var Connection $connection */
                 $connection = $this->getService($resourceName);
                 if ($connection) {
                     $class = get_class($connection);
@@ -249,7 +250,7 @@ class ConnectionManager extends Component
                 $client = $this->getService('client');
                 if ($client && $client instanceof Client) {
                     $connection = $this->getClientConnection(true);
-                    if ($connection && $connection instanceof \yii\db\Connection) {
+                    if ($connection && $connection instanceof Connection) {
                         try {
                             $dbResource = ClientDbResource::find()
                                 ->where(['resourceName' => $resourceName])
@@ -265,7 +266,7 @@ class ConnectionManager extends Component
                 }
             } else {
                 $connection = $this->getConnection();
-                if ($connection && $connection instanceof \yii\db\Connection) {
+                if ($connection && $connection instanceof Connection) {
                     try {
                         $dbResource = DbResource::find()
                             ->where(['resourceName' => $resourceName])
@@ -328,7 +329,7 @@ class ConnectionManager extends Component
      * Extend internal resources array
      *
      * @param string $resourceName
-     * @param \yii\db\Connection $connection
+     * @param Connection $connection
      * @param string $className
      * @param boolean $connect
      */
@@ -361,7 +362,7 @@ class ConnectionManager extends Component
      *
      * @param string $resourceName
      * @param array $dbParams
-     * @return \yii\db\Connection|false
+     * @return Connection|false
      */
     public function setupConnection($resourceName, $dbParams)
     {
@@ -670,7 +671,7 @@ class ConnectionManager extends Component
     {
         $services = $this->getServices();
         foreach ($services as $serviceName => $service) {
-            if ($service instanceof \yii\db\Connection) {
+            if ($service instanceof Connection) {
                 if (!isset($this->resources['Resources'][$serviceName])) {
                     $resourceName = $this->getResourceNameByAlias($serviceName);
                     if ($resourceName) {
@@ -687,7 +688,7 @@ class ConnectionManager extends Component
     /**
      * Get a count of the number of resources defined
      *
-     * @return integer:
+     * @return integer
      */
     public function getResourceCount()
     {
@@ -698,7 +699,7 @@ class ConnectionManager extends Component
     /**
      * Get a count of the number of aliases
      *
-     * @return integer:
+     * @return integer
      */
     public function getAliasCount()
     {
@@ -711,7 +712,7 @@ class ConnectionManager extends Component
      *
      * @param boolean $includeConnections include the connection objects in the response
      * @param boolean $checkServices check services for db connections that have not been registered via the connection manager
-     * @return array:
+     * @return array
      */
     public function getResourceArray($includeConnections = false, $checkServices = true)
     {

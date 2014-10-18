@@ -16,6 +16,7 @@ namespace fangface\concord\db;
 
 use Yii;
 use fangface\concord\Tools;
+use fangface\concord\base\traits\ServiceGetter;
 use fangface\concord\base\traits\ActionErrors;
 use fangface\concord\db\ActiveRecordParentalInterface;
 use fangface\concord\db\ActiveRecordParentalTrait;
@@ -31,39 +32,48 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     use ActionErrors;
     use ActiveRecordParentalTrait;
     use ActiveRecordReadOnlyTrait;
-    use \fangface\concord\base\traits\ServiceGetter;
+    use ServiceGetter;
 
+    /**
+     * @var string|false
+     */
     protected $attributeEntitiesClass = false;
 
+    /**
+     * @var string|false
+     */
     protected $attributeDefinitionsClass = false;
 
+    /**
+     * @var string|false
+     */
     protected $attributeValuesClass = false;
 
     /**
      * Provided by $config or by class extension
      *
-     * @var array The attribtue mapping details to use against the $parentModel to obtain the $objectId
+     * @var array|false The attribtue mapping details to use against the $parentModel to obtain the $objectId
      */
     protected $link = false;
 
     /**
      * Provided by $config or by class extension
      *
-     * @var integer The entityId for this attribute class if it us using a shared set of attribute tables
+     * @var integer|false The entityId for this attribute class if it us using a shared set of attribute tables
      */
     protected $entityId = false;
 
     /**
      * Provided by $config or $parentModel
      *
-     * @var integer The objectId for which attributes will be loaded, saved or deleted
+     * @var integer|false The objectId for which attributes will be loaded, saved or deleted
      */
     protected $objectId = false;
 
     /**
      * Array of existing attribute value models ready to use during delete or save
      *
-     * @var \fangface\concord\Models\AttributeValues[]
+     * @var \fangface\concord\Models\AttributeValues[]|array
      */
     private $attributeValues = array();
 
@@ -169,6 +179,10 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     const EVENT_AFTER_DELETE_FULL_FAILED = 'afterDeleteFullFailed';
 
 
+    /**
+     * Constructor
+     * @param mixed $config
+     */
     public function __construct($config = array())
     {
         if (!empty($config)) {
@@ -182,6 +196,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     }
 
 
+    /**
+     * @param mixed $config
+     */
     public function configure($config)
     {
         foreach ($config as $name => $value) {
@@ -578,7 +595,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     /**
      * Return list of attributes as an array (forcing the load of any attributes that have not been loaded yet)
      *
-     * @return array:
+     * @return array
      */
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
@@ -602,7 +619,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      *        [OPTIONAL] default false
      * @param boolean $excludeNewAndBlankRelations
      *        [OPTIONAL] exclude new blank records, default true
-     * @return array:
+     * @return array
      */
     public function allToArray($loadedOnly=false, $excludeNewAndBlankRelations=true)
     {
@@ -789,7 +806,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      * Return an attribute id for a given attribute name (assumes entityId not in use in this model
      *
      * @param string $attributeName
-     * @return integer false
+     * @return integer|false
      */
     public function getAttributeIdByName($attributeName)
     {
@@ -803,7 +820,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
      * @param string $attributeName
      * @param integer $entityId
      *        [OPTIONAL] defaults to current initialised entityId
-     * @return integer false
+     * @return integer|false
      */
     public function getEntityAttributeIdByName($attributeName, $entityId = null)
     {

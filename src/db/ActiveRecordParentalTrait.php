@@ -14,11 +14,13 @@
 
 namespace fangface\concord\db;
 
+use fangface\concord\db\ActiveRecord;
+
 trait ActiveRecordParentalTrait
 {
 
     /**
-     * @var \fangface\concord\db\ActiveRecord false parent model if this model is part of a map
+     * @var ActiveRecord false parent model if this model is part of a map
      */
     protected $parentModel = false;
 
@@ -28,7 +30,7 @@ trait ActiveRecordParentalTrait
     private $isNewRecord = true;
 
     /**
-     * @var boolean Indicates if the current model was loaded from the db or is new
+     * @var array Indicates if the current model was loaded from the db or is new
      */
     private $childHasChanges = array();
 
@@ -41,7 +43,7 @@ trait ActiveRecordParentalTrait
     /**
      * Set parent model
      *
-     * @param \fangface\concord\db\ActiveRecord $parentModel
+     * @param ActiveRecord $parentModel
      */
     public function setParentModel($parentModel)
     {
@@ -52,7 +54,7 @@ trait ActiveRecordParentalTrait
     /**
      * get parent model
      *
-     * @return \fangface\concord\db\ActiveRecord
+     * @return ActiveRecord
      */
     public function getParentModel()
     {
@@ -63,7 +65,7 @@ trait ActiveRecordParentalTrait
     /**
      * shorthand get parent model
      *
-     * @return \fangface\concord\db\ActiveRecord
+     * @return ActiveRecord
      */
     public function parent()
     {
