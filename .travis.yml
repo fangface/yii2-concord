@@ -26,7 +26,7 @@ before_script:
   - mysql -e 'CREATE DATABASE dbTestRemote2;';
 
 script:
-  - vendor/bin/phpunit --verbose --debug --coverage-clover=coverage.clover
+  - vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
 
 after_script:
   - cd ../../..

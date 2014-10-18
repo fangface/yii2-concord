@@ -1,5 +1,27 @@
 <?php
 
+if (getenv('TRAVIS') && getenv('TRAVIS') == 'true') {
+    // running tests on travis
+    if (version_compare(PHP_VERSION, '5.5.0') >= 0) {
+        $cacheConfig = [
+            'class' => 'yii\caching\MemCache',
+            'useMemcached' => true,
+            'keyPrefix' => 'concord_prefix',
+        ];
+    } else {
+        $cacheConfig = [
+            'class' => 'yii\caching\ApcCache',
+            'keyPrefix' => 'concord_prefix',
+        ];
+    }
+} else {
+    // default local testing to summy cache and let config-local.php override
+    $cacheConfig = [
+        'class' => 'yii\caching\DummyCache',
+        'keyPrefix' => 'concord_prefix',
+    ];
+}
+
 return [
 
     'app' => [
@@ -66,14 +88,13 @@ return [
                 'tablePrefix' => 'example_',
             ],
 
-            /* setup dbFactory to allow for dynamic management of db connections */
             'dbFactory' => [
                 'class' => 'fangface\concord\db\ConnectionManager',
             ],
 
             'dbCache' => [
                 'class' => 'yii\caching\MemCache',
-                'useMemcached' => false,
+                'useMemcached' => true,
                 'keyPrefix' => 'concord_prefix',
             ],
 
