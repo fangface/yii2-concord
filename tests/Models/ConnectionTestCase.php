@@ -12,9 +12,9 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
-use Concord\Tests\Models\TestCase;
+use fangface\concord\tests\models\TestCase;
 
 
 /**
@@ -25,7 +25,7 @@ abstract class ConnectionTestCase extends TestCase
 
     /**
      * Close down any db connections setup by the connection manager
-     * @see \Concord\Tests\TestCase::tearDown()
+     * @see \fangface\concord\tests\TestCase::tearDown()
      */
     protected function localPreTearDown()
     {

@@ -12,11 +12,16 @@
  *
  */
 
-namespace Concord\Tests\Unit\Db;
+namespace fangface\concord\tests\Unit\Db;
 
-use Concord\Tests\Models\DbTestCase as DbTestCase;
-use PDO;
-use Yii;
+use fangface\concord\tests\models\DbTestCase;
+use fangface\concord\models\db\DbResource;
+use fangface\concord\models\db\client\DbResource as ClientDBResource;
+use fangface\concord\base\traits\ServiceGetter;
+use fangface\concord\models\db\Client;
+use fangface\concord\tests\models\Customer;
+use fangface\concord\tests\models\Robot;
+use yii\db\Connection;
 
 /**
  * Test Concord Active Record add-on for Yii2
@@ -24,7 +29,7 @@ use Yii;
 class A2MultiDbResourcesTest extends DbTestCase
 {
 
-    use \Concord\Base\Traits\ServiceGetter;
+    use ServiceGetter;
 
     /**
      * Test multiple db resources specified in a local dbResources table
@@ -34,9 +39,9 @@ class A2MultiDbResourcesTest extends DbTestCase
     public function testLoopThroughDifferentDbResources()
     {
 
-        $dbFactory = Yii::$app->get('dbFactory');
+        $dbFactory = \Yii::$app->get('dbFactory');
 
-        $dbResources = \Concord\Models\Db\DbResource::find()
+        $dbResources = DbResource::find()
             ->orderBy('id')
             ->all();
 
@@ -46,7 +51,7 @@ class A2MultiDbResourcesTest extends DbTestCase
 
             $dbClient = $dbFactory->getConnection($dbResource->resourceName, true);
 
-            $this->assertInstanceOf('\yii\db\Connection', $dbClient);
+            $this->assertInstanceOf(Connection::className(), $dbClient);
             $this->assertEquals($dbResource->dbDsn, $dbClient->dsn);
             $this->assertEquals($counter, $dbFactory->getResourceCount());
 
@@ -64,7 +69,7 @@ class A2MultiDbResourcesTest extends DbTestCase
                 $this->assertRegExp('/dbTestClient2/', $dbClient->dsn);
             }
 
-            $customer = new \Concord\Tests\Models\Customer();
+            $customer = new Customer;
             if ($dbResource->resourceName == 'dbClient1') {
                 $this->assertTrue(!$customer->hasAttribute('extraField'));
             } else {
@@ -72,7 +77,7 @@ class A2MultiDbResourcesTest extends DbTestCase
                 $this->assertTrue($customer->hasAttribute('extraField'));
             }
 
-            $dbRemoteResource = \Concord\Models\Db\Client\DbResource::find()
+            $dbRemoteResource = ClientDbResource::find()
                 ->where(['resourceName' => 'dbRemote'])
                 ->one();
 
@@ -98,7 +103,7 @@ class A2MultiDbResourcesTest extends DbTestCase
 
             $dbRemote = $dbFactory->getConnection('dbRemote');
 
-            $this->assertInstanceOf('\yii\db\Connection', $dbRemote);
+            $this->assertInstanceOf(Connection::className(), $dbRemote);
             $this->assertEquals($dbRemoteResource->dbDsn, $dbRemote->dsn);
             $this->assertEquals(($counter+1), $dbFactory->getResourceCount());
 
@@ -113,7 +118,7 @@ class A2MultiDbResourcesTest extends DbTestCase
                 $this->assertRegExp('/dbTestRemote2/', $dbRemote->dsn);
             }
 
-            $robot = \Concord\Tests\Models\Robot::findOne(1);
+            $robot = Robot::findOne(1);
             if ($dbResource->resourceName == 'dbClient1') {
                 $this->assertTrue(!$robot->hasAttribute('extraField'));
             } else {
@@ -142,15 +147,15 @@ class A2MultiDbResourcesTest extends DbTestCase
     public function testLoopThroughDifferentClients()
     {
 
-        $dbFactory = Yii::$app->get('dbFactory');
+        $dbFactory = \Yii::$app->get('dbFactory');
 
-        $clients = \Concord\Models\Db\Client::find()
+        $clients = Client::find()
             ->orderBy('id')
             ->all();
 
         foreach ($clients as $client) {
 
-            $this->assertInstanceOf('\Concord\Models\Db\Client', $client);
+            $this->assertInstanceOf(Client::className(), $client);
             $this->setService('client', $client);
 
             // get the dbClient connection (should be based on the 'client' component setup above
@@ -158,7 +163,7 @@ class A2MultiDbResourcesTest extends DbTestCase
             $db = $dbFactory->getClientConnection(true); // command equivalent to the above
 
             // $db should now be the connection to the current client (not connected)
-            $this->assertInstanceOf('\yii\db\Connection', $db);
+            $this->assertInstanceOf(Connection::className(), $db);
             $this->assertEquals($client->dbDsn, $db->dsn);
             $this->assertEquals(2, $dbFactory->getResourceCount());
 
@@ -168,7 +173,7 @@ class A2MultiDbResourcesTest extends DbTestCase
             $this->assertInstanceOf('\PDO', $db->pdo);
 
 
-            $customer = new \Concord\Tests\Models\Customer();
+            $customer = new Customer;
             if ($client->clientCode == 'CLIENT1') {
                 $this->assertTrue(!$customer->hasAttribute('extraField'));
             } else {
@@ -177,7 +182,7 @@ class A2MultiDbResourcesTest extends DbTestCase
             }
 
             // find details of the current clients dbRemote connection
-            $dbResource = \Concord\Models\Db\Client\DbResource::find()
+            $dbResource = ClientDbResource::find()
                 ->where(['resourceName' => 'dbRemote'])
                 ->one();
 
@@ -187,7 +192,7 @@ class A2MultiDbResourcesTest extends DbTestCase
             $dbRemote = $dbFactory->getClientResourceConnection('dbRemote', true); // identical to the getConnection() call above
 
             // $dbRemote should now be the connection to the current clients dbRemote resource (not connected)
-            $this->assertInstanceOf('\yii\db\Connection', $dbRemote);
+            $this->assertInstanceOf(Connection::className(), $dbRemote);
             $this->assertEquals($dbResource->dbDsn, $dbRemote->dsn);
             $this->assertEquals(3, $dbFactory->getResourceCount());
 
@@ -202,7 +207,7 @@ class A2MultiDbResourcesTest extends DbTestCase
                 $this->assertRegExp('/dbTestRemote2/', $dbRemote->dsn);
             }
 
-            $robot = \Concord\Tests\Models\Robot::findOne(1);
+            $robot = Robot::findOne(1);
             if ($client->clientCode == 'CLIENT1') {
                 $this->assertTrue(!$robot->hasAttribute('extraField'));
             } else {
@@ -229,21 +234,21 @@ class A2MultiDbResourcesTest extends DbTestCase
     public function testLoopThroughDifferentClientsAutoActiveRecordDbResource()
     {
 
-        $dbFactory = Yii::$app->get('dbFactory');
+        $dbFactory = \Yii::$app->get('dbFactory');
 
-        $clients = \Concord\Models\Db\Client::find()
+        $clients = Client::find()
             ->orderBy('id')
             ->all();
 
         foreach ($clients as $client) {
 
-            $this->assertInstanceOf('\Concord\Models\Db\Client', $client);
+            $this->assertInstanceOf(Client::className(), $client);
 
             // setting the cient component up in yii will make the client connection available
             // when required to determine the clients dbRemote connection for the Robot model
             $this->setService('client', $client);
 
-            $robot = \Concord\Tests\Models\Robot::findOne(1);
+            $robot = Robot::findOne(1);
 
             if ($client->clientCode == 'CLIENT1') {
                 $this->assertTrue(!$robot->hasAttribute('extraField'));
@@ -268,12 +273,12 @@ class A2MultiDbResourcesTest extends DbTestCase
      * Fail to obtain the 'db' connection via the connection manager because it has not been
      * defined in the connection manager and the parameters specify to attempt to add the
      * resource and not to use anything defined in components
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Missing dbParams on addResource
      */
     public function testGetUndefinedDbConnectionFails()
     {
-        $db = Yii::$app->get('dbFactory')->getConnection('dbX', true, false);
+        $db = \Yii::$app->get('dbFactory')->getConnection('dbX', true, false);
     }
 
 }

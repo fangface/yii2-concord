@@ -12,14 +12,15 @@
  *
  */
 
-namespace Concord\Tests\Migrations\General;
+namespace fangface\concord\tests\Migrations\General;
 
+use fangface\concord\db\Migration;
 use yii\db\Schema;
 
 /**
  * Create the 'db4' / 'dbTestRemote1' tables required to perform the unit tests
  */
-class db4Tables extends \Concord\Db\Migration
+class db4Tables extends Migration
 {
 
     /**

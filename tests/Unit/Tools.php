@@ -12,10 +12,11 @@
  *
  */
 
-namespace Concord\Tests\Unit;
+namespace fangface\concord\tests\Unit;
 
-use Concord\Tests\Models\TestCase as TestCase;
-use Concord\Tests\Models\Item;
+use fangface\concord\tests\models\TestCase as TestCase;
+use fangface\concord\tests\models\Item;
+use fangface\concord\Tools;
 
 /**
  * Test Concord Tools class
@@ -29,7 +30,7 @@ class Tools extends TestCase
     public function testDebugDoesNotFail()
     {
         $var = array('a' => 100, 'b' => 200);
-        $debug = \Concord\Tools::debug($var, 'My Label', false);
+        $debug = Tools::debug($var, 'My Label', false);
         $this->assertInternalType('string', $actual);
     }
 
@@ -39,7 +40,7 @@ class Tools extends TestCase
      */
     public function testGetClientIdForNonClient()
     {
-        $id = \Concord\Tools::getClientId();
+        $id = Tools::getClientId();
         $this->assertEquals(0, $id);
     }
 
@@ -49,7 +50,7 @@ class Tools extends TestCase
      */
     public function testGetClientCodeForNonClient()
     {
-        $code = \Concord\Tools::getClientCode();
+        $code = Tools::getClientCode();
         $this->assertEquals('', $code);
     }
 
@@ -59,11 +60,11 @@ class Tools extends TestCase
      */
     public function testIsClosure()
     {
-        $this->assertFalse(\Concord\Tools::is_closure(array()));
-        $this->assertFalse(\Concord\Tools::is_closure(5));
-        $this->assertFalse(\Concord\Tools::is_closure('string'));
-        $this->assertFalse(\Concord\Tools::is_closure(new Item));
-        $this->assertTrue(\Concord\Tools::is_closure(function(){$a=1;}));
+        $this->assertFalse(Tools::is_closure(array()));
+        $this->assertFalse(Tools::is_closure(5));
+        $this->assertFalse(Tools::is_closure('string'));
+        $this->assertFalse(Tools::is_closure(new Item));
+        $this->assertTrue(Tools::is_closure(function(){$a=1;}));
     }
 
 }

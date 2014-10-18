@@ -1,6 +1,6 @@
 <?php
 
-namespace Concord\Tools;
+namespace fangface\concord\tools;
 
 class Xml
 {

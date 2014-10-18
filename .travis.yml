@@ -4,18 +4,19 @@ php:
   - 5.4
   - 5.5
   - 5.6
-#  - hhvm
 
-# run build against PHP 5.6 and hhvm but allow them to fail
-# http://docs.travis-ci.com/user/build-configuration/#Rows-That-are-Allowed-To-Fail
-#matrix:
-#  allow_failures:
-#    - php: hhvm
+services:
+  - memcached
+
+sudo: false
 
 install:
   - composer self-update && composer --version
   - composer global require "fxp/composer-asset-plugin:1.0.0-beta3"
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer install --prefer-dist
+  - tests/data/travis/apc-setup.sh
+  - tests/data/travis/memcache-setup.sh
 
 before_script:
   - mysql -e 'CREATE DATABASE dbTestMain;';
@@ -28,5 +29,6 @@ script:
   - vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
 
 after_script:
+  - cd ../../..
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

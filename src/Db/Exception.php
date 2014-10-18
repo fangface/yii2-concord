@@ -12,9 +12,9 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
-class Exception extends \Concord\Exception
+class Exception extends \fangface\concord\Exception
 {
 
 }

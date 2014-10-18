@@ -12,7 +12,7 @@
  *
  */
 
-namespace Concord;
+namespace fangface\concord;
 
 class Exception extends \Exception {
 

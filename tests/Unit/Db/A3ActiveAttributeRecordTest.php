@@ -12,11 +12,11 @@
  *
  */
 
-namespace Concord\Tests\Unit\Db;
+namespace fangface\concord\tests\Unit\Db;
 
-use Concord\Models\Db\Client;
-use Concord\Tests\Models\CustomerAttributes;
-use Concord\Tests\Models\DbTestCase as DbTestCase;
+use fangface\concord\models\db\Client;
+use fangface\concord\tests\models\CustomerAttributes;
+use fangface\concord\tests\models\DbTestCase;
 
 /**
  * Test Concord Active Attribute Record add-on for Yii2
@@ -24,7 +24,7 @@ use Concord\Tests\Models\DbTestCase as DbTestCase;
  */
 class A3ActiveAttributeRecordTest extends DbTestCase
 {
-    use \Concord\Base\Traits\ServiceGetter;
+    use \fangface\concord\base\traits\ServiceGetter;
 
     /**
      * Test ability to get attribute record schema
@@ -32,7 +32,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
     public function testGetEntityAttributeListAsStructure()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerAttributes = New CustomerAttributes();
@@ -56,7 +56,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
     public function testLoadLazyAttribute()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerAttributes = New CustomerAttributes(array(
@@ -156,7 +156,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
     public function testGetEntityAttributeMap()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerAttributes = New CustomerAttributes();
@@ -175,7 +175,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
     public function testGetEntityAttributeIdByName()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
         $customerAttributes = New CustomerAttributes();
         $id = $customerAttributes->getEntityAttributeIdByName('field1');
@@ -191,7 +191,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
     public function testGetEntityAttributeNameById()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
         $customerAttributes = New CustomerAttributes();
         $id = $customerAttributes->getEntityAttributeNameById(2);
@@ -204,7 +204,7 @@ class A3ActiveAttributeRecordTest extends DbTestCase
     public function testSetValuesByArray()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
         $customerAttributes = New CustomerAttributes();
         $customerAttributes->setValuesByArray(array('field1'=>'a', 'field2'=>'b'), array('modifiedBy'=>54));

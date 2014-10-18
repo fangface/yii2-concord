@@ -12,7 +12,7 @@
  *
  */
 
-namespace Concord\Base\Traits\Arrays;
+namespace fangface\concord\base\traits\arrays;
 
 trait MagicAccess
 {

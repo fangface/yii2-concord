@@ -5,15 +5,15 @@
  * @license http://opensource.org/licenses/BSD-3-Clause
  */
 
-namespace Concord\Behaviors;
+namespace fangface\concord\behaviors;
 
 use yii\base\Behavior;
 use yii\base\Event;
-use Concord\Db\ActiveRecord;
+use fangface\concord\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 use yii\db\Exception;
-use Concord\Tools;
+use fangface\concord\tools;
 
 /**
  * @author Alexander Kochetov <creocoder@gmail.com>
@@ -90,9 +90,9 @@ class NestedSet extends Behavior
 	/**
 	 * Gets descendants for node.
 	 * @param int $depth the depth.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @param int $limit [optional] limit results (typically used when only after limited number of immediate children)
-	 * @return ActiveQuery.
+	 * @return ActiveQuery
 	 */
 	public function descendants($depth = null, $object = null, $limit = 0)
 	{
@@ -126,9 +126,9 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets children for node (direct descendants only).
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @param int $limit [optional] limit results (typically used when only after limited number of immediate children)
-	 * @return ActiveQuery.
+	 * @return ActiveQuery
 	 */
 	public function children($object = null, $limit = 0)
 	{
@@ -137,8 +137,8 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets one child for node (first direct descendant only).
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @return ActiveQuery.
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @return ActiveQuery
 	 */
 	public function oneChild($object = null)
 	{
@@ -148,10 +148,10 @@ class NestedSet extends Behavior
 	/**
 	 * Gets ancestors for node.
 	 * @param int $depth the depth.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @param boolean $reverse Should the result be in reverse order i.e. root first
 	 * @param boolean $idOnly Should an array of IDs be returned only
-	 * @return ActiveQuery.
+	 * @return ActiveQuery
 	 */
 	public function ancestors($depth = null, $object = null, $reverse = false, $idOnly = false)
 	{
@@ -193,9 +193,9 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets parent of node.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @param boolean $idOnly Should only the id be returned
-	 * @return ActiveQuery.
+	 * @return ActiveQuery
 	 */
 	public function parentOnly($object = null, $idOnly = false)
 	{
@@ -204,8 +204,8 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets previous sibling of node.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @return ActiveQuery.
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @return ActiveQuery
 	 */
 	public function prev($object = null)
 	{
@@ -227,8 +227,8 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets next sibling of node.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
-	 * @return ActiveQuery.
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @return ActiveQuery
 	 */
 	public function next($object = null)
 	{
@@ -272,7 +272,7 @@ class NestedSet extends Behavior
 	        // not allowed to amend or delete
 	        $message = 'Attempting to save on ' . Tools::getClassName($this->owner) . ' readOnly model';
 	        //$this->addActionError($message);
-	        throw new \Concord\Db\Exception($message);
+	        throw new \fangface\concord\db\Exception($message);
 
 	    } elseif ($this->owner->getReadOnly() && $hasParentModel) {
 
@@ -666,7 +666,7 @@ class NestedSet extends Behavior
 	/**
 	 * Determines if node is descendant of subject node.
 	 * @param ActiveRecord $subj the subject node.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @return boolean whether the node is descendant of subject node.
 	 */
 	public function isDescendantOf($subj, $object = null)
@@ -685,7 +685,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Determines if node is leaf.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @return boolean whether the node is leaf.
 	 */
 	public function isLeaf($object = null)
@@ -697,7 +697,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Determines if node is root.
-	 * @param Concord\Db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
 	 * @return boolean whether the node is root.
 	 */
 	public function isRoot($object = null)

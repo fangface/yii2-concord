@@ -12,7 +12,7 @@
  *
  */
 
-namespace Concord\Base\Traits;
+namespace fangface\concord\base\traits;
 
 trait Singleton
 {

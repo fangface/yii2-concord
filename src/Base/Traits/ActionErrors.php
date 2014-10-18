@@ -12,7 +12,9 @@
  *
  */
 
-namespace Concord\Base\Traits;
+namespace fangface\concord\base\traits;
+
+use fangface\concord\Tools;
 
 trait ActionErrors {
 
@@ -90,7 +92,7 @@ trait ActionErrors {
             'message' => $message,
             'code' => $code,
             'attribute' => $attribute,
-            'model' => ($modelName !== null ? $modelName : (true ? \Concord\Tools::getClassName($this) : get_called_class()))
+            'model' => ($modelName !== null ? $modelName : (true ? Tools::getClassName($this) : get_called_class()))
         );
     }
 
@@ -192,7 +194,7 @@ trait ActionErrors {
             'message' => $message,
             'code' => $code,
             'attribute' => $attribute,
-            'model' => ($modelName !== null ? $modelName : (true ? \Concord\Tools::getClassName($this) : get_called_class()))
+            'model' => ($modelName !== null ? $modelName : (true ? Tools::getClassName($this) : get_called_class()))
         );
     }
 

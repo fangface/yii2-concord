@@ -68,18 +68,18 @@ return [
 
             /* setup dbFactory to allow for dynamic management of db connections */
             'dbFactory' => [
-                'class' => 'Concord\Db\ConnectionManager',
+                'class' => 'fangface\concord\db\ConnectionManager',
             ],
 
             'dbCache' => [
-                'class' => 'yii\caching\DummyCache',
+                'class' => 'yii\caching\MemCache',
                 'keyPrefix' => 'concord_prefix',
             ],
 
         ],
 
         'params' => [
-            'db.defaultTableNameType' => 'plural',
+            'db.defaultTableNameType' => 'plural', // testing an alternative to yii built in convention
         ],
 
     ],

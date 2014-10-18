@@ -12,7 +12,7 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
 use yii\helpers\ArrayHelper;
 
@@ -56,7 +56,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Typicaly used by individual test classes to extend the
      * setUp method
-     * @see \Concord\Tests\TestCase::setUp()
+     * @see \fangface\concord\tests\TestCase::setUp()
      */
     protected function localSetUp()
     {
@@ -81,7 +81,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Typicaly used by individual test classes to extend the
      * localPreTearDown method
-     * @see \Concord\Tests\TestCase::tearDown()
+     * @see \fangface\concord\tests\TestCase::tearDown()
      */
     protected function localPreTearDown()
     {
@@ -92,7 +92,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Typicaly used by individual test classes to extend the
      * tearDown method
-     * @see \Concord\Tests\TestCase::tearDown()
+     * @see \fangface\concord\tests\TestCase::tearDown()
      */
     protected function localTearDown()
     {

@@ -12,13 +12,13 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
-use Concord\Db\ActiveRecord;
-use Concord\Tests\Models\CustomerAttributes;
-use Concord\Tests\Models\Address;
-use Concord\Tests\Models\Phone;
-use Concord\Tests\Models\Order;
+use fangface\concord\db\ActiveRecord;
+use fangface\concord\tests\models\CustomerAttributes;
+use fangface\concord\tests\models\Address;
+use fangface\concord\tests\models\Phone;
+use fangface\concord\tests\models\Order;
 
 /**
  * Active Record class for the clients dbClient.{prefix}customers table
@@ -31,10 +31,10 @@ use Concord\Tests\Models\Order;
  * @property integer $createdBy	User id of user that created record
  * @property datetime $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
- * @property Concord\Tests\Models\CustomerAttributes $customerAttributes
- * @property Concord\Tests\Models\Address $address
- * @property Concord\Tests\Models\Phone $phone
- * @property Concord\Tests\Models\Order[] $orders
+ * @property fangface\concord\tests\models\CustomerAttributes $customerAttributes
+ * @property fangface\concord\tests\models\Address $address
+ * @property fangface\concord\tests\models\Phone $phone
+ * @property fangface\concord\tests\models\Order[] $orders
  */
 class Customer extends ActiveRecord
 {

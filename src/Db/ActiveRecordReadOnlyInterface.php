@@ -12,7 +12,7 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
 interface ActiveRecordReadOnlyInterface
 {

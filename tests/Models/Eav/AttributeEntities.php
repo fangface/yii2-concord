@@ -12,9 +12,11 @@
  *
  */
 
-namespace Concord\Tests\Models\Eav;
+namespace fangface\concord\tests\models\eav;
 
-class AttributeEntities extends \Concord\Models\Eav\AttributeEntities
+use fangface\concord\models\eav\AttributeEntities as BaseAttributeEntities;
+
+class AttributeEntities extends BaseAttributeEntities
 {
 
     protected static $dbResourceName     = 'dbClient';

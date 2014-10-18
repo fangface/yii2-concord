@@ -12,13 +12,13 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
 trait ActiveRecordParentalTrait
 {
 
     /**
-     * @var \Concord\Db\ActiveRecord false parent model if this model is part of a map
+     * @var \fangface\concord\db\ActiveRecord false parent model if this model is part of a map
      */
     protected $parentModel = false;
 
@@ -41,7 +41,7 @@ trait ActiveRecordParentalTrait
     /**
      * Set parent model
      *
-     * @param \Concord\Db\ActiveRecord $parentModel
+     * @param \fangface\concord\db\ActiveRecord $parentModel
      */
     public function setParentModel($parentModel)
     {
@@ -52,7 +52,7 @@ trait ActiveRecordParentalTrait
     /**
      * get parent model
      *
-     * @return \Concord\Db\ActiveRecord
+     * @return \fangface\concord\db\ActiveRecord
      */
     public function getParentModel()
     {
@@ -63,7 +63,7 @@ trait ActiveRecordParentalTrait
     /**
      * shorthand get parent model
      *
-     * @return \Concord\Db\ActiveRecord
+     * @return \fangface\concord\db\ActiveRecord
      */
     public function parent()
     {

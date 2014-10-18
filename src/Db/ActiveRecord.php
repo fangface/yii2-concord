@@ -12,21 +12,21 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
-use Concord\Base\Traits\ActionErrors;
-use Concord\Base\Traits\AttributeHintBlocks;
-use Concord\Base\Traits\AttributeIcons;
-use Concord\Base\Traits\AttributePlaceholders;
-use Concord\Base\Traits\AttributeTooltips;
-use Concord\Db\ActiveRecord;
-use Concord\Db\ActiveRecordArray;
-use Concord\Db\ActiveRecordParentalInterface;
-use Concord\Db\ActiveRecordParentalTrait;
-use Concord\Db\ActiveRecordReadOnlyInterface;
-use Concord\Db\ActiveRecordReadOnlyTrait;
-use Concord\Db\ActiveRecordSaveAllInterface;
-use Concord\Tools;
+use fangface\concord\base\traits\ActionErrors;
+use fangface\concord\base\traits\AttributeHintBlocks;
+use fangface\concord\base\traits\AttributeIcons;
+use fangface\concord\base\traits\AttributePlaceholders;
+use fangface\concord\base\traits\AttributeTooltips;
+use fangface\concord\db\ActiveRecord;
+use fangface\concord\db\ActiveRecordArray;
+use fangface\concord\db\ActiveRecordParentalInterface;
+use fangface\concord\db\ActiveRecordParentalTrait;
+use fangface\concord\db\ActiveRecordReadOnlyInterface;
+use fangface\concord\db\ActiveRecordReadOnlyTrait;
+use fangface\concord\db\ActiveRecordSaveAllInterface;
+use fangface\concord\tools;
 use Yii;
 use yii\base\ModelEvent;
 use yii\db\ActiveQuery;
@@ -145,7 +145,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * Returns the database connection used by this AR class.
      * By default, the "db" application component is used as the database connection.
      * You may override this method if you want to use a different database connection.
-     * @throws \Concord\Db\Exception if no connection can be found
+     * @throws \fangface\concord\db\Exception if no connection can be found
      * @return yii\db\Connection|false The database connection used by this AR class.
      */
     public static function getDb()
@@ -160,14 +160,14 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
 
         if (Yii::$app->has('dbFactory')) {
-            /** @var \Concord\Db\ConnectionManager $dbFactory */
+            /** @var \fangface\concord\db\ConnectionManager $dbFactory */
             $dbFactory = Yii::$app->get('dbFactory');
             return $dbFactory->getConnection($dbResourceName, true, true, $isClientResource);
         } elseif (Yii::$app->has($dbResourceName)) {
             return Yii::$app->get($dbResourceName);
         }
 
-        throw new \Concord\Db\Exception('Database resource \'' . $dbResourceName . '\' not found');
+        throw new \fangface\concord\db\Exception('Database resource \'' . $dbResourceName . '\' not found');
     }
 
 
@@ -250,13 +250,13 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * @param mixed $value
      *        the attribute value.
      * @throws InvalidParamException if the named attribute does not exist.
-     * @throws \Concord\Db\Exception if the current record is read only
+     * @throws \fangface\concord\db\Exception if the current record is read only
      * @see hasAttribute()
      */
     public function setAttribute($name, $value)
     {
         if ($this->getReadOnly()) {
-            throw new \Concord\Db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . Tools::getClassName($this) . ' model');
+            throw new \fangface\concord\db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . Tools::getClassName($this) . ' model');
         }
 
         parent::setAttribute($name, $value);
@@ -266,12 +266,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     /**
      * (non-PHPdoc)
      * @see \yii\base\Model::setAttributes()
-     * @throws \Concord\Db\Exception if the current record is read only
+     * @throws \fangface\concord\db\Exception if the current record is read only
      */
     public function setAttributes($values, $safeOnly = true)
     {
         if ($this->getReadOnly()) {
-            throw new \Concord\Db\Exception('Attempting to set attributes on a read only ' . Tools::getClassName($this) . ' model');
+            throw new \fangface\concord\db\Exception('Attempting to set attributes on a read only ' . Tools::getClassName($this) . ' model');
         }
 
         parent::setAttributes($values, $safeOnly);
@@ -298,12 +298,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     /**
      * (non-PHPdoc)
      * @see \yii\base\Model::load($data, $formName)
-     * @throws \Concord\Db\Exception if the current record is read only
+     * @throws \fangface\concord\db\Exception if the current record is read only
      */
     public function load($data, $formName = null)
     {
         if ($this->getReadOnly()) {
-            throw new \Concord\Db\Exception('Attempting to load attributes on a read only ' . Tools::getClassName($this) . ' model');
+            throw new \fangface\concord\db\Exception('Attempting to load attributes on a read only ' . Tools::getClassName($this) . ' model');
         }
 
         if ($this->getIsNewRecord() && $this->applyDefaults && !$this->defaultsApplied) {
@@ -377,7 +377,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             if ($this->createdByAttr || $this->modifiedByAttr) {
 
                 $defaults['savedby'] = [
-                    'class' => 'Concord\Behaviors\AutoSavedBy'
+                    'class' => 'fangface\concord\behaviors\AutoSavedBy'
                 ];
 
                 $defaults['savedby']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT] = array();
@@ -397,7 +397,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             if ($this->createdAtAttr || $this->modifiedAtAttr) {
 
                 $defaults['datestamp'] = [
-                    'class' => 'Concord\Behaviors\AutoDatestamp'
+                    'class' => 'fangface\concord\behaviors\AutoDatestamp'
                 ];
 
                 $defaults['datestamp']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT] = array();
@@ -539,7 +539,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // not allowed to amend or delete
             $message = 'Attempting to save on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
@@ -562,7 +562,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             } elseif ($this->getIsNewRecord() && !$hasParentModel) {
                 $message = 'Attempting to save an empty ' . Tools::getClassName($this) . ' model';
                 //$this->addActionError($message);
-                throw new \Concord\Db\Exception($message);
+                throw new \fangface\concord\db\Exception($message);
             }
         }
 
@@ -581,7 +581,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // not allowed to amend or delete
             $message = 'Attempting to update on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
@@ -693,7 +693,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // not allowed to amend or delete
             $message = 'Attempting to saveAll on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
@@ -893,7 +893,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                             } else {
 
                                 $hasChanges = true;
-                                if (!$this->getIsNewRecord() && $this->$relation instanceof \Concord\Db\ActiveRecord) {
+                                if (!$this->getIsNewRecord() && $this->$relation instanceof \fangface\concord\db\ActiveRecord) {
 
                                     // sub models may exist that have changes even though the relation itself does not have any changes
                                     // also we may need to apply auto link updates fromChild and fromParent depending on changes to this
@@ -1389,7 +1389,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         } elseif (!$hasParentModel) {
             $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
         } else {
             $this->addActionWarning('Skipped delete of ' . Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
         }
@@ -1442,7 +1442,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             // not allowed to amend or delete
             $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } elseif ($hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
@@ -2217,7 +2217,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * the attributes of the record associated with the `$class` model, while the values of the
      * array refer to the corresponding attributes in **this** AR class.
      * @param array $config [OPTIONAL] array of config paramaters
-     * @return \Concord\Models\AttributeModel.
+     * @return \fangface\concord\Models\AttributeModel.
      */
     public function hasEav($class, $link, $config=array())
     {
@@ -2270,12 +2270,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * but only if the current model is not read only
      * @param string $name property name
      * @param mixed $value property value
-     * @throws \Concord\Db\Exception if the current record is read only
+     * @throws \fangface\concord\db\Exception if the current record is read only
      */
     public function __set($name, $value)
     {
         if ($this->getReadOnly()) {
-            throw new \Concord\Db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . Tools::getClassName($this) . ' model');
+            throw new \fangface\concord\db\Exception('Attempting to set attribute `' . $name . '` on a read only ' . Tools::getClassName($this) . ' model');
         }
         parent::__set($name, $value);
     }

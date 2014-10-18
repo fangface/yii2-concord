@@ -12,17 +12,17 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
-use Concord\Tests\Models\TestCase;
-use Concord\Tests\Models\ConnectionTestCase;
-use Concord\Tests\Models\Customer;
-use Concord\Tests\Models\Eav\AttributeValues;
-use Concord\Tests\Models\Address;
-use Concord\Tests\Models\Country;
-use Concord\Tests\Models\Order;
-use Concord\Tests\Models\Item;
-use Concord\Tests\Models\Product;
+use fangface\concord\tests\models\TestCase;
+use fangface\concord\tests\models\ConnectionTestCase;
+use fangface\concord\tests\models\Customer;
+use fangface\concord\tests\models\Eav\AttributeValues;
+use fangface\concord\tests\models\Address;
+use fangface\concord\tests\models\Country;
+use fangface\concord\tests\models\Order;
+use fangface\concord\tests\models\Item;
+use fangface\concord\tests\models\Product;
 
 
 /**
@@ -39,8 +39,8 @@ abstract class DbTestCase extends ConnectionTestCase
 
     /**
      * (non-PHPdoc)
-     * @see \Concord\Tests\TestCase::setUp()
-     * @see \Concord\Tests\TestCase::localSetUp()
+     * @see \fangface\concord\tests\TestCase::setUp()
+     * @see \fangface\concord\tests\TestCase::localSetUp()
      */
     protected function localSetUp()
     {
@@ -51,8 +51,8 @@ abstract class DbTestCase extends ConnectionTestCase
 
     /**
      * (non-PHPdoc)
-     * @see \Concord\Tests\TestCase::tearDown()
-     * @see \Concord\Tests\TestCase::localTearDown()
+     * @see \fangface\concord\tests\TestCase::tearDown()
+     * @see \fangface\concord\tests\TestCase::localTearDown()
      */
     protected function localTearDown()
     {
@@ -83,7 +83,7 @@ abstract class DbTestCase extends ConnectionTestCase
 
         if ($dbSetupType) {
 
-            $migrationPath = \Yii::getAlias('@Concord/Tests/Migrations');
+            $migrationPath = \Yii::getAlias('@fangface/concord/tests/migrations');
             $migrations = [];
             $files = glob($migrationPath . DIRECTORY_SEPARATOR . ($dbSetupType ? $dbSetupType . DIRECTORY_SEPARATOR : '') . '*.php');
             foreach ($files as $path) {
@@ -91,7 +91,7 @@ abstract class DbTestCase extends ConnectionTestCase
                 if (preg_match('/^(.*)\.(.*?)\.php$/', $file, $matches) && is_file($path)) {
                     $migrations[] = array(
                         'db' => $matches[1],
-                        'classFull' => '\\Concord\\Tests\\Migrations\\' . ($dbSetupType ? $dbSetupType . '\\' : '') . $matches[1] . ucfirst($matches[2]),
+                        'classFull' => '\\fangface\concord\\tests\\migrations\\' . ($dbSetupType ? $dbSetupType . '\\' : '') . $matches[1] . ucfirst($matches[2]),
                         'class' => $matches[1] . ucfirst($matches[2]),
                         'file' => $file,
                         'path' => $path,
@@ -139,7 +139,7 @@ abstract class DbTestCase extends ConnectionTestCase
 
         if ($dbSetupType) {
 
-            $fixturesPath = \Yii::getAlias('@Concord/Tests/Fixtures');
+            $fixturesPath = \Yii::getAlias('@fangface/concord/tests/fixtures');
             $fixtures = [];
 
             $files = glob($fixturesPath . DIRECTORY_SEPARATOR . ($dbSetupType ? $dbSetupType . DIRECTORY_SEPARATOR : '') . '*.php');
@@ -332,7 +332,7 @@ abstract class DbTestCase extends ConnectionTestCase
 
         $fullDataCheck = $this->cleanDatesForComparison($fullDataCheck);
 
-        $resultsPath = \Yii::getAlias('@Concord/Tests/Unit/Results');
+        $resultsPath = \Yii::getAlias('@fangface/concord/tests/data/results');
         $resultsFile = $resultsPath . '/ar-test2-' . strtolower($clientCode) . '.json';
         if (false) {
             // for use when comparing future tests

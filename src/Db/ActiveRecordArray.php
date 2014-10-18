@@ -12,15 +12,16 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
-use Concord\Base\Traits\ActionErrors;
-use Concord\Db\ActiveRecordArrayException;
-use Concord\Db\ActiveRecordParentalInterface;
-use Concord\Db\ActiveRecordParentalTrait;
-use Concord\Db\ActiveRecordReadOnlyInterface;
-use Concord\Db\ActiveRecordReadOnlyTrait;
-use Concord\Db\ActiveRecordSaveAllInterface;
+use fangface\concord\base\traits\ActionErrors;
+use fangface\concord\db\ActiveRecordArrayException;
+use fangface\concord\db\ActiveRecordParentalInterface;
+use fangface\concord\db\ActiveRecordParentalTrait;
+use fangface\concord\db\ActiveRecordReadOnlyInterface;
+use fangface\concord\db\ActiveRecordReadOnlyTrait;
+use fangface\concord\db\ActiveRecordSaveAllInterface;
+use fangface\concord\Tools;
 use yii\base\ModelEvent;
 use yii\db\ActiveRecord as YiiActiveRecord;
 
@@ -98,7 +99,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
     /**
      * Appends the value
      *
-     * @param \Concord\Db\ActiveRecord|\Concord\Db\ActiveAttributeRecord $value
+     * @param \fangface\concord\db\ActiveRecord|\fangface\concord\db\ActiveAttributeRecord $value
      * @return void
      */
     public function append($value)
@@ -110,7 +111,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
     /**
      * Appends the value but with a specific key value
      *
-     * @param \Concord\Db\ActiveRecord|\Concord\Db\ActiveAttributeRecord $value
+     * @param \fangface\concord\db\ActiveRecord|\fangface\concord\db\ActiveAttributeRecord $value
      * @param mixed $key
      * @return void
      */
@@ -124,7 +125,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
      * (non-PHPdoc)
      *
      * @see ArrayObject::offsetSet()
-     * @throws \Concord\Db\ActiveRecordArrayException
+     * @throws \fangface\concord\db\ActiveRecordArrayException
      */
     public function offsetSet($key, $value)
     {
@@ -134,7 +135,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
         } elseif ($this->getReadOnly()) {
 
-            throw new ActiveRecordArrayException('Attempting to add an element to a read only array of ' . \Concord\Tools::getClassName($this->defaultObjectClass));
+            throw new ActiveRecordArrayException('Attempting to add an element to a read only array of ' . Tools::getClassName($this->defaultObjectClass));
 
         } else {
 
@@ -167,7 +168,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
     /**
      * (non-PHPdoc)
      * @see ArrayObject::offsetGet()
-     * @throws \Concord\Db\ActiveRecordArrayException
+     * @throws \fangface\concord\db\ActiveRecordArrayException
      */
     public function offsetGet($key)
     {
@@ -188,7 +189,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
      * Returns the value at the specified key
      *
      * @param mixed $key
-     * @return \Concord\Db\ActiveRecord \Concord\Db\ActiveAttributeRecord
+     * @return \fangface\concord\db\ActiveRecord \fangface\concord\db\ActiveAttributeRecord
      */
     public function get($key)
     {
@@ -200,7 +201,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
      * Returns the value at the specified key
      *
      * @param mixed $key
-     * @return \Concord\Db\ActiveRecord \Concord\Db\ActiveAttributeRecord
+     * @return \fangface\concord\db\ActiveRecord \fangface\concord\db\ActiveAttributeRecord
      */
     public function row($key)
     {
@@ -383,7 +384,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
                                     if (!$canSaveThis) {
                                         $errors = $iterator->current()->getErrors();
                                         foreach ($errors as $errorField => $errorDescription) {
-                                            $this->addActionError($errorDescription, 0, $errorField, \Concord\Tools::getClassName($iterator->current()));
+                                            $this->addActionError($errorDescription, 0, $errorField, Tools::getClassName($iterator->current()));
                                         }
                                     }
                                 }
@@ -439,13 +440,13 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
         if ($hasParentModel && $this->getReadOnly()) {
 
             // not allowed to amend or delete but is a child model so we will treat as okay without deleting the record
-            $this->addActionWarning('Skipped saveAll on ' . \Concord\Tools::getClassName($this->defaultObjectClass) . '(s) which is read only');
+            $this->addActionWarning('Skipped saveAll on ' . Tools::getClassName($this->defaultObjectClass) . '(s) which is read only');
             $allOk = true;
 
         } elseif (!$hasParentModel && $this->getReadOnly()) {
 
             // not allowed to amend
-            throw new \Concord\Db\Exception('Attempting to saveAll on ' . \Concord\Tools::getClassName($this->defaultObjectClass) . '(s) which is read only');
+            throw new \fangface\concord\db\Exception('Attempting to saveAll on ' . Tools::getClassName($this->defaultObjectClass) . '(s) which is read only');
 
         } else {
 
@@ -488,7 +489,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
                         $ok = false;
                         if ($iterator->current() instanceof ActiveRecordSaveAllInterface) {
                             $ok = $iterator->current()->saveAll($runValidation, true, $push, true);
-                        } elseif (method_exists($this->$relation, 'save')) {
+                        } elseif (method_exists($iterator->current(), 'save')) {
                             $ok = $iterator->current()->save($runValidation);
                             if ($ok) {
                                 $iterator->current()->setIsNewRecord(false);
@@ -682,13 +683,13 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
         if ($hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
             // not allowed to amend or delete but is a child model so we will treat as okay without deleting the record
-            $this->addActionWarning('Skipped delete of ' . \Concord\Tools::getClassName($this->defaultObjectClass) . '(s)' . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
+            $this->addActionWarning('Skipped delete of ' . Tools::getClassName($this->defaultObjectClass) . '(s)' . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
             $allOk = true;
 
         } elseif (!$hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
             // not allowed to delete
-            throw new \Concord\Db\Exception('Attempting to delete ' . \Concord\Tools::getClassName($this->defaultObjectClass) . '(s)' . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable'));
+            throw new \fangface\concord\db\Exception('Attempting to delete ' . Tools::getClassName($this->defaultObjectClass) . '(s)' . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable'));
 
         } else {
 
@@ -707,7 +708,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
                     $ok = false;
                     if ($iterator->current() instanceof ActiveRecordSaveAllInterface) {
                         $ok = $iterator->current()->deleteFull(true);
-                    } elseif (method_exists($this->$relation, 'delete')) {
+                    } elseif (method_exists($iterator->current(), 'delete')) {
                         $ok = $iterator->current()->delete();
                     }
 
@@ -818,7 +819,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
                                 if (!$canDeleteThis) {
                                     $errors = $iterator->current()->getErrors();
                                     foreach ($errors as $errorField => $errorDescription) {
-                                        $this->addActionError($errorDescription, 0, $errorField, \Concord\Tools::getClassName($iterator->current()));
+                                        $this->addActionError($errorDescription, 0, $errorField, Tools::getClassName($iterator->current()));
                                     }
                                 }
                             }
@@ -1020,7 +1021,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
     /**
      * Set parent model
      *
-     * @param \Concord\Db\ActiveRecord|\yii\db\ActiveRecord $parentModel
+     * @param \fangface\concord\db\ActiveRecord|\yii\db\ActiveRecord $parentModel
      */
     public function setParentModel($parentModel)
     {
@@ -1253,12 +1254,12 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
      *
      * @param string $func
      * @param mixed[] $argv
-     * @throws \Concord\Db\ActiveRecordArrayException
+     * @throws \fangface\concord\db\ActiveRecordArrayException
      * @return mixed
      */
     public function __call($func, $argv)
     {
-        if (!is_callable($func) || substr($func, 0, 6) !== 'array_') {throw new \Concord\Db\ActiveRecordArrayException(__CLASS__ . '->' . $func . ' does not exist');}
+        if (!is_callable($func) || substr($func, 0, 6) !== 'array_') {throw new \fangface\concord\db\ActiveRecordArrayException(__CLASS__ . '->' . $func . ' does not exist');}
         return call_user_func_array($func, array_merge(array(
             $this->getArrayCopy()
         ), $argv));
@@ -1267,7 +1268,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
     /**
      * Required to meet the needs of ActiveRecordSaveAllInterface but not used at this level
-     * @see \Concord\Db\ActiveRecordSaveAllInterface
+     * @see \fangface\concord\db\ActiveRecordSaveAllInterface
      */
     public function save($runValidation = true, $attributes = null, $hasParentModel = false, $fromSaveAll = false)
     {
@@ -1277,7 +1278,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
     /**
      * Required to meet the needs of ActiveRecordSaveAllInterface but not used at this level
-     * @see \Concord\Db\ActiveRecordSaveAllInterface
+     * @see \fangface\concord\db\ActiveRecordSaveAllInterface
      */
     public function beforeSaveAll()
     {
@@ -1287,7 +1288,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
     /**
      * Required to meet the needs of ActiveRecordSaveAllInterface but not used at this level
-     * @see \Concord\Db\ActiveRecordSaveAllInterface
+     * @see \fangface\concord\db\ActiveRecordSaveAllInterface
      */
     public function afterSaveAll()
     {
@@ -1318,7 +1319,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
     /**
      * Required to meet the needs of ActiveRecordSaveAllInterface but not used at this level
-     * @see \Concord\Db\ActiveRecordSaveAllInterface
+     * @see \fangface\concord\db\ActiveRecordSaveAllInterface
      */
     public function resetOnFailedSave($data)
     {
@@ -1327,7 +1328,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
     /**
      * Required to meet the needs of ActiveRecordSaveAllInterface but not used at this level
-     * @see \Concord\Db\ActiveRecordSaveAllInterface
+     * @see \fangface\concord\db\ActiveRecordSaveAllInterface
      */
     public function delete($hasParentModel = false, $fromDeleteFull = false)
     {
@@ -1336,7 +1337,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
     /**
      * Required to meet the needs of ActiveRecordSaveAllInterface but not used at this level
-     * @see \Concord\Db\ActiveRecordSaveAllInterface
+     * @see \fangface\concord\db\ActiveRecordSaveAllInterface
      */
     public function beforeDeleteFull()
     {
@@ -1346,7 +1347,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
 
     /**
      * Required to meet the needs of ActiveRecordSaveAllInterface but not used at this level
-     * @see \Concord\Db\ActiveRecordSaveAllInterface
+     * @see \fangface\concord\db\ActiveRecordSaveAllInterface
      */
     public function afterDeleteFull()
     {

@@ -17,14 +17,14 @@
 
     <testsuites>
         <testsuite name="Concord PHP Add-On for Yii2">
-            <directory>./tests/Unit</directory>
+            <directory>./tests/unit</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
+    <!-- filter>
         <blacklist>
-            <directory>./tests/Unit/Results</directory>
+            <directory>./tests/unit/xyz</directory>
         </blacklist>
-    </filter>
+    </filter -->
 
 </phpunit>

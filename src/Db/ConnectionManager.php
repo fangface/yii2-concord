@@ -12,11 +12,15 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
-use Yii;
 use yii\base\Component;
-use \yii\helpers\Security;
+use yii\helpers\Security;
+use fangface\concord\models\db\Client;
+use fangface\concord\base\traits\ServiceGetter;
+use fangface\concord\db\Exception;
+use fangface\concord\models\db\client\DbResource as ClientDbResource;
+use fangface\concord\models\db\DbResource;
 
 /**
  * ConnectionManager Class
@@ -40,7 +44,7 @@ use \yii\helpers\Security;
  */
 class ConnectionManager extends Component
 {
-    use \Concord\Base\Traits\ServiceGetter;
+    use ServiceGetter;
 
     /**
      * Key to use to recover dbResource passwords
@@ -237,41 +241,41 @@ class ConnectionManager extends Component
                  * so we will get the details from the db.clients table
                  */
                 $dbResource = $this->getService('client');
-                if ($dbResource && $dbResource instanceof \Concord\Models\Db\Client) {
+                if ($dbResource && $dbResource instanceof Client) {
                     // take some default values form the defaul connection (which would have come from config
                     $connection = $this->getConnection();
                 }
 
             } elseif ($clientResource) {
                 $client = $this->getService('client');
-                if ($client && $client instanceof \Concord\Models\Db\Client) {
+                if ($client && $client instanceof Client) {
                     $connection = $this->getClientConnection(true);
                     if ($connection && $connection instanceof \yii\db\Connection) {
                         try {
-                            $dbResource = \Concord\Models\Db\Client\DbResource::find()
+                            $dbResource = ClientDbResource::find()
                                 ->where(['resourceName' => $resourceName])
                                 ->one();
                         } catch (\yii\db\Exception $e) {
-                            throw new \Concord\Db\Exception('Unable to load client dbResources');
+                            throw new Exception('Unable to load client dbResources');
                         }
                     } else {
-                        throw new \Concord\Db\Exception('No connections to client db available');
+                        throw new Exception('No connections to client db available');
                     }
                 } else {
-                    throw new \Concord\Db\Exception('No client service available');
+                    throw new Exception('No client service available');
                 }
             } else {
                 $connection = $this->getConnection();
                 if ($connection && $connection instanceof \yii\db\Connection) {
                     try {
-                        $dbResource = \Concord\Models\Db\DbResource::find()
+                        $dbResource = DbResource::find()
                             ->where(['resourceName' => $resourceName])
                             ->one();
                     } catch (\yii\db\Exception $e) {
-                        throw new \Concord\Db\Exception('Unable to load dbResources');
+                        throw new Exception('Unable to load dbResources');
                     }
                 } else {
-                    throw new \Concord\Db\Exception('No connections to load dbResources');
+                    throw new Exception('No connections to load dbResources');
                 }
             }
 
@@ -314,7 +318,7 @@ class ConnectionManager extends Component
                     return true;
                 }
             } else {
-                throw new \Concord\Db\Exception('Missing dbParams on addResource');
+                throw new Exception('Missing dbParams on addResource');
             }
         }
         return false;
@@ -671,7 +675,7 @@ class ConnectionManager extends Component
                 if (!isset($this->resources['Resources'][$serviceName])) {
                     $resourceName = $this->getResourceNameByAlias($serviceName);
                     if ($resourceName) {
-                        throw new \Concord\Db\Exception('Service manager has db connection instance that is also an alias within ConnectionManager');
+                        throw new Exception('Service manager has db connection instance that is also an alias within ConnectionManager');
                     }
                     $class = get_class($service);
                     $this->extendResourceArray($serviceName, $service, $class);
@@ -765,7 +769,7 @@ class ConnectionManager extends Component
     /**
      * Obtain the last error code info on the specified connection
      * <code>
-     *      list($pdoErrorCode, $dbErrorCode, $dbErrorString) = Yii::$app->get('dbFactory')->getLastError('db');
+     *      list($pdoErrorCode, $dbErrorCode, $dbErrorString) = \Yii::$app->get('dbFactory')->getLastError('db');
      * </code>
      * @param string $resourceName [OPTIONAL] (default is the current default resource name)
      * @return array|false

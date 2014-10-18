@@ -12,9 +12,9 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
-use Concord\Db\ActiveRecord;
+use fangface\concord\db\ActiveRecord;
 
 /**
  * Active Record class for the main db.{prefix}countries table

@@ -5,10 +5,10 @@
  * @license http://opensource.org/licenses/BSD-3-Clause
  */
 
-namespace Concord\Behaviors;
+namespace fangface\concord\behaviors;
 
 use yii\base\Behavior;
-use Concord\Db\ActiveRecord;
+use fangface\concord\db\ActiveRecord;
 use yii\db\ActiveQuery;
 
 /**

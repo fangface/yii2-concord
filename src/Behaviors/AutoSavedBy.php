@@ -12,9 +12,9 @@
  *
  */
 
-namespace Concord\Behaviors;
+namespace fangface\concord\behaviors;
 
-use Concord\Db\ActiveRecord;
+use fangface\concord\db\ActiveRecord;
 use Yii;
 use yii\base\Behavior;
 use yii\db\Expression;
@@ -26,7 +26,7 @@ use yii\db\Expression;
  * public function behaviors()
  * {
  *     return [
- *         'savedby' => ['class' => 'Concord\Behaviors\AutoSavedBy'],
+ *         'savedby' => ['class' => 'fangface\concord\behaviors\AutoSavedBy'],
  *     ];
  * }
  * ~~~

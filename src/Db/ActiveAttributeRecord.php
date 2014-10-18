@@ -12,16 +12,16 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
-use Concord\Base\Traits\ActionErrors;
-use Concord\Db\ActiveRecordParentalInterface;
-use Concord\Db\ActiveRecordParentalTrait;
-use Concord\Db\ActiveRecordReadOnlyInterface;
-use Concord\Db\ActiveRecordReadOnlyTrait;
-use Concord\Db\ActiveRecordSaveAllInterface;
-use Concord\Db\Exception;
-use Concord\Tools;
+use fangface\concord\base\traits\ActionErrors;
+use fangface\concord\db\ActiveRecordParentalInterface;
+use fangface\concord\db\ActiveRecordParentalTrait;
+use fangface\concord\db\ActiveRecordReadOnlyInterface;
+use fangface\concord\db\ActiveRecordReadOnlyTrait;
+use fangface\concord\db\ActiveRecordSaveAllInterface;
+use fangface\concord\db\Exception;
+use fangface\concord\Tools;
 use Yii;
 use yii\base\ModelEvent;
 
@@ -31,7 +31,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     use ActionErrors;
     use ActiveRecordParentalTrait;
     use ActiveRecordReadOnlyTrait;
-    use \Concord\Base\Traits\ServiceGetter;
+    use \fangface\concord\base\traits\ServiceGetter;
 
     protected $attributeEntitiesClass = false;
 
@@ -63,7 +63,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     /**
      * Array of existing attribute value models ready to use during delete or save
      *
-     * @var \Concord\Models\AttributeValues[]
+     * @var \fangface\concord\Models\AttributeValues[]
      */
     private $attributeValues = array();
 
@@ -210,15 +210,15 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     public function init()
     {
         if (!$this->attributeEntitiesClass) {
-            $this->attributeEntitiesClass = \Concord\Models\AttributeEntities::className();
+            $this->attributeEntitiesClass = \fangface\concord\Models\AttributeEntities::className();
         }
 
         if (!$this->attributeDefinitionsClass) {
-            $this->attributeDefinitionsClass = \Concord\Models\AttributeDefinitions::className();
+            $this->attributeDefinitionsClass = \fangface\concord\Models\AttributeDefinitions::className();
         }
 
         if (!$this->attributeValuesClass) {
-            $this->attributeValuesClass = \Concord\Models\AttributeValues::className();
+            $this->attributeValuesClass = \fangface\concord\Models\AttributeValues::className();
         }
 
         if (!class_exists($this->attributeEntitiesClass)) {
@@ -371,7 +371,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
         foreach ($this->data as $k => $v) {
             // now apply value formatters because all values are trpically stored in string fields at the moment
-            $this->data[$k] = \Concord\Tools::formatAttributeValue($v, $attributeDefs[$k]);
+            $this->data[$k] = Tools::formatAttributeValue($v, $attributeDefs[$k]);
         }
     }
 
@@ -452,7 +452,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
                         }
                         // now apply value formatters because all values are trpically stores in string fields
                         foreach ($newAttributes as $k => $v) {
-                            $this->data[$k] = \Concord\Tools::formatAttributeValue($v, $attributeDefs[$k]);
+                            $this->data[$k] = Tools::formatAttributeValue($v, $attributeDefs[$k]);
                             unset($this->lazyAttributes[$k]);
                         }
                     }
@@ -633,14 +633,14 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             throw new Exception('No entity id available for ' . __METHOD__ . '()');
         }
 
-        if (isset(self::$attributeDefinitions[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId])) {
+        if (isset(self::$attributeDefinitions[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId])) {
             if ($attributeName) {
-                if (isset(self::$attributeDefinitions[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId][$attributeName])) {
-                    return self::$attributeDefinitions[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId][$attributeName];
+                if (isset(self::$attributeDefinitions[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId][$attributeName])) {
+                    return self::$attributeDefinitions[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId][$attributeName];
                 }
                 return false;
             }
-            return self::$attributeDefinitions[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId];
+            return self::$attributeDefinitions[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId];
         }
 
         $conditions = array();
@@ -661,7 +661,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             foreach ($attributeDefinitions as $k => $v) {
                 $result[$v['attributeName']] = $v;
             }
-            self::$attributeDefinitions[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId] = $result;
+            self::$attributeDefinitions[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId] = $result;
         }
 
         if ($attributeName) {
@@ -694,29 +694,29 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             throw new Exception('No entity id available for ' . __METHOD__ . '()');
         }
 
-        if (isset(self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId])) {
-            return self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId];
+        if (isset(self::$attributeDefinitionsMap[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId])) {
+            return self::$attributeDefinitionsMap[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId];
         }
 
         $attributeList = $this->getEntityAttributeList('', $entityId);
 
-        self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId] = array(
+        self::$attributeDefinitionsMap[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId] = array(
             'id' => array(),
             'name' => array()
         );
 
         if ($attributeList) {
             foreach ($attributeList as $k => $v) {
-                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['id'][$v['id']] = $v['attributeName'];
-                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['name'][$v['attributeName']] = $v['id'];
-                self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName]['__ALL__'][$v['id']] = array(
+                self::$attributeDefinitionsMap[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['id'][$v['id']] = $v['attributeName'];
+                self::$attributeDefinitionsMap[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId]['name'][$v['attributeName']] = $v['id'];
+                self::$attributeDefinitionsMap[Tools::getClientId()][$this->cleanDefinitionsClassName]['__ALL__'][$v['id']] = array(
                     'name' => $v['attributeName'],
                     'entity' => $v['entityId']
                 );
             }
         }
 
-        return self::$attributeDefinitionsMap[\Concord\Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId];
+        return self::$attributeDefinitionsMap[Tools::getClientId()][$this->cleanDefinitionsClassName][$entityId];
     }
 
 
@@ -1107,16 +1107,16 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
         } elseif (!$hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
             // not allowed to amend or delete
-            $message = 'Attempting to delete ' . \Concord\Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
+            $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             $this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } elseif ($hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
             // not allowed to amend or delete
-            $message = 'Attempting to delete ' . \Concord\Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
+            $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             $this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } else {
 
@@ -1351,11 +1351,11 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             }
 
         } elseif (!$hasParentModel) {
-            $message = 'Attempting to delete ' . \Concord\Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
+            $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
         } else {
-            $this->addActionWarning('Skipped delete of ' . \Concord\Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
+            $this->addActionWarning('Skipped delete of ' . Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
         }
 
         return $ok;
@@ -1502,13 +1502,13 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
             // return failure if we are at the top of the tree and should not be asking to saveAll
             // not allowed to amend or delete
-            $message = 'Attempting to saveAll on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Attempting to saveAll on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
-            $message = 'Skipping saveAll on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Skipping saveAll on ' . Tools::getClassName($this) . ' readOnly model';
             $this->addActionWarning($message);
             return true;
 
@@ -1591,13 +1591,13 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
             // return failure if we are at the top of the tree and should not be asking to saveAll
             // not allowed to amend or delete
-            $message = 'Attempting to save on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Attempting to save on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
-            throw new \Concord\Db\Exception($message);
+            throw new \fangface\concord\db\Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
-            $message = 'Skipping save on ' . \Concord\Tools::getClassName($this) . ' readOnly model';
+            $message = 'Skipping save on ' . Tools::getClassName($this) . ' readOnly model';
             $this->addActionWarning($message);
             return true;
 
@@ -1709,9 +1709,9 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
 
                 if ($attributeId) {
 
-                    $attributeValue = \Concord\Tools::formatAttributeValue($attributeValue, $attributeDef);
+                    $attributeValue = Tools::formatAttributeValue($attributeValue, $attributeDef);
 
-                    if ($attributeDef['deleteOnDefault'] && $attributeValue === \Concord\Tools::formatAttributeValue($attributeDef['defaultValue'], $attributeDef)) {
+                    if ($attributeDef['deleteOnDefault'] && $attributeValue === Tools::formatAttributeValue($attributeDef['defaultValue'], $attributeDef)) {
 
                         // value is default so we will remove it from the attribtue table as not required
                         $ok = true;

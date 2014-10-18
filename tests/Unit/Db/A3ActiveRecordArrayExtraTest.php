@@ -12,14 +12,13 @@
  *
  */
 
-namespace Concord\Tests\Unit\Db;
+namespace fangface\concord\tests\Unit\Db;
 
-use Concord\Tests\Models\DbTestCase as DbTestCase;
-use Concord\Models\Db\Client;
-use Concord\Tests\Models\Customer;
-use Concord\Tests\Models\Order;
-use Concord\Tests\Models\Item;
-use Yii;
+use fangface\concord\models\db\Client;
+use fangface\concord\tests\models\DbTestCase;
+use fangface\concord\tests\models\Customer;
+use fangface\concord\tests\models\Order;
+use fangface\concord\tests\models\Item;
 
 /**
  * Test Concord Active Record array add-on for Yii2 hasMany/multi active record arrays
@@ -29,19 +28,19 @@ use Yii;
 class A3ActiveRecordArrayExtraTest extends DbTestCase
 {
 
-    use \Concord\Base\Traits\ServiceGetter;
+    use \fangface\concord\base\traits\ServiceGetter;
 
 
     /**
      * Test add invalid object to new active record object array
      *
-     * @expectedException        \Concord\Db\ActiveRecordArrayException
-     * @expectedExceptionMessage Item added to array not of type `Concord\Tests\Models\Item` it is of type `Concord\Tests\Models\Customer`
+     * @expectedException        \fangface\concord\db\ActiveRecordArrayException
+     * @expectedExceptionMessage Item added to array not of type `fangface\concord\tests\models\Item` it is of type `fangface\concord\tests\models\Customer`
      */
     function testActiveRecordArrayAddInvalidObjectToNewArray()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $order = new Order();
@@ -52,13 +51,13 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test add invalid object to existing active record object array
      *
-     * @expectedException        \Concord\Db\ActiveRecordArrayException
-     * @expectedExceptionMessage Item added to array not of type `Concord\Tests\Models\Item` it is of type `Concord\Tests\Models\Customer`
+     * @expectedException        \fangface\concord\db\ActiveRecordArrayException
+     * @expectedExceptionMessage Item added to array not of type `fangface\concord\tests\models\Item` it is of type `fangface\concord\tests\models\Customer`
      */
     function testActiveRecordArrayAddInvalidObjectToExistingArray()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -67,7 +66,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
         $this->assertEquals(3, $customer->orders[1]->items->count());
 
         $customer->orders[1]->items[] = new Customer();
@@ -80,7 +79,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     function testActiveRecordArrayAddValidObjectToExistingArray()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -89,7 +88,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
         $this->assertEquals(3, $customer->orders[1]->items->count());
 
         $customer->orders[1]->items[] = new Item(array(
@@ -106,7 +105,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
         $this->assertTrue($customer->saveAll());
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
         $this->assertEquals(4, $customer->orders[1]->items->count());
     }
 
@@ -114,14 +113,14 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array set attribute via magic method for a readOnly array
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `productCode` on a read only Item model
      */
     function testActiveRecordSetAttributeViaMagicSetOnReadOnlyFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -130,7 +129,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $customer->orders[1]->items->setReadOnly(true);
 
@@ -144,14 +143,14 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array saveAll() where readOnly has been set
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to saveAll on Item(s) which is read only
      */
     function testActiveRecordSaveAllOnReadOnlyArrayFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -160,7 +159,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $customer->orders[1]->items->setReadOnly(true);
         $customer->orders[1]->items->saveAll();
@@ -170,14 +169,14 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array deleteFull() where readOnly has been set
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Item(s) readOnly model
      */
     function testActiveRecordDeleteFullOnReadOnlyArrayFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -186,7 +185,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $customer->orders[1]->items->setReadOnly(true);
         $customer->orders[1]->items->deleteFull();
@@ -196,14 +195,14 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array deleteFull() where canDelete has been set to false
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Item(s) model flagged as not deletable
      */
     function testActiveRecordDeleteFullOnNonCanDeleteArrayFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -212,7 +211,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $customer->orders[1]->items->setCanDelete(false);
         $customer->orders[1]->items->deleteFull();

@@ -12,9 +12,9 @@
  *
  */
 
-namespace Concord\Models\Eav;
+namespace fangface\concord\models\eav;
 
-use Concord\Db\ActiveRecord;
+use fangface\concord\db\ActiveRecord;
 
 class AttributeDefinitions extends ActiveRecord
 {

@@ -12,11 +12,11 @@
  *
  */
 
-namespace Concord\Base;
+namespace fangface\concord\base;
 
 class Controller extends \yii\web\Controller
 {
 
-    use \Concord\Base\Traits\ServiceGetter;
+    use \fangface\concord\base\traits\ServiceGetter;
 
 }

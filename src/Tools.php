@@ -12,18 +12,20 @@
  *
  */
 
-namespace Concord;
+namespace fangface\concord;
 
-use Concord\Tools;
+use fangface\concord\tools;
+use fangface\concord\base\traits\Singleton;
+use fangface\concord\base\traits\ServiceGetterStatic;
+use fangface\concord\models\db\Client;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
-use Yii;
 
 class Tools
 {
 
-    use \Concord\Base\Traits\Singleton;
-    use \Concord\Base\Traits\ServiceGetterStatic;
+    use Singleton;
+    use ServiceGetterStatic;
 
     const DATE_TIME_DB_EMPTY = '0000-00-00 00:00:00';
     const DATE_DB_EMPTY = '0000-00-00';
@@ -39,7 +41,7 @@ class Tools
     public static function getClientId()
     {
         $client = static::getService('client');
-        if ($client && $client instanceof \Concord\Models\Db\Client) {
+        if ($client && $client instanceof Client) {
             return $client->id;
         }
         return 0;
@@ -54,7 +56,7 @@ class Tools
     public static function getClientCode()
     {
         $client = static::getService('client');
-        if ($client && $client instanceof \Concord\Models\Db\Client) {
+        if ($client && $client instanceof Client) {
             return $client->clientCode;
         }
         return '';
@@ -91,7 +93,7 @@ class Tools
 
     /**
      * Determine default table name for an ActiveRecord class
-     * @param \Concord\Db\ActiveRecord $object
+     * @param \fangface\concord\db\ActiveRecord $object
      * @return string
      */
 
@@ -1111,7 +1113,7 @@ class Tools
             $class,
             $extra,
         ];
-        Yii::$app->session->setFlash($key, $values);
+        \Yii::$app->session->setFlash($key, $values);
     }
 
 

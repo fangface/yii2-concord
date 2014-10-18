@@ -12,12 +12,12 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
-use Concord\Db\ActiveRecord;
-use Concord\Tests\Models\Product;
-use Concord\Tests\Models\Order;
-use Concord\Tests\Models\Customer;
+use fangface\concord\db\ActiveRecord;
+use fangface\concord\tests\models\Product;
+use fangface\concord\tests\models\Order;
+use fangface\concord\tests\models\Customer;
 
 /**
  * Active Record class for the clients dbCLIENT.{prefix}items table
@@ -31,9 +31,9 @@ use Concord\Tests\Models\Customer;
  * @property string $field1
  * @property string $field2
  * @property string $field3
- * @property \Concord\Tests\Models\Product $product
- * @property \Concord\Tests\Models\Order $order
- * @property \Concord\Tests\Models\Customer $customer
+ * @property \fangface\concord\tests\models\Product $product
+ * @property \fangface\concord\tests\models\Order $order
+ * @property \fangface\concord\tests\models\Customer $customer
  */
 class Item extends ActiveRecord
 {

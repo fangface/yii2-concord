@@ -1,9 +1,9 @@
 <?
 
-namespace Concord\Tools;
+namespace fangface\concord\tools;
 
 use yii\base\Model;
-use Concord\Tools\Xml;
+use fangface\concord\tools\Xml;
 
 class XmlPost extends Model {
 
@@ -34,7 +34,7 @@ class XmlPost extends Model {
     public $remote_request = '';
 
     /**
-     * @var string The response document
+     * @var mixed The response document
      */
     public $remote_response = '';
 

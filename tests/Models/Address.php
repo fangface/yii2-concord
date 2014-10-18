@@ -12,11 +12,11 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
-use Concord\Db\ActiveRecord;
-use Concord\Tests\Models\Country;
-use Concord\Tests\Models\Customer;
+use fangface\concord\db\ActiveRecord;
+use fangface\concord\tests\models\Country;
+use fangface\concord\tests\models\Customer;
 
 /**
  * Active Record class for the clients dbClient.{prefix}addresses table
@@ -38,8 +38,8 @@ use Concord\Tests\Models\Customer;
  * @property integer $createdBy	User id of user that created record
  * @property datetime $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
- * @property \Concord\Tests\Models\Country $country
- * @property \Concord\Tests\Models\Customer $customer
+ * @property \fangface\concord\tests\models\Country $country
+ * @property \fangface\concord\tests\models\Customer $customer
  */
 class Address extends ActiveRecord
 {

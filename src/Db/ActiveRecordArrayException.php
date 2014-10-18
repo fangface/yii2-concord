@@ -12,9 +12,9 @@
  *
  */
 
-namespace Concord\Db;
+namespace fangface\concord\db;
 
-class ActiveRecordArrayException extends \Concord\Exception
+class ActiveRecordArrayException extends \fangface\concord\Exception
 {
 
 }

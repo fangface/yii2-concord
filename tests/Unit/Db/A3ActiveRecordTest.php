@@ -12,14 +12,13 @@
  *
  */
 
-namespace Concord\Tests\Unit\Db;
+namespace fangface\concord\tests\Unit\Db;
 
-use Concord\Tests\Models\DbTestCase as DbTestCase;
-use Concord\Models\Db\Client;
-use Concord\Tests\Models\Customer;
-use Concord\Tests\Models\Order;
-use Concord\Tests\Models\Item;
-use Yii;
+use fangface\concord\models\db\Client;
+use fangface\concord\tests\models\DbTestCase;
+use fangface\concord\tests\models\Customer;
+use fangface\concord\tests\models\Order;
+use fangface\concord\tests\models\Item;
 
 /**
  * Test Concord Active Record add-on for Yii2
@@ -27,14 +26,14 @@ use Yii;
 class A3ActiveRecordTest extends DbTestCase
 {
 
-    use \Concord\Base\Traits\ServiceGetter;
+    use \fangface\concord\base\traits\ServiceGetter;
 
     /**
      * Test active record extensions across the two test clients
      */
     public function testActiveRecordExtensions()
     {
-        $dbFactory = Yii::$app->get('dbFactory');
+        $dbFactory = \Yii::$app->get('dbFactory');
 
         $clients = Client::find()
             ->orderBy('id')
@@ -43,7 +42,7 @@ class A3ActiveRecordTest extends DbTestCase
         $cnt = 0;
         foreach ($clients as $client) {
 
-            $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+            $this->assertInstanceOf(Client::className(), $client);
             $this->setService('client', $client);
 
 
@@ -92,7 +91,7 @@ class A3ActiveRecordTest extends DbTestCase
                     $customerId = $customer->id;
 
                     $customer = Customer::findOne($customerId);
-                    $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+                    $this->assertInstanceOf(Customer::className(), $customer);
 
                     /////// new order - using calculated new element keys - with assortment of array access, get row functions
 
@@ -328,7 +327,7 @@ class A3ActiveRecordTest extends DbTestCase
 
             $fullDataCheck = $this->cleanDatesForComparison($fullDataCheck);
 
-            $resultsPath = \Yii::getAlias('@Concord/Tests/Unit/Results');
+            $resultsPath = \Yii::getAlias('@fangface/concord/tests/data/results');
             $resultsFile = $resultsPath . '/ar-test-' . strtolower($client->clientCode) . '.json';
             if (false) {
                 // for use when comparing future tests
@@ -358,7 +357,7 @@ class A3ActiveRecordTest extends DbTestCase
      */
     function testActiveRecordFullDelete()
     {
-        $dbFactory = Yii::$app->get('dbFactory');
+        $dbFactory = \Yii::$app->get('dbFactory');
 
         $this->assertEquals(0, $dbFactory->getResourceCount());
 
@@ -371,7 +370,7 @@ class A3ActiveRecordTest extends DbTestCase
         $cnt = 0;
         foreach ($clients as $client) {
 
-            $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+            $this->assertInstanceOf(Client::className(), $client);
             $this->setService('client', $client);
 
             $this->checkBaseCounts();
@@ -383,7 +382,7 @@ class A3ActiveRecordTest extends DbTestCase
             $this->assertTrue($customerId !== false && $customerId > 0);
 
             $customer = Customer::findOne($customerId);
-            $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+            $this->assertInstanceOf(Customer::className(), $customer);
 
             // should be able to do a full delete which will exclude any relations that have
             // been defined as read only
@@ -408,7 +407,7 @@ class A3ActiveRecordTest extends DbTestCase
      */
     function testActiveRecordFullDeleteOnPartialRelation()
     {
-        $dbFactory = Yii::$app->get('dbFactory');
+        $dbFactory = \Yii::$app->get('dbFactory');
 
         $this->assertEquals(0, $dbFactory->getResourceCount());
 
@@ -421,7 +420,7 @@ class A3ActiveRecordTest extends DbTestCase
         $cnt = 0;
         foreach ($clients as $client) {
 
-            $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+            $this->assertInstanceOf(Client::className(), $client);
             $this->setService('client', $client);
 
             $this->checkBaseCounts();
@@ -433,7 +432,7 @@ class A3ActiveRecordTest extends DbTestCase
             $this->assertTrue($customerId !== false && $customerId > 0);
 
             $customer = Customer::findOne($customerId);
-            $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+            $this->assertInstanceOf(Customer::className(), $customer);
 
             // should be able to do a full delete which will exclude any relations that have
             // been defined as read only
@@ -455,13 +454,13 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct deleteFull() fails on readOnly relation
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Country readOnly model
      */
     function testActiveRecordDirectDeleteFullOnReadOnlyFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -470,7 +469,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $this->assertFalse($customer->address->country->deleteFull());
     }
@@ -479,13 +478,13 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct delete() fails on readOnly relation
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Country readOnly model
      */
     function testActiveRecordDirectDeleteOnReadOnlyFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -494,7 +493,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $this->assertFalse($customer->address->country->delete());
     }
@@ -503,13 +502,13 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct fullDelete() fails on !canDelete relation
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Country model flagged as not deletable
      */
     function testActiveRecordDirectDeleteFullOnNonCanDeleteFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -518,7 +517,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // bypass read only to allow testing of !canDelete
         $customer->address->country->setReadOnly(false);
@@ -530,13 +529,13 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct delete() fails on !canDelete relation
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Country model flagged as not deletable
      */
     function testActiveRecordDirectDeleteOnNonCanDeleteFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -545,7 +544,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // bypass read only to allow testing of !canDelete
         $customer->address->country->setReadOnly(false);
@@ -557,13 +556,13 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct saveAll() fails on !readOnly
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to saveAll on Country readOnly model
      */
     function testActiveRecordDirectSaveAllOnReadOnlyFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -572,7 +571,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $this->assertFalse($customer->address->country->saveAll());
     }
@@ -581,14 +580,14 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct save() fails on !readOnly
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to save on Country readOnly model
      */
     function testActiveRecordDirectSaveOnReadOnlyFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -597,7 +596,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $this->assertFalse($customer->address->country->save());
     }
@@ -606,14 +605,14 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions set attribute for a readOnly model
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `longName` on a read only Country model
      */
     function testActiveRecordSetAttributeOnReadOnlyFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -622,7 +621,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // check attribute can be read first
         $this->assertEquals('United Kingdom', $customer->address->country->longName);
@@ -634,14 +633,14 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions set attribute via magic method for a readOnly model
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `longName` on a read only Country model
      */
     function testActiveRecordSetAttributeViaMagicSetOnReadOnlyFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -650,7 +649,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // check attribute can be read first
         $this->assertEquals('United Kingdom', $customer->address->country->longName);
@@ -662,14 +661,14 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions set attributes for a readOnly model
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to set attributes on a read only Country model
      */
     function testActiveRecordSetAttributesOnReadOnlyFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -678,7 +677,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // check attribute can be read first
         $this->assertEquals('United Kingdom', $customer->address->country->longName);
@@ -691,13 +690,13 @@ class A3ActiveRecordTest extends DbTestCase
      * Test invalid active record property being set
      *
      * @expectedException        \yii\base\UnknownPropertyException
-     * @expectedExceptionMessage Setting unknown property: Concord\Tests\Models\Customer::fieldNotExist
+     * @expectedExceptionMessage Setting unknown property: fangface\concord\tests\models\Customer::fieldNotExist
      */
     function testActiveRecordSetNonExistAttributeFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -706,7 +705,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // check attribute can be read first
         $customer->fieldNotExist = 1;
@@ -717,12 +716,12 @@ class A3ActiveRecordTest extends DbTestCase
      * Test invalid active record property being set via setAttribute()
      *
      * @expectedException        \yii\base\InvalidParamException
-     * @expectedExceptionMessage Concord\Tests\Models\Customer has no attribute named "fieldNotExist".
+     * @expectedExceptionMessage fangface\concord\tests\models\Customer has no attribute named "fieldNotExist".
      */
     function testActiveRecordSetNonExistSetAttributeFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -731,7 +730,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // check attribute can be read first
         $customer->setAttribute('fieldNotExist', 1);
@@ -744,7 +743,7 @@ class A3ActiveRecordTest extends DbTestCase
     function testActiveRecordDirectSave()
     {
         $client = Client::findOne(2);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -753,7 +752,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // check attribute can be read first
         $customer->extraField = 'New Value ' . time();
@@ -763,7 +762,7 @@ class A3ActiveRecordTest extends DbTestCase
         $customer->save();
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
         $customerReloaded = $this->cleanDatesForComparison($customer->toArray());
 
         $this->assertEquals($customerPreSave, $customerReloaded, 'Failed to match save() data after reload');
@@ -776,7 +775,7 @@ class A3ActiveRecordTest extends DbTestCase
     function testActiveRecordDirectDelete()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -785,7 +784,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $customer->orders[1]->items[3]->delete();
 
@@ -797,13 +796,13 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct deleteFull() fails on readOnly relation
      * where readOnly is defined in the model class itself
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Product readOnly model
      */
     function testActiveRecordDirectDeleteFullOnClassDefinedReadOnlyFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -812,7 +811,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $this->assertFalse($customer->orders[1]->items[1]->product->deleteFull());
     }
@@ -822,13 +821,13 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct deleteFull() fails on !canDelete relation
      * where !canDelete is defined in the model class itself
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Product model flagged as not deletable
      */
     function testActiveRecordDirectDeleteFullOnClassDefinedNonCanDeleteFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -837,7 +836,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // override so we can test non canDelete
         $customer->orders[1]->items[1]->product->setReadOnly(false);
@@ -849,13 +848,13 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct delete() fails on readOnly relation
      * where readOnly is defined in the model class itself
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Product readOnly model
      */
     function testActiveRecordDirectDeleteOnClassDefinedReadOnlyFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -864,7 +863,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $this->assertFalse($customer->orders[1]->items[1]->product->delete());
     }
@@ -874,13 +873,13 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct delete() fails on !canDelete relation
      * where !canDelete is defined in the model class itself
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to delete Product model flagged as not deletable
      */
     function testActiveRecordDirectDeleteOnClassDefinedNonCanDeleteFails()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -889,7 +888,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // override so we can test non canDelete
         $customer->orders[1]->items[1]->product->setReadOnly(false);
@@ -901,14 +900,14 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions set attribute via magic method for a readOnly model
      * where readOnly is defined in the model class itself
      *
-     * @expectedException        \Concord\Db\Exception
+     * @expectedException        \fangface\concord\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `description` on a read only Product model
      */
     function testActiveRecordSetAttributeViaMagicSetOnClassDefinedReadOnlyFails()
     {
 
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -917,7 +916,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         // check attribute can be read first
         $this->assertEquals('Description for productCode CODE1', $customer->orders[1]->items[1]->product->description);
@@ -934,7 +933,7 @@ class A3ActiveRecordTest extends DbTestCase
     function testActiveRecordChangeTopLevelIdFeedsDownToRelations()
     {
         $client = Client::findOne(1);
-        $this->assertInstanceOf('Concord\Models\Db\Client', $client);
+        $this->assertInstanceOf(Client::className(), $client);
         $this->setService('client', $client);
 
         $customerId = $this->createTestCustomerAndOrder($client->clientCode);
@@ -943,7 +942,7 @@ class A3ActiveRecordTest extends DbTestCase
         $this->checkBaseCounts('full', $client->clientCode);
 
         $customer = Customer::findOne($customerId);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $customer->id = 95;
         $customerPreChangeWithNewId = $this->updateCustomerIdForComparison($this->cleanDatesForComparison($customer->toArray()), 95);
@@ -951,7 +950,7 @@ class A3ActiveRecordTest extends DbTestCase
         $customer->push();
 
         $customer = Customer::findOne(95);
-        $this->assertInstanceOf('Concord\Tests\Models\Customer', $customer);
+        $this->assertInstanceOf(Customer::className(), $customer);
 
         $customerReloaded = $this->cleanDatesForComparison($customer->toArray());
 

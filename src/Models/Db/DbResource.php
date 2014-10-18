@@ -12,9 +12,9 @@
  *
  */
 
-namespace Concord\Models\Db;
+namespace fangface\concord\models\db;
 
-use Concord\Db\ActiveRecord;
+use fangface\concord\db\ActiveRecord;
 
 /**
  * Active Record class to the main db.{prefix}dbResources table

@@ -27,7 +27,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Concord\\": "src/"
+      "fangface\\concord\\": "src/"
     }
   },
   "extra" : {

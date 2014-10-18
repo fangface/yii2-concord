@@ -12,10 +12,9 @@
  *
  */
 
-namespace Concord\Tests\Models;
+namespace fangface\concord\tests\models;
 
 use yii\db\ActiveRecord;
-use Yii;
 
 /**
  * Active Record class for the clients dbClient.{prefix}phones table
@@ -38,7 +37,7 @@ class Phone extends ActiveRecord
             return \Yii::$app->get($dbResourceName);
         }
 
-        throw new \Concord\Db\Exception('Database resource \'' . $dbResourceName . '\' not found');
+        throw new \fangface\concord\db\Exception('Database resource \'' . $dbResourceName . '\' not found');
     }
 
 
