@@ -14,7 +14,7 @@
 
 namespace fangface\concord;
 
-use fangface\concord\tools;
+use fangface\concord\Tools;
 use fangface\concord\base\traits\Singleton;
 use fangface\concord\base\traits\ServiceGetterStatic;
 use fangface\concord\models\db\Client;

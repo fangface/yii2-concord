@@ -26,7 +26,7 @@ use fangface\concord\db\ActiveRecordParentalTrait;
 use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
-use fangface\concord\tools;
+use fangface\concord\Tools;
 use Yii;
 use yii\base\ModelEvent;
 use yii\db\ActiveQuery;

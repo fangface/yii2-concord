@@ -13,7 +13,7 @@ use fangface\concord\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 use yii\db\Exception;
-use fangface\concord\tools;
+use fangface\concord\Tools;
 
 /**
  * @author Alexander Kochetov <creocoder@gmail.com>
