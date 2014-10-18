@@ -7,5 +7,5 @@ tools:
     php_pdepend: false
     php_cs_fixer: false
 
-external_code_coverage:
-    timeout: 3000
+    external_code_coverage:
+        timeout: 3000
