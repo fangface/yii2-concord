@@ -23,9 +23,9 @@ use fangface\concord\db\ActiveRecord;
  * @property string $countryCode 3 character ISO code for the country
  * @property string $shortName Short name of the country e.g. UK
  * @property string $longName Long name of the country e.g. United Kingdom
- * @property datetime $createdAt Date and time record was created
+ * @property string $createdAt Date and time record was created
  * @property integer $createdBy	User id of user that created record
- * @property datetime $modifiedAt Date and time record was last modified
+ * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
  */
 class Country extends ActiveRecord

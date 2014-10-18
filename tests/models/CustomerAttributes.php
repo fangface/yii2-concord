@@ -22,9 +22,9 @@ use fangface\concord\db\ActiveAttributeRecord;
  *
  * @property string $field1
  * @property string $field2
- * @property datetime $createdAt Date and time record was created
+ * @property string $createdAt Date and time record was created
  * @property integer $createdBy	User id of user that created record
- * @property datetime $modifiedAt Date and time record was last modified
+ * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
 
  */

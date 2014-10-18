@@ -27,9 +27,9 @@ use fangface\concord\tests\models\Order;
  * @property integer $addressId ID for the address
  * @property integer $phoneId ID for the phone
  * @property integer $extraField Extra field only present in dbCLIENT for CLIENT2
- * @property datetime $createdAt Date and time record was created
+ * @property string $createdAt Date and time record was created
  * @property integer $createdBy	User id of user that created record
- * @property datetime $modifiedAt Date and time record was last modified
+ * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
  * @property fangface\concord\tests\models\CustomerAttributes $customerAttributes
  * @property fangface\concord\tests\models\Address $address

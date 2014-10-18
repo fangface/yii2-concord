@@ -21,6 +21,8 @@ use fangface\concord\base\traits\AttributeHintBlocks;
 use fangface\concord\base\traits\AttributeIcons;
 use fangface\concord\base\traits\AttributePlaceholders;
 use fangface\concord\base\traits\AttributeTooltips;
+use fangface\concord\behaviors\AutoSavedBy;
+use fangface\concord\behaviors\AutoDatestamp;
 use fangface\concord\db\ActiveRecord;
 use fangface\concord\db\ActiveRecordArray;
 use fangface\concord\db\ActiveRecordParentalInterface;
@@ -28,7 +30,9 @@ use fangface\concord\db\ActiveRecordParentalTrait;
 use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
+use fangface\concord\db\ConnectionManager;
 use fangface\concord\db\Exception;
+use fangface\concord\models\AttributeModel;
 use yii\base\InvalidParamException;
 use yii\base\ModelEvent;
 use yii\base\UnknownMethodException;
@@ -163,7 +167,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
 
         if (Yii::$app->has('dbFactory')) {
-            /** @var \fangface\concord\db\ConnectionManager $dbFactory */
+            /** @var ConnectionManager $dbFactory */
             $dbFactory = Yii::$app->get('dbFactory');
             return $dbFactory->getConnection($dbResourceName, true, true, $isClientResource);
         } elseif (Yii::$app->has($dbResourceName)) {
@@ -380,7 +384,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             if ($this->createdByAttr || $this->modifiedByAttr) {
 
                 $defaults['savedby'] = [
-                    'class' => 'fangface\concord\behaviors\AutoSavedBy'
+                    'class' => AutoSavedBy::className()
                 ];
 
                 $defaults['savedby']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT] = array();
@@ -400,7 +404,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             if ($this->createdAtAttr || $this->modifiedAtAttr) {
 
                 $defaults['datestamp'] = [
-                    'class' => 'fangface\concord\behaviors\AutoDatestamp'
+                    'class' => AutoDatestamp::className()
                 ];
 
                 $defaults['datestamp']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT] = array();
@@ -896,7 +900,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                             } else {
 
                                 $hasChanges = true;
-                                if (!$this->getIsNewRecord() && $this->$relation instanceof \fangface\concord\db\ActiveRecord) {
+                                if (!$this->getIsNewRecord() && $this->$relation instanceof ActiveRecord) {
 
                                     // sub models may exist that have changes even though the relation itself does not have any changes
                                     // also we may need to apply auto link updates fromChild and fromParent depending on changes to this
@@ -2220,7 +2224,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * the attributes of the record associated with the `$class` model, while the values of the
      * array refer to the corresponding attributes in **this** AR class.
      * @param array $config [OPTIONAL] array of config paramaters
-     * @return \fangface\concord\Models\AttributeModel.
+     * @return AttributeModel.
      */
     public function hasEav($class, $link, $config=array())
     {

@@ -29,9 +29,9 @@ use fangface\concord\db\ActiveRecord;
  * @property string $dbCharset Character set of the database connection
  * @property string $dbAfterOpen Commands to run after the connection is initially established
  * @property string $dbClass Class through which the connection should be established
- * @property datetime $createdAt Date and time record was created
+ * @property string $createdAt Date and time record was created
  * @property integer $createdBy	User id of user that created record
- * @property datetime $modifiedAt Date and time record was last modified
+ * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
  */
 class DbResource extends ActiveRecord

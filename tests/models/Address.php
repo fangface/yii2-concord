@@ -34,9 +34,9 @@ use fangface\concord\tests\models\Customer;
  * @property string $city
  * @property string $region
  * @property string $countryCode 3 character ISO code for the country
- * @property datetime $createdAt Date and time record was created
+ * @property string $createdAt Date and time record was created
  * @property integer $createdBy	User id of user that created record
- * @property datetime $modifiedAt Date and time record was last modified
+ * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
  * @property \fangface\concord\tests\models\Country $country
  * @property \fangface\concord\tests\models\Customer $customer

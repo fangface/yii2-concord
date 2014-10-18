@@ -23,6 +23,9 @@ use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
 use fangface\concord\db\Exception;
+use fangface\concord\models\AttributeDefinitions;
+use fangface\concord\models\AttributeEntities;
+use fangface\concord\models\AttributeValues;
 use yii\base\InvalidConfigException;
 use yii\base\ModelEvent;
 
@@ -73,7 +76,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     /**
      * Array of existing attribute value models ready to use during delete or save
      *
-     * @var \fangface\concord\Models\AttributeValues[]|array
+     * @var AttributeValues[]|array
      */
     private $attributeValues = array();
 
@@ -227,15 +230,15 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     public function init()
     {
         if (!$this->attributeEntitiesClass) {
-            $this->attributeEntitiesClass = \fangface\concord\Models\AttributeEntities::className();
+            $this->attributeEntitiesClass = AttributeEntities::className();
         }
 
         if (!$this->attributeDefinitionsClass) {
-            $this->attributeDefinitionsClass = \fangface\concord\Models\AttributeDefinitions::className();
+            $this->attributeDefinitionsClass = AttributeDefinitions::className();
         }
 
         if (!$this->attributeValuesClass) {
-            $this->attributeValuesClass = \fangface\concord\Models\AttributeValues::className();
+            $this->attributeValuesClass = AttributeValues::className();
         }
 
         if (!class_exists($this->attributeEntitiesClass)) {
@@ -1126,14 +1129,14 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             // not allowed to amend or delete
             $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             $this->addActionError($message);
-            throw new \fangface\concord\db\Exception($message);
+            throw new Exception($message);
 
         } elseif ($hasParentModel && ($this->getReadOnly() || !$this->getCanDelete())) {
 
             // not allowed to amend or delete
             $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             $this->addActionError($message);
-            throw new \fangface\concord\db\Exception($message);
+            throw new Exception($message);
 
         } else {
 
@@ -1370,7 +1373,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
         } elseif (!$hasParentModel) {
             $message = 'Attempting to delete ' . Tools::getClassName($this) . ($this->getReadOnly() ? ' readOnly model' : ' model flagged as not deletable');
             //$this->addActionError($message);
-            throw new \fangface\concord\db\Exception($message);
+            throw new Exception($message);
         } else {
             $this->addActionWarning('Skipped delete of ' . Tools::getClassName($this) . ' which is ' . ($this->getReadOnly() ? 'read only' : 'flagged as not deletable'));
         }
@@ -1521,7 +1524,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             // not allowed to amend or delete
             $message = 'Attempting to saveAll on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
-            throw new \fangface\concord\db\Exception($message);
+            throw new Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
@@ -1610,7 +1613,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
             // not allowed to amend or delete
             $message = 'Attempting to save on ' . Tools::getClassName($this) . ' readOnly model';
             //$this->addActionError($message);
-            throw new \fangface\concord\db\Exception($message);
+            throw new Exception($message);
 
         } elseif ($this->getReadOnly() && $hasParentModel) {
 
