@@ -14,8 +14,8 @@
 
 namespace fangface\concord\behaviors;
 
-use fangface\concord\db\ActiveRecord;
 use fangface\concord\Tools;
+use fangface\concord\db\ActiveRecord;
 use yii\base\Behavior;
 use yii\db\Expression;
 

@@ -28,6 +28,10 @@ class BeautyXml {
 	var $colors = array('green', 'red', 'pink', 'yellow', 'gray');
 
     // gives ident to string
+
+    /**
+     * @param integer $level
+     */
     function ident(&$str, $level) {
 		$spaces = '';
         $level--;
