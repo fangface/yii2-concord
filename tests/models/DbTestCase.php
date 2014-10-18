@@ -197,12 +197,16 @@ abstract class DbTestCase extends ConnectionTestCase
                 switch ($k)
                 {
                 	case 'createdAt':
-                	case 'modifiedAt':
-                	    $v = '2050-12-31 23:59:59';
+                	case 'created_at':
+            	    case 'modifiedAt':
+            	    case 'modified_at':
+            	        $v = '2050-12-31 23:59:59';
                 	    break;
                 	case 'createdBy':
-                	case 'modifiedBy':
-                	    $v = 99;
+                	case 'created_by':
+            	    case 'modifiedBy':
+            	    case 'modified_by':
+            	        $v = 99;
                 	    break;
             	    default:
                 	    break;
