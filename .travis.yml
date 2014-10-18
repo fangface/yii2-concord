@@ -15,8 +15,8 @@ install:
   - composer global require "fxp/composer-asset-plugin:1.0.0-beta3"
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer install --prefer-dist
-  - tests/data/travis/apc-setup.sh
-  - tests/data/travis/memcache-setup.sh
+  - /bin/sh tests/data/travis/apc-setup.sh
+  - /bin/sh tests/data/travis/memcache-setup.sh
 
 before_script:
   - mysql -e 'CREATE DATABASE dbTestMain;';
