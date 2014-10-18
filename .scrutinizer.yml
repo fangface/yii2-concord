@@ -9,10 +9,3 @@ imports:
 
     external_code_coverage:
         timeout: 3000
-
-imports:
-    - php
-
-checks:
-    php:
-        code_rating: true
