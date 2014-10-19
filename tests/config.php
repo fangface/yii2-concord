@@ -22,6 +22,10 @@ if (getenv('TRAVIS') && getenv('TRAVIS') == 'true') {
     ];
 }
 
+print 'Cache config: ';
+print_r($cacheConfig);
+print "\n";
+
 return [
 
     'app' => [
