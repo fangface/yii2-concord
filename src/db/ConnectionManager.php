@@ -367,14 +367,11 @@ class ConnectionManager extends Component
     public function setupConnection($dbParams)
     {
         $connected = false;
-
         $class = (isset($dbParams['class']) && is_string($dbParams['class']) && $dbParams['class'] != '' ? $dbParams['class'] : Connection::className());
         $connect = (isset($dbParams['connect']) && is_string($dbParams['connect']) ? $dbParams['connect'] : false);
-
-        unset($dbParams['class']);
         unset($dbParams['connect']);
 
-        $connection = new $class($dbParams);
+        $connection = \Yii::createObject($dbParams);
 
         if ($connection instanceof $class) {
             if ($connect) {

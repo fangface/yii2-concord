@@ -14,16 +14,15 @@
 
 namespace fangface\concord\tests\models;
 
-use fangface\concord\tests\models\TestCase;
-use fangface\concord\tests\models\ConnectionTestCase;
-use fangface\concord\tests\models\Customer;
-use fangface\concord\tests\models\eav\AttributeValues;
 use fangface\concord\tests\models\Address;
+use fangface\concord\tests\models\ConnectionTestCase;
 use fangface\concord\tests\models\Country;
-use fangface\concord\tests\models\Order;
+use fangface\concord\tests\models\Customer;
 use fangface\concord\tests\models\Item;
+use fangface\concord\tests\models\TestCase;
+use fangface\concord\tests\models\Order;
 use fangface\concord\tests\models\Product;
-
+use fangface\concord\tests\models\eav\AttributeValues;
 
 /**
  * This is the base class for all Concord database unit tests
