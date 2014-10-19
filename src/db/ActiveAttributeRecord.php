@@ -23,9 +23,9 @@ use fangface\concord\db\ActiveRecordReadOnlyInterface;
 use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
 use fangface\concord\db\Exception;
-use fangface\concord\models\AttributeDefinitions;
-use fangface\concord\models\AttributeEntities;
-use fangface\concord\models\AttributeValues;
+use fangface\concord\models\eav\AttributeDefinitions;
+use fangface\concord\models\eav\AttributeEntities;
+use fangface\concord\models\eav\AttributeValues;
 use yii\base\InvalidConfigException;
 use yii\base\ModelEvent;
 
@@ -634,7 +634,7 @@ class ActiveAttributeRecord implements ActiveRecordParentalInterface, ActiveReco
     /**
      * Check if lazy loaded attributes exist and should be fully loaded and if so load them
      *
-     * @param string $forceLoadLazyLoad
+     * @param boolean $forceLoadLazyLoad
      *        [OPTIONAL] default is false
      */
     public function forceLoadLazyLoad($forceLoadLazyLoad = false)

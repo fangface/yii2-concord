@@ -90,7 +90,7 @@ class NestedSet extends Behavior
 	/**
 	 * Gets descendants for node
 	 * @param integer $depth the depth
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @param integer $limit [optional] limit results (typically used when only after limited number of immediate children)
 	 * @return ActiveQuery
 	 */
@@ -126,7 +126,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets children for node (direct descendants only)
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @param integer $limit [optional] limit results (typically used when only after limited number of immediate children)
 	 * @return ActiveQuery
 	 */
@@ -137,7 +137,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets one child for node (first direct descendant only).
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @return ActiveQuery
 	 */
 	public function oneChild($object = null)
@@ -148,7 +148,7 @@ class NestedSet extends Behavior
 	/**
 	 * Gets ancestors for node
 	 * @param integer $depth the depth
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @param boolean $reverse Should the result be in reverse order i.e. root first
 	 * @param boolean $idOnly Should an array of IDs be returned only
 	 * @return ActiveQuery
@@ -193,7 +193,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets parent of node
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @param boolean $idOnly Should only the id be returned
 	 * @return ActiveQuery
 	 */
@@ -204,7 +204,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets previous sibling of node
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @return ActiveQuery
 	 */
 	public function prev($object = null)
@@ -227,7 +227,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Gets next sibling of node
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @return ActiveQuery
 	 */
 	public function next($object = null)

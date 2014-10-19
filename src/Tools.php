@@ -678,9 +678,9 @@ class Tools
     /**
      * Format a numeric value to the preferred decimal format
      *
-     * @param decimal $value
+     * @param float|double $value
      * @param integer $decimals, default 2
-     * @return string
+     * @return double
      */
     public static function decimalFormat($value, $decimals = 2)
     {
@@ -723,7 +723,7 @@ class Tools
     /**
      * Round half values up to the specified level of precision
      *
-     * @param decimal $value
+     * @param double $value
      * @param integer $precision
      * @return double
      */
@@ -744,9 +744,9 @@ class Tools
     /**
      * Round the provided number up by the specified level of significance
      *
-     * @param decimal $number
+     * @param double $number
      * @param integer $significance
-     * @return decimal
+     * @return double
      */
     function roundUpBy($number, $significance = 1)
     {
@@ -894,7 +894,7 @@ class Tools
      */
     public static function fullLower($str, $encoding = 'UTF-8')
     {
-        return mb_strtolower($str, $enc);
+        return mb_strtolower($str, $encoding);
     }
 
 

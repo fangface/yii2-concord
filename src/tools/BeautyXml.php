@@ -83,7 +83,7 @@ class BeautyXml {
 
             	if (in_array($lan, $stab) && substr_count($tmp[$a], "</$lan") == 1) {
                 	$level--;
-                	$s = array_pop($stab);
+                	array_pop($stab);
                 	$add = false;
             	}
 

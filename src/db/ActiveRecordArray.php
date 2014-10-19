@@ -36,7 +36,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
     use ActiveRecordReadOnlyTrait;
 
     /**
-     * @var string|false object class for use by $this->newElement()
+     * @var string|object|false|null object class for use by $this->newElement()
      */
     protected $defaultObjectClass       = false;
 
@@ -82,7 +82,7 @@ class ActiveRecordArray extends \ArrayObject implements ActiveRecordParentalInte
     /**
      * Construct
      *
-     * @param string $input
+     * @param string|null|array $input
      * @param integer $flags
      * @param string $iterator_class
      */

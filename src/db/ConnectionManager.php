@@ -21,6 +21,7 @@ use fangface\concord\models\db\DbResource;
 use fangface\concord\models\db\client\DbResource as ClientDbResource;
 use yii\base\Component;
 use yii\db\Connection;
+use yii\db\Exception as YiiDbException;
 
 /**
  * ConnectionManager Class
@@ -255,7 +256,7 @@ class ConnectionManager extends Component
                             $dbResource = ClientDbResource::find()
                                 ->where(['resourceName' => $resourceName])
                                 ->one();
-                        } catch (\yii\db\Exception $e) {
+                        } catch (YiiDbException $e) {
                             throw new Exception('Unable to load client dbResources');
                         }
                     } else {
@@ -271,7 +272,7 @@ class ConnectionManager extends Component
                         $dbResource = DbResource::find()
                             ->where(['resourceName' => $resourceName])
                             ->one();
-                    } catch (\yii\db\Exception $e) {
+                    } catch (YiiDbException $e) {
                         throw new Exception('Unable to load dbResources');
                     }
                 } else {
@@ -303,7 +304,7 @@ class ConnectionManager extends Component
                 if (isset($dbParams['password']) && substr($dbParams['password'], 0, 1) == '#') {
                     $dbParams['password'] = $this->decrypt($dbParams['password']);
                 }
-                $connection = $this->setupConnection($resourceName, $dbParams);
+                $connection = $this->setupConnection($dbParams);
                 if ($connection) {
 
                     $class = get_class($connection);
@@ -360,15 +361,14 @@ class ConnectionManager extends Component
     /**
      * Setup and return the connection for the specified resource name
      *
-     * @param string $resourceName
      * @param array $dbParams
      * @return Connection|false
      */
-    public function setupConnection($resourceName, $dbParams)
+    public function setupConnection($dbParams)
     {
         $connected = false;
 
-        $class = (isset($dbParams['class']) && is_string($dbParams['class']) && $dbParams['class'] != '' ? $dbParams['class'] : 'yii\db\Connection');
+        $class = (isset($dbParams['class']) && is_string($dbParams['class']) && $dbParams['class'] != '' ? $dbParams['class'] : Connection::className());
         $connect = (isset($dbParams['connect']) && is_string($dbParams['connect']) ? $dbParams['connect'] : false);
 
         unset($dbParams['class']);
@@ -654,7 +654,7 @@ class ConnectionManager extends Component
             if ($resource == 'db' && !$includeCore) {
                 // do not remove
             } else {
-                $success = $this->removeResource($resource);
+                $this->removeResource($resource);
             }
         }
         if ($includeCore) {

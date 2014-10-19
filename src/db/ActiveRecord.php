@@ -32,7 +32,7 @@ use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
 use fangface\concord\db\ConnectionManager;
 use fangface\concord\db\Exception;
-use fangface\concord\models\AttributeModel;
+use fangface\concord\models\eav\AttributeModel;
 use yii\base\InvalidParamException;
 use yii\base\ModelEvent;
 use yii\base\UnknownMethodException;
@@ -1437,8 +1437,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
         $this->clearActionErrors();
 
-        $allOk = false;
-
         if ($this->getIsNewRecord()) {
 
             // record does not exist yet anyway
@@ -1944,7 +1942,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * Get defined relation info by relation name or return false if the name is not a defined relation
      * @param string $name
      * @param string|false $key
-     * @return array|false
+     * @return array|string|false
      */
     public function getDefinedRelationInfo($name, $key = false)
     {
@@ -2224,7 +2222,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * the attributes of the record associated with the `$class` model, while the values of the
      * array refer to the corresponding attributes in **this** AR class.
      * @param array $config [OPTIONAL] array of config paramaters
-     * @return AttributeModel.
+     * @return AttributeModel
      */
     public function hasEav($class, $link, $config=array())
     {

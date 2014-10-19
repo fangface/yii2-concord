@@ -27,7 +27,7 @@ use fangface\concord\tests\models\Customer;
  * @property integer $orderId ID of order that the item belongs to
  * @property string $productCode
  * @property integer $quantity
- * @property decimal $totalValue
+ * @property double $totalValue
  * @property string $field1
  * @property string $field2
  * @property string $field3
