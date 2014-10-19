@@ -34,62 +34,62 @@ return [
         'components' => [
 
             'db' => [
-        		'class' => 'yii\db\Connection',
+        		'class' => \yii\db\Connection::className(),
         		'dsn' => 'mysql:host=localhost;dbname=dbTestMain',
         		'username' => 'root',
         		'password' => '',
         		'charset' => 'utf8',
-        		'enableSchemaCache' => false,
+        		'enableSchemaCache' => true,
         		'schemaCache' => 'dbCache',
         		'tablePrefix' => '',
             ],
 
             'db2' => [
-                'class' => 'yii\db\Connection',
+                'class' => \yii\db\Connection::className(),
                 'dsn' => 'mysql:host=localhost;dbname=dbTestClient1',
                 'username' => 'root',
                 'password' => '',
                 'charset' => 'utf8',
-                'enableSchemaCache' => false,
+                'enableSchemaCache' => true,
                 'schemaCache' => 'dbCache',
                 'tablePrefix' => '',
             ],
 
             'db3' => [
-                'class' => 'yii\db\Connection',
+                'class' => \yii\db\Connection::className(),
                 'dsn' => 'mysql:host=localhost;dbname=dbTestClient2',
                 'username' => 'root',
                 'password' => '',
                 'charset' => 'utf8',
-                'enableSchemaCache' => false,
+                'enableSchemaCache' => true,
                 'schemaCache' => 'dbCache',
                 'tablePrefix' => 'example_',
             ],
 
             'db4' => [
-                'class' => 'yii\db\Connection',
+                'class' => \yii\db\Connection::className(),
                 'dsn' => 'mysql:host=localhost;dbname=dbTestRemote1',
                 'username' => 'root',
                 'password' => '',
                 'charset' => 'utf8',
-                'enableSchemaCache' => false,
+                'enableSchemaCache' => true,
                 'schemaCache' => 'dbCache',
                 'tablePrefix' => '',
             ],
 
             'db5' => [
-                'class' => 'yii\db\Connection',
+                'class' => \yii\db\Connection::className(),
                 'dsn' => 'mysql:host=localhost;dbname=dbTestRemote2',
                 'username' => 'root',
                 'password' => '',
                 'charset' => 'utf8',
-                'enableSchemaCache' => false,
+                'enableSchemaCache' => true,
                 'schemaCache' => 'dbCache',
                 'tablePrefix' => 'example_',
             ],
 
             'dbFactory' => [
-                'class' => 'fangface\concord\db\ConnectionManager',
+                'class' => \fangface\concord\db\ConnectionManager::className(),
             ],
 
             'dbCache' => $cacheConfig,
