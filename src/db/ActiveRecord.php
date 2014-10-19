@@ -153,7 +153,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * By default, the "db" application component is used as the database connection.
      * You may override this method if you want to use a different database connection.
      * @throws Exception if no connection can be found
-     * @return yii\db\Connection|false The database connection used by this AR class.
+     * @return Connection|false The database connection used by this AR class.
      */
     public static function getDb()
     {

@@ -704,7 +704,7 @@ class Tools
     /**
      * Round values up to the specified level of precision
      *
-     * @param decimal $value
+     * @param float|double $value
      * @param integer $precision
      * @return double
      */

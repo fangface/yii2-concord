@@ -665,7 +665,7 @@ class NestedSet extends Behavior
 	/**
 	 * Determines if node is descendant of subject node
 	 * @param ActiveRecord $subj the subject node
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @return boolean whether the node is descendant of subject node
 	 */
 	public function isDescendantOf($subj, $object = null)
@@ -684,7 +684,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Determines if node is leaf
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @return boolean whether the node is leaf
 	 */
 	public function isLeaf($object = null)
@@ -696,7 +696,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Determines if node is root
-	 * @param fangface\concord\db\ActiveRecord $object [optional] defaults to $this->owner
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @return boolean whether the node is root
 	 */
 	public function isRoot($object = null)
