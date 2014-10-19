@@ -678,9 +678,9 @@ class Tools
     /**
      * Format a numeric value to the preferred decimal format
      *
-     * @param float|double $value
+     * @param float|double|string $value
      * @param integer $decimals, default 2
-     * @return double
+     * @return string
      */
     public static function decimalFormat($value, $decimals = 2)
     {
@@ -691,7 +691,7 @@ class Tools
     /**
      * Format a numeric value to the preferred tax rate format
      *
-     * @param decimal $value
+     * @param float|string $value
      * @param integer $decimals, default 6
      * @return string
      */

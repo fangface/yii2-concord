@@ -23,6 +23,7 @@ use fangface\concord\base\traits\AttributePlaceholders;
 use fangface\concord\base\traits\AttributeTooltips;
 use fangface\concord\behaviors\AutoSavedBy;
 use fangface\concord\behaviors\AutoDatestamp;
+use fangface\concord\db\ActiveAttributeRecord;
 use fangface\concord\db\ActiveRecord;
 use fangface\concord\db\ActiveRecordArray;
 use fangface\concord\db\ActiveRecordParentalInterface;
@@ -32,7 +33,6 @@ use fangface\concord\db\ActiveRecordReadOnlyTrait;
 use fangface\concord\db\ActiveRecordSaveAllInterface;
 use fangface\concord\db\ConnectionManager;
 use fangface\concord\db\Exception;
-use fangface\concord\models\eav\AttributeModel;
 use yii\base\InvalidParamException;
 use yii\base\ModelEvent;
 use yii\base\UnknownMethodException;
@@ -2222,7 +2222,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * the attributes of the record associated with the `$class` model, while the values of the
      * array refer to the corresponding attributes in **this** AR class.
      * @param array $config [OPTIONAL] array of config paramaters
-     * @return AttributeModel
+     * @return ActiveAttributeRecord
      */
     public function hasEav($class, $link, $config=array())
     {
