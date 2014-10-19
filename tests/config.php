@@ -92,11 +92,7 @@ return [
                 'class' => 'fangface\concord\db\ConnectionManager',
             ],
 
-            'dbCache' => [
-                'class' => 'yii\caching\MemCache',
-                'useMemcached' => true,
-                'keyPrefix' => 'concord_prefix',
-            ],
+            'dbCache' => $cacheConfig,
 
         ],
 
