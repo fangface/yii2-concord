@@ -24,12 +24,14 @@ trait AttributeIcons
      */
     public function getIcon($attribute)
     {
-        $message = '';
+        $icon = '';
         $attributeDefaults = $this->attributeIcons();
-        if (isset($attributeDefaults[$attribute])) {
-            $message = $attributeDefaults[$attribute];
+        if (array_key_exists($attribute, $attributeDefaults)) {
+            $icon = $attributeDefaults[$attribute];
+        } else {
+            $icon = $this->getAttributeConfig($attribute, 'icon');
         }
-        return $message;
+        return ($icon ? $icon : '');
     }
 
     /**

@@ -29,6 +29,10 @@ class NestedSet extends Behavior
 	 */
 	public $hasManyRoots = false;
 	/**
+	 * @var boolean should deletes be performed on each active record individually
+	 */
+	public $deleteIndividual = false;
+	/**
 	 * @var string
 	 */
 	public $rootAttribute = 'root';
@@ -349,17 +353,47 @@ class NestedSet extends Behavior
 
 		        $condition = $db->quoteColumnName($this->leftAttribute) . '>='
 		            . $this->owner->getAttribute($this->leftAttribute) . ' AND '
-		                . $db->quoteColumnName($this->rightAttribute) . '<='
-		                    . $this->owner->getAttribute($this->rightAttribute);
-		        $params = [];
+	                . $db->quoteColumnName($this->rightAttribute) . '<='
+                    . $this->owner->getAttribute($this->rightAttribute);
 
 		        if ($this->hasManyRoots) {
-		            $condition .= ' AND ' . $db->quoteColumnName($this->rootAttribute) . '=:' . $this->rootAttribute;
-		            $params[':' . $this->rootAttribute] = $this->owner->getAttribute($this->rootAttribute);
+		            $condition .= ' AND ' . $db->quoteColumnName($this->rootAttribute) . '=' . $this->owner->getAttribute($this->rootAttribute);
 		        }
 
-		        //wlhere - how to handle deleteAll - if not already supported
-		        $result = $this->owner->deleteAll($condition, $params) > 0;
+                if (!$this->deleteIndividual) {
+
+                    $result = $this->owner->deleteAll($condition) > 0;
+
+                } else {
+
+                    $nodes = $this->owner->descendants()->all();
+    		        foreach ($nodes as $node) {
+
+    		            $node->setIgnoreEvents(true);
+    		            if ($deleteFull && method_exists($node, 'deleteFull')) {
+    		                $result = $node->deleteFull($hasParentModel);
+    		            } else {
+    		                $result = $node->delete($hasParentModel, $fromDeleteFull);
+    		            }
+    		            $node->setIgnoreEvents(false);
+
+    		            if (method_exists($node, 'hasActionErrors')) {
+    		                if ($node->hasActionErrors()) {
+    		                    $this->owner->mergeActionErrors($node->getActionErrors());
+    		                }
+    		            }
+
+    		            if (method_exists($node, 'hasActionWarnings')) {
+    		                if ($node->hasActionWarnings()) {
+    		                    $this->owner->mergeActionWarnings($node->getActionWarnings());
+    		                }
+    		            }
+    		            if (!$result) {
+    		                break;
+    		            }
+    		        }
+                }
+
 		    }
 
 		    if ($result) {
@@ -385,7 +419,6 @@ class NestedSet extends Behavior
 				if (isset($transaction)) {
 					$transaction->rollback();
 				}
-
 				return false;
 			}
 
@@ -1333,6 +1366,16 @@ class NestedSet extends Behavior
 			}
 		}
 	}
+
+    /**
+     * Override ignore events flag
+     * @param boolean $value
+     */
+    function setIgnoreEvents($value)
+    {
+        $this->_ignoreEvent = $value;
+    }
+
 
 	/**
 	 * Destructor

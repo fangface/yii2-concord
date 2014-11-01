@@ -27,12 +27,17 @@ trait AttributePlaceholders
      */
     public function getPlaceholder($attribute, $encode = false)
     {
-        $message = '';
+        $text = '';
         $attributeDefaults = $this->attributePlaceholders();
-        if (isset($attributeDefaults[$attribute])) {
-            $message = ($encode ? Html::encode($attributeDefaults[$attribute]) : $attributeDefaults[$attribute]);
+        if (array_key_exists($attribute, $attributeDefaults)) {
+            $text = $attributeDefaults[$attribute];
+        } else {
+            $text = $this->getAttributeConfig($attribute, 'placeholder');
         }
-        return $message;
+        if ($text) {
+            $text = ($encode ? Html::encode($text) : $text);
+        }
+        return $text;
     }
 
     /**

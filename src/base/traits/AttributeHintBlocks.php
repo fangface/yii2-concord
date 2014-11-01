@@ -29,8 +29,13 @@ trait AttributeHintBlocks
     {
         $message = '';
         $attributeDefaults = $this->attributeHintBlocks();
-        if (isset($attributeDefaults[$attribute])) {
-            $message = ($encode ? Html::encode($attributeDefaults[$attribute]) : $attributeDefaults[$attribute]);
+        if (array_key_exists($attribute, $attributeDefaults)) {
+            $message = $attributeDefaults[$attribute];
+        } else {
+            $message = $this->getAttributeConfig($attribute, 'hint');
+        }
+        if ($message) {
+            $message = ($encode ? Html::encode($message) : $message);
         }
         return $message;
     }

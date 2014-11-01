@@ -581,18 +581,6 @@ class Tools
         return $output;
     }
 
-    /*
-     * Returns a safe string representing the specified db connection Dsn
-     * suitable for using as a cache key for data hooked to the connection
-     *
-     * @param \yii\db\Connection $connection db connection
-     * @param string $name table name
-     */
-    public static function getDbConnectionCacheKey($connection, $name='')
-    {
-        return $connection->getSchema()->getCacheKey($name);
-    }
-
 
     /**
      * Check the email provided is of a valid syntax and check that the domain portion

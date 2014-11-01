@@ -14,38 +14,32 @@
 
 namespace fangface\concord\base\traits;
 
-use yii\helpers\Html;
-
-trait AttributeTooltips
+trait AttributeActiveFieldConfig
 {
     /**
-     * Get the default tooltip text to use for an attribute
+     * Get the default active field config for an attribute
      *
      * @param string $attribute Attribute name
-     * @param boolean $encode [default false] Should the resulting string be encoded
-     * @return string
+     * @return array
      */
-    public function getTooltip($attribute, $encode = false)
+    public function getActiveFieldSettings($attribute)
     {
-        $message = '';
-        $attributeDefaults = $this->attributeTooltips();
+        $settings = false;
+        $attributeDefaults = $this->attributeActiveFieldSettings();
         if (array_key_exists($attribute, $attributeDefaults)) {
-            $message = $attributeDefaults[$attribute];
+            $settings = $attributeDefaults[$attribute];
         } else {
-            $message = $this->getAttributeConfig($attribute, 'tooltip');
+            $settings = $this->getAttributeConfig($attribute, 'active');
         }
-        if ($message) {
-            $message = ($encode ? Html::encode($message) : $message);
-        }
-        return $message;
+        return ($settings ? $settings : []);
     }
 
     /**
-     * Get array of attributes and what the default tooltip should be
+     * Get array of attributes and their default active field config
      *
      * @return array
      */
-    public function attributeTooltips()
+    public function attributeActiveFieldSettings()
     {
         return [
         ];

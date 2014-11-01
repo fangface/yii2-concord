@@ -17,6 +17,8 @@ namespace fangface\concord\db;
 use Yii;
 use fangface\concord\Tools;
 use fangface\concord\base\traits\ActionErrors;
+use fangface\concord\base\traits\AttributeActiveFieldConfig;
+use fangface\concord\base\traits\AttributeConfig;
 use fangface\concord\base\traits\AttributeHintBlocks;
 use fangface\concord\base\traits\AttributeIcons;
 use fangface\concord\base\traits\AttributePlaceholders;
@@ -48,6 +50,8 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     use ActionErrors;
     use ActiveRecordParentalTrait;
     use ActiveRecordReadOnlyTrait;
+    use AttributeActiveFieldConfig;
+    use AttributeConfig;
     use AttributeHintBlocks;
     use AttributeIcons;
     use AttributePlaceholders;
@@ -269,7 +273,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         parent::setAttribute($name, $value);
     }
 
-
     /**
      * (non-PHPdoc)
      * @see \yii\base\Model::setAttributes()
@@ -327,43 +330,54 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         if ($this->applyDefaults && !$this->defaultsApplied) {
             $this->defaultsApplied = true;
-            $stru = self::getTableSchema();
-            $columns = $stru->columns;
-            foreach ($columns as $colName => $spec) {
-                if ($spec->isPrimaryKey && $spec->autoIncrement) {
-                    // leave value alone
-                } else {
-                    if (isset($this->$colName) && !is_null($this->$colName)) {
-                        // use the default value provided by the variable within the model
-                        $defaultValue = Tools::formatAttributeValue($this->$colName, $spec);
-                        // we want this all to work with magic getters and setters so now is a good time to remove the attribute from the object
-                        unset($this->$colName);
-                    } else {
-                        // use the default value from the DB if available
-                        $defaultValue = Tools::formatAttributeValue('__DEFAULT__', $spec);
-                    }
+            $this->loadDefaultValues();
+        }
+    }
 
-                    if (is_null($defaultValue)) {
-                        // leave as null
-                    } elseif (false && is_string($defaultValue) && $defaultValue == '') {
-                        // leave as null
-                    } elseif (false && is_numeric($defaultValue) && $defaultValue === 0) {
-                        // leave as null
-                    } elseif (false && !$this->disableCreatedUpd && $this->createdAtAttr && $colName == $this->createdAtAttr && $defaultValue == Tools::DATE_TIME_DB_EMPTY) {
-                        // leave as null
-                    } elseif (false && !$this->disableModifiedUpd && $this->modifiedAtAttr && $colName == $this->modifiedAtAttr && $defaultValue == Tools::DATE_TIME_DB_EMPTY) {
-                        // leave as null
-                    } else {
-                        $this->setAttribute($colName, $defaultValue);
-                        if ($spec->type != 'text' && $defaultValue == '') {
-                            // some fields need to have the default set and included in the sql statements even if not set to anything yet
-                            $this->setOldAttribute($colName, $defaultValue);
-                        }
+    /**
+     * (non-PHPdoc)
+     * @see \yii\db\ActiveRecord::loadDefaultValues()
+     */
+    public function loadDefaultValues($skipIfSet = true)
+    {
+        $stru = self::getTableSchema();
+        $columns = $stru->columns;
+        foreach ($columns as $colName => $spec) {
+            if ($spec->isPrimaryKey && $spec->autoIncrement) {
+                // leave value alone
+            } else {
+                if (isset($this->$colName) && !is_null($this->$colName)) {
+                    // use the default value provided by the variable within the model
+                    $defaultValue = Tools::formatAttributeValue($this->$colName, $spec);
+                    // we want this all to work with magic getters and setters so now is a good time to remove the attribute from the object
+                    unset($this->$colName);
+                } else {
+                    // use the default value from the DB if available
+                    $defaultValue = Tools::formatAttributeValue('__DEFAULT__', $spec);
+                }
+
+                if (is_null($defaultValue)) {
+                    // leave as null
+                } elseif ($skipIfSet && $this->getAttribute($colName) !== null) {
+                    // leave as is
+                } elseif (false && is_string($defaultValue) && $defaultValue == '') {
+                    // leave as null
+                } elseif (false && is_numeric($defaultValue) && $defaultValue === 0) {
+                    // leave as null
+                } elseif (false && !$this->disableCreatedUpd && $this->createdAtAttr && $colName == $this->createdAtAttr && $defaultValue == Tools::DATE_TIME_DB_EMPTY) {
+                    // leave as null
+                } elseif (false && !$this->disableModifiedUpd && $this->modifiedAtAttr && $colName == $this->modifiedAtAttr && $defaultValue == Tools::DATE_TIME_DB_EMPTY) {
+                    // leave as null
+                } else {
+                    $this->setAttribute($colName, $defaultValue);
+                    if ($spec->type != 'text' && $defaultValue == '') {
+                        // some fields need to have the default set and included in the sql statements even if not set to anything yet
+                        $this->setOldAttribute($colName, $defaultValue);
                     }
                 }
             }
-
         }
+        return $this;
     }
 
     /**
@@ -507,21 +521,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     }
 
     /**
-     * Extended to allow for a default message to be returned if no errors yet exist
-     *
-     * @see \yii\base\Model::getFirstError($attribute)
-     */
-    public function getFirstError($attribute)
-    {
-        $error = parent::getFirstError($attribute);
-        if (is_null($error)) {
-            $error = $this->getHintBlock($attribute);
-        }
-        return $error;
-    }
-
-
-    /**
      * Save the current record
      *
      * @see \yii\db\BaseActiveRecord::save()
@@ -606,6 +605,24 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             return $ok;
         }
     }
+
+
+    /**
+     * Touch the model (update modified datetime stamps
+     * @param boolean $incrementRevision default true
+     */
+    public function touch($incrementRevision = true)
+    {
+        if ($incrementRevision && $this->hasAttribute('revision')) {
+            $this->revision++;
+        } elseif ($this->hasAttribute('modified_at')) {
+            $this->modified_at = date(Tools::DATETIME_DATABASE);
+        } elseif ($this->hasAttribute('modifiedAt')) {
+            $this->modifiedAt = date(Tools::DATETIME_DATABASE);
+        }
+        $this->saveAll();
+    }
+
 
     /**
      * Optionally fix and truncate strings for fields that may contain unknown responses
@@ -2454,6 +2471,55 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         $argc = count($args);
         if ($argc < $min || $argc > $max) {
             throw new InvalidParamException('Method ' . $methodName . ' needs min ' . $min . ' and max ' . $max . ' arguments. ' . $argc . ' arguments given.');
+        }
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function XX__clone()
+    {
+        parent::__clone();
+
+        $attributes = $this->getAttributes();
+
+        $this->setOldAttributes(null);
+        $this->setIsNewRecord(true);
+        $this->defaultsApplied = false;
+        foreach ($attributes as $name => $value) {
+            $this->setAttribute($name, null);
+        }
+
+        $keys = self::primaryKey();
+        $keysCount = count($keys);
+        if ($keysCount == 1) {
+            $this->setAttribute($keys[0], null);
+        }
+
+        // for now reset relations
+        $relations = $this->getRelatedRecords();
+        foreach ($relations as $name => $value) {
+            $this->__unset($name);
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __clone()
+    {
+        parent::__clone();
+        $attributes = $this->getAttributes();
+        $this->deleteWrapUp(); // helps set up the new active record again
+        $this->setOldAttributes(null);
+        foreach ($attributes as $name => $value) {
+            $this->setAttribute($name, $value);
+        }
+        $keys = self::primaryKey();
+        $keysCount = count($keys);
+        if ($keysCount == 1) {
+            $this->setAttribute($keys[0], null);
         }
     }
 
