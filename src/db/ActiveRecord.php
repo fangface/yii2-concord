@@ -496,10 +496,16 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public function hasChanged($attribute = null)
     {
-        $hasChanges = $this->getDirtyAttributes();
+        if ($this->getOldAttributes() == [] && !$this->getIsNewRecord()) {
+            $hasChanges = false;
+        } elseif ($this->getIsNewRecord() && $this->defaultsApplied && $this->defaultsAppliedText) {
+            $hasChanges = $this->getIsNewDirtyAttributes();
+        } else {
+            $hasChanges = $this->getDirtyAttributes();
+        }
         if (is_null($attribute)) {
             return ($hasChanges ? true : false);
-        } elseif (isset($hasChanges[$attribute])) {
+        } elseif ($hasChanges && isset($hasChanges[$attribute])) {
             return true;
         }
         return false;
