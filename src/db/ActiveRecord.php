@@ -42,6 +42,7 @@ use yii\db\ActiveRecord as YiiActiveRecord;
 use yii\db\ActiveQuery;
 use yii\db\ActiveQueryInterface;
 use yii\db\Connection;
+use yii\helpers\ArrayHelper;
 
 
 class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
@@ -73,6 +74,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
     protected $applyDefaults            = true;
     protected $defaultsApplied          = false;
+    protected $defaultsAppliedText      = false;
 
     private $savedNewChildRelations     = [];
 
@@ -151,7 +153,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $tableName;
     }
 
-
     /**
      * Returns the database connection used by this AR class.
      * By default, the "db" application component is used as the database connection.
@@ -181,13 +182,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         throw new Exception('Database resource \'' . $dbResourceName . '\' not found');
     }
 
-
-    public function init()
-    {
-        parent::init();
-    }
-
-
     /**
      * Reset the static dbResourceName (will impact all uses of the called class
      * until changed again)
@@ -203,7 +197,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
     }
 
-
     /**
      * Return the static dbResourceName
      */
@@ -214,7 +207,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             return $calledClass::$dbResourceName;
         }
     }
-
 
     /**
      * Returns a value indicating whether the model has an attribute with the specified name.
@@ -230,12 +222,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
 
         if ($this->getIsNewRecord() && $result) {
-            $this->applyDefaults();
+            $this->applyDefaults(false);
         }
 
         return $result;
     }
-
 
     /**
      * Returns the named attribute value.
@@ -317,7 +308,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
 
         if ($this->getIsNewRecord() && $this->applyDefaults && !$this->defaultsApplied) {
-            $this->applyDefaults();
+            $this->applyDefaults(false);
         }
 
         return parent::load($data, $formName);
@@ -325,12 +316,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
     /**
      * Apply defaults to the model
+     * @param boolean $skipIfSet if existing value should be preserved
      */
-    public function applyDefaults()
+    public function applyDefaults($skipIfSet = true)
     {
         if ($this->applyDefaults && !$this->defaultsApplied) {
-            $this->defaultsApplied = true;
-            $this->loadDefaultValues();
+            $this->loadDefaultValues($skipIfSet);
         }
     }
 
@@ -340,6 +331,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      */
     public function loadDefaultValues($skipIfSet = true)
     {
+        $this->defaultsApplied = true;
         $stru = self::getTableSchema();
         $columns = $stru->columns;
         foreach ($columns as $colName => $spec) {
@@ -370,8 +362,10 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     // leave as null
                 } else {
                     $this->setAttribute($colName, $defaultValue);
-                    if ($spec->type != 'text' && $defaultValue == '') {
+                    if ($spec->type == 'text' && $defaultValue == '') {
                         // some fields need to have the default set and included in the sql statements even if not set to anything yet
+                        $this->defaultsAppliedText = true;
+                    } else {
                         $this->setOldAttribute($colName, $defaultValue);
                     }
                 }
@@ -440,9 +434,8 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $defaults;
     }
 
-
     /**
-     * Determine if model has any unsaved changed
+     * Determine if model has any unsaved changes
      *
      * @param boolean $checkRelations should changes in relations be checked as well
      * @return boolean
@@ -450,7 +443,13 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     public function hasChanges($checkRelations = false)
     {
 
-        $hasChanges = ($this->getOldAttributes() == [] ? false : $this->getDirtyAttributes());
+        if ($this->getOldAttributes() == [] && !$this->getIsNewRecord()) {
+            $hasChanges = false;
+        } elseif ($this->getIsNewRecord() && $this->defaultsApplied && $this->defaultsAppliedText) {
+            $hasChanges = $this->getIsNewDirtyAttributes();
+        } else {
+            $hasChanges = $this->getDirtyAttributes();
+        }
 
         if (!$hasChanges) {
             /*
@@ -490,7 +489,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return ($hasChanges ? true : false);
     }
 
-
     /**
      * Return if an attribute has changed
      * @param string $attribute [optional] if not specified returns true if anything within the currect AR has changed
@@ -507,6 +505,44 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return false;
     }
 
+    /**
+     * Returns the attribute values that have been modified in this new record since loading the default values
+     * Only really gets used by self::hasChanges() when _oldAttributes == [] (typically when no default values are set
+     * because they are all set to null in the table schema)
+     * @param string[]|null $names the names of the attributes whose values may be returned if they are
+     * changed recently. If null, [[attributes()]] will be used.
+     * @return array the changed attribute values (name-value pairs)
+     */
+    public function getIsNewDirtyAttributes($names = null)
+    {
+        if (!$this->getIsNewRecord() || !$this->defaultsApplied) {
+            return $this->getDirtyAttributes($names);
+        }
+        $attributes = [];
+        $theAttributes = $this->getAttributes($names);
+        if ($theAttributes) {
+            $stru = self::getTableSchema();
+            $columns = $stru->columns;
+            foreach ($theAttributes as $name => $value) {
+                $spec = ArrayHelper::getValue($columns, $name, []);
+                if ($spec) {
+                    if ($spec->isPrimaryKey && $spec->autoIncrement) {
+                        if ($value !== null) {
+                            $attributes[$name] = $value;
+                        }
+                    } else {
+                        $defaultValue = Tools::formatAttributeValue('__DEFAULT__', $spec);
+                        if ($defaultValue === null && $value !== null) {
+                            $attributes[$name] = $value;
+                        } elseif ($defaultValue != $value) {
+                            $attributes[$name] = $value;
+                        }
+                    }
+                }
+            }
+        }
+        return $attributes;
+    }
 
     /**
      * This method is called when the AR object is created and populated with the query result.
@@ -606,7 +642,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
-
     /**
      * Touch the model (update modified datetime stamps
      * @param boolean $incrementRevision default true
@@ -622,7 +657,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
         $this->saveAll();
     }
-
 
     /**
      * Optionally fix and truncate strings for fields that may contain unknown responses
@@ -640,7 +674,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return false;
     }
 
-
     /**
      * (non-PHPdoc)
      * @see \yii\db\BaseActiveRecord::afterSave($insert, $changedAttributes)
@@ -650,7 +683,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         $this->setIsNewRecord(false);
         parent::afterSave($insert, $changedAttributes);
     }
-
 
     /**
      * Check changed attributes and compare the table schema, truncating any fields as required
@@ -675,7 +707,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
-
     /**
      * Perform a saveAll() call but push the request down the model map including
      * models that are not currently loaded (perhaps because child models need to
@@ -690,7 +721,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         return $this->saveAll($runValidation, false, true);
     }
-
 
     /**
      * Saves the current record but also loops through defined relationships (if appropriate)
@@ -761,6 +791,8 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     } elseif ($isNewRecord && !$hasParentModel) {
 
                         // only return false for no point saving when on the top level
+                        $message = 'Attempting to save an empty ' . Tools::getClassName($this) . ' model';
+                        $this->addActionError($message);
                         $ok = false;
 
                     } elseif ($isNewRecord && $hasParentModel) {
@@ -800,7 +832,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
         return true;
     }
-
 
     private function saveRelation($saveRelationType = 'fromParent', $runValidation = true, $push = false)
     {
@@ -1041,7 +1072,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
     }
 
-
     /**
      * This method is called at the beginning of a saveAll() request on a record or model map
      *
@@ -1203,7 +1233,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $canSaveAll;
     }
 
-
     /**
      * Called by beforeSaveAllInternal on the current model to determine if the whole of saveAll
      * can be processed - this is expected to be replaced in individual models when required
@@ -1214,7 +1243,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         return true;
     }
-
 
     /**
      * This method is called at the end of a successful saveAll()
@@ -1269,7 +1297,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
-
     /**
      * Called by afterSaveAllInternal on the current model once the whole of the saveAll() has
      * been successfully processed
@@ -1278,7 +1305,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
 
     }
-
 
     /**
      * This method is called at the end of a failed saveAll()
@@ -1349,7 +1375,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
-
     /**
      * Called by afterSaveAllInternal on the current model once saveAll() fails
      */
@@ -1357,7 +1382,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
 
     }
-
 
     /**
      * Obtain data required to reset current record to state before saveAll() was called in the event
@@ -1368,7 +1392,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         return array('new' => $this->getIsNewRecord(), 'oldValues' => $this->getOldAttributes(), 'current' => $this->getAttributes());
     }
-
 
     /**
      * Reset current record to state before saveAll() was called in the event
@@ -1382,7 +1405,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         $tempValue = $data['oldValues'];
         $this->setOldAttributes($tempValue ? $tempValue : null);
     }
-
 
     /**
      * Delete the current record
@@ -1433,6 +1455,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         //$this->setOldAttributes(null); // now done in Yii::ActiveRecord::deleteInternal()
         $this->setIsNewRecord(true);
         $this->defaultsApplied = false;
+        $this->defaultsAppliedText = false;
         $relations = $this->getRelatedRecords();
         foreach ($relations as $name => $value) {
             $this->__unset($name);
@@ -1574,7 +1597,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $allOk;
     }
 
-
     /**
      * This method is called at the beginning of a deleteFull() request on a record or model map
      *
@@ -1715,7 +1737,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $canDeleteFull;
     }
 
-
     /**
      * Called by beforeDeleteFullInternal on the current model to determine if the whole of deleteFull
      * can be processed - this is expected to be replaced in individual models when required
@@ -1726,7 +1747,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         return true;
     }
-
 
     /**
      * This method is called at the end of a successful deleteFull()
@@ -1783,7 +1803,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
-
     /**
      * Called by afterDeleteFullInternal on the current model once the whole of the deleteFull() has
      * been successfully processed
@@ -1792,7 +1811,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
 
     }
-
 
     /**
      * This method is called at the end of a failed deleteFull()
@@ -1864,7 +1882,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
-
     /**
      * Called by afterDeleteFullFailedInternal on the current model once deleteFull() has
      * failed processing
@@ -1873,7 +1890,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
 
     }
-
 
     /**
      * Obtain list of fields that need to have string lengths checked as part of beforeSave()
@@ -1884,7 +1900,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return [];
     }
 
-
     /**
      * Obtain the model relation map array (this function should be overwritten inside AR classes)
      * @return array
@@ -1893,7 +1908,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         return [];
     }
-
 
     /**
      * Process model map to ensure all missing values have their defaults applied
@@ -1937,7 +1951,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
-
     /**
      * Check if the model attribute name is a defined relation
      * @param string $name
@@ -1953,7 +1966,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
         return false;
     }
-
 
     /**
      * Get defined relation info by relation name or return false if the name is not a defined relation
@@ -1977,7 +1989,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return false;
     }
 
-
     /**
      * (non-PHPdoc)
      * @see \yii\base\Model::toArray()
@@ -1985,12 +1996,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
         if ($this->getIsNewRecord() && $this->applyDefaults && !$this->defaultsApplied) {
-            $this->applyDefaults();
+            $this->applyDefaults(false);
         }
         $recursive = false;
         return parent::toArray($fields, $expand, $recursive);
     }
-
 
     /**
      * Return whole active record model including relationships as an array
@@ -2096,7 +2106,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $data;
     }
 
-
     /**
      * Automatically establish the relationship if defined in the $modelRelationMap array
      *
@@ -2188,8 +2197,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return null;
     }
 
-
-
     /**
      * @param string $relationName
      */
@@ -2231,7 +2238,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $success;
     }
 
-
     /**
      * Declares a `has-eav` relation.
      * @param string $class the class name of the related record (must not be 'attributes')
@@ -2259,7 +2265,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return new $class($config);
     }
 
-
     /**
      * Declares a `has-many` relation.
      * @param string $class the class name of the related record
@@ -2285,7 +2290,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return $query;
     }
 
-
     /**
      * PHP setter magic method.
      * This method is overridden so that AR attributes can be accessed like properties,
@@ -2301,7 +2305,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
         parent::__set($name, $value);
     }
-
 
     /**
      * PHP getter magic method. Override \yii\db\ActiveRecord so that we can automatically
@@ -2412,7 +2415,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return parent::__get($name);
     }
 
-
     /**
      * PHP magic method to handle calls to functions that do not exist
      * Initially here to allow successful self::getRelation() call when using the model
@@ -2457,7 +2459,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         return parent::__call($methodName, $args);
     }
 
-
     /**
      * Quickly validate method argument count matches expectations else throw exception
      *
@@ -2471,36 +2472,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         $argc = count($args);
         if ($argc < $min || $argc > $max) {
             throw new InvalidParamException('Method ' . $methodName . ' needs min ' . $min . ' and max ' . $max . ' arguments. ' . $argc . ' arguments given.');
-        }
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function XX__clone()
-    {
-        parent::__clone();
-
-        $attributes = $this->getAttributes();
-
-        $this->setOldAttributes(null);
-        $this->setIsNewRecord(true);
-        $this->defaultsApplied = false;
-        foreach ($attributes as $name => $value) {
-            $this->setAttribute($name, null);
-        }
-
-        $keys = self::primaryKey();
-        $keysCount = count($keys);
-        if ($keysCount == 1) {
-            $this->setAttribute($keys[0], null);
-        }
-
-        // for now reset relations
-        $relations = $this->getRelatedRecords();
-        foreach ($relations as $name => $value) {
-            $this->__unset($name);
         }
     }
 
@@ -2522,7 +2493,6 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             $this->setAttribute($keys[0], null);
         }
     }
-
 
     /**
      * Call the debugTest method on all objects in the model map (used for testing)

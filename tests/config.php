@@ -15,7 +15,7 @@ if (getenv('TRAVIS') && getenv('TRAVIS') == 'true') {
         ];
     }
 } else {
-    // default local testing to summy cache and let config-local.php override
+    // default local testing to dummy cache and let config-local.php override
     $cacheConfig = [
         'class' => 'yii\caching\DummyCache',
         'keyPrefix' => 'concord_prefix',

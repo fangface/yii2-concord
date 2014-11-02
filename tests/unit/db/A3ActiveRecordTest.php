@@ -19,6 +19,8 @@ use fangface\concord\tests\models\DbTestCase;
 use fangface\concord\tests\models\Customer;
 use fangface\concord\tests\models\Order;
 use fangface\concord\tests\models\Item;
+use fangface\concord\tests\models\Note;
+use fangface\concord\tests\models\Pick;
 
 /**
  * Test Concord Active Record add-on for Yii2
@@ -957,5 +959,5 @@ class A3ActiveRecordTest extends DbTestCase
         $this->assertEquals($customerPreChangeWithNewId, $customerReloaded, 'Failed to push new customerId into relations after reload');
 
     }
-}
 
+}

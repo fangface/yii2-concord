@@ -217,6 +217,32 @@ class db3Tables extends Migration
         $this->createIndex('entityObjectAttribute', $prefix.'attributeValues', array('entityId', 'objectId', 'attributeId'), true);
         $this->createIndex('entityAttributeValue', $prefix.'attributeValues', array('entityId','attributeId','value(255)'));
 
+        // notes table
+        $this->createTable($prefix.'notes', [
+            'id'                => "bigpk",
+            'anotherId'         => "bigint(20) UNSIGNED NOT NULL DEFAULT '0'",
+            /*'anotherText'       => "longtext NOT NULL",*/
+            'anotherString'     => "varchar(20) NOT NULL DEFAULT ''",
+            'anotherDec'        => "decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00'",
+            'created_at'        => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+            'created_by'        => "bigint(16) UNSIGNED NOT NULL DEFAULT '0'",
+            'modified_at'       => "datetime NOT NULL default '0000-00-00 00:00:00'",
+            'modified_by'       => "bigint(16) UNSIGNED NOT NULL DEFAULT '0'",
+        ]);
+
+        // picks table
+        $this->createTable($prefix.'picks', [
+            'id'                => "bigpk",
+            'anotherId'         => "bigint(20) UNSIGNED NOT NULL DEFAULT '0'",
+            'anotherText'       => "longtext NOT NULL",
+            'anotherString'     => "varchar(20) NOT NULL DEFAULT ''",
+            'anotherDec'        => "decimal(8,2) UNSIGNED NOT NULL DEFAULT '0.00'",
+            'created_at'        => "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+            'created_by'        => "bigint(16) UNSIGNED NOT NULL DEFAULT '0'",
+            'modified_at'       => "datetime NOT NULL default '0000-00-00 00:00:00'",
+            'modified_by'       => "bigint(16) UNSIGNED NOT NULL DEFAULT '0'",
+        ]);
+
     }
 
 
@@ -237,6 +263,8 @@ class db3Tables extends Migration
         $this->safeDropTable($prefix.'attributeEntities');
         $this->safeDropTable($prefix.'attributeDefinitions');
         $this->safeDropTable($prefix.'attributeValues');
+        $this->safeDropTable($prefix.'notes');
+        $this->safeDropTable($prefix.'picks');
     }
 
 
