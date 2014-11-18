@@ -16,9 +16,15 @@ namespace fangface\concord\models\eav;
 
 use fangface\concord\db\ActiveRecord;
 
+/**
+ * Default Active Record class for the attributeEntities table
+ *
+ * @method AttributeEntities findOne($condition = null) static
+ * @method AttributeEntities[] findAll($condition = null) static
+ * @method AttributeEntities[] findByCondition($condition, $one) static
+ */
 class AttributeEntities extends ActiveRecord
 {
-    protected $disableCreatedUpd  = true;
-    protected $disableModifiedUpd = true;
+    protected $disableAutoBehaviors = true;
 
 }

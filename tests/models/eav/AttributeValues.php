@@ -16,6 +16,13 @@ namespace fangface\concord\tests\models\eav;
 
 use fangface\concord\models\eav\AttributeValues as BaseAttributeValues;
 
+/**
+ * Active Record class for the clients dbClient.{prefix}attributeValues table
+ *
+ * @method AttributeValues findOne($condition = null) static
+ * @method AttributeValues[] findAll($condition = null) static
+ * @method AttributeValues[] findByCondition($condition, $one) static
+ */
 class AttributeValues extends BaseAttributeValues
 {
 

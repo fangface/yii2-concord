@@ -24,14 +24,15 @@ use fangface\concord\db\ActiveRecord;
  * @property string $type
  * @property integer $year
  * @property string $extraField Extra field only present in dbTestRemote2
+ *
+ * @method Robot findOne($condition = null) static
+ * @method Robot[] findAll($condition = null) static
+ * @method Robot[] findByCondition($condition, $one) static
  */
 class Robot extends ActiveRecord
 {
 
     protected static $dbResourceName    = 'dbRemote';
     protected static $isClientResource  = true;
-
-    protected $disableCreatedUpd  = true;
-    protected $disableModifiedUpd = true;
 
 }

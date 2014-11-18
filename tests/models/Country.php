@@ -27,6 +27,10 @@ use fangface\concord\db\ActiveRecord;
  * @property integer $createdBy	User id of user that created record
  * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
+ *
+ * @method Country findOne($condition = null) static
+ * @method Country[] findAll($condition = null) static
+ * @method Country[] findByCondition($condition, $one) static
  */
 class Country extends ActiveRecord
 {

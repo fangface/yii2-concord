@@ -40,6 +40,10 @@ use fangface\concord\tests\models\Customer;
  * @property integer $modifiedBy User id of last user to modify record
  * @property \fangface\concord\tests\models\Country $country
  * @property \fangface\concord\tests\models\Customer $customer
+ *
+ * @method Address findOne($condition = null) static
+ * @method Address[] findAll($condition = null) static
+ * @method Address[] findByCondition($condition, $one) static
  */
 class Address extends ActiveRecord
 {

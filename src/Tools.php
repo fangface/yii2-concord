@@ -17,8 +17,8 @@ namespace fangface\concord;
 use fangface\concord\Tools;
 use fangface\concord\base\traits\ServiceGetterStatic;
 use fangface\concord\base\traits\Singleton;
+use fangface\concord\helpers\Inflector;
 use fangface\concord\models\db\Client;
-use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 class Tools
@@ -29,9 +29,14 @@ class Tools
 
     const DATE_TIME_DB_EMPTY = '0000-00-00 00:00:00';
     const DATE_DB_EMPTY = '0000-00-00';
+    const TIME_DB_EMPTY = '00:00:00';
+    const YEAR_DB_EMPTY = '1901';
+    const YEAR_DB_MAX = '2155';
 
     const DATETIME_DATABASE = 'Y-m-d H:i:s';
     const DATE_DATABASE = 'Y-m-d';
+    const TIME_DATABASE = 'H:i:s';
+    const YEAR_DATABASE = 'Y';
 
     /*
      * Returns the current active client Id @return integer
@@ -253,13 +258,11 @@ class Tools
             // check if date is of form YYYY-MM-DD HH:MM:SS and that it
             // is not 0000-00-00 00:00:00.
             //
-            if (strlen($mixed) === 19 && !static::strEquals($mixed, '0000-00-00 00:00:00')) {
+            if (strlen($mixed) === 19 && !static::strEquals($mixed, self::DATE_TIME_DB_EMPTY)) {
                 return true;
             }
-
             // check for MM/DD/YYYY type dates
             $parts = explode("/", $mixed);
-
             return count($parts) === 3 && checkdate($parts[0], $parts[1], $parts[2]);
         } elseif ($expected_type === 'OBJECT') {
             // iterate through object and check if there are any properties
@@ -384,6 +387,7 @@ class Tools
                 case 'integer':
                 case 'tinyint':
                 case 'smallint':
+                case 'mediumint':
                 case 'bigint':
                 case 'serial':
                 case 'numeric':
@@ -409,7 +413,11 @@ class Tools
                 case 'tinytext':
                 case 'mediumtext':
                 case 'longtext':
+                case 'binary':
+                case 'varbinary':
                 case 'blob':
+                case 'tinyblob':
+                case 'mediumblob':
                 case 'longblob':
                 case 'enum':
                 case 'string':
@@ -450,9 +458,13 @@ class Tools
                     }
 
                 case 'date':
-                    return ($value != '' && $value != '0000-00-00' && strtotime($value) ? $value : '0000-00-00');
+                    if ($length) {
+                        return ($value != '' && $value != self::YEAR_DB_EMPTY ? $value : self::YEAR_DB_EMPTY);
+                    } else {
+                        return ($value != '' && $value != self::DATE_DB_EMPTY && strtotime($value) ? $value : self::DATE_DB_EMPTY);
+                    }
                 case 'datetime':
-                    return ($value != '' && $value != '0000-00-00 00:00:00' && strtotime($value) ? $value : '0000-00-00 00:00:00');
+                    return ($value != '' && $value != self::DATE_TIME_DB_EMPTY && strtotime($value) ? $value : self::DATE_TIME_DB_EMPTY);
                 default:
                     return $value;
             }
@@ -885,7 +897,6 @@ class Tools
         return mb_strtolower($str, $encoding);
     }
 
-
     /**
      * Return length of a string
      *
@@ -1121,4 +1132,13 @@ class Tools
         return (strpos($haystack, $delimiter . $needle . $delimiter) !== false ? true : false);
     }
 
+    /**
+     * Obtain class name
+     *
+     * @return string the fully qualified name of this class.
+     */
+    public static function className()
+    {
+        return get_called_class();
+    }
 }

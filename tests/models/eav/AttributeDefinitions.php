@@ -16,7 +16,14 @@ namespace fangface\concord\tests\models\eav;
 
 use fangface\concord\models\eav\AttributeDefinitions as BaseAttributeDefinitions;
 
-class AttributeDefinitions extends BaseAttributeDefinitions
+/**
+ * Active Record class for the clients dbClient.{prefix}attributeDefinitions table
+ *
+ * @method AttributeDefinitions findOne($condition = null) static
+ * @method AttributeDefinitions[] findAll($condition = null) static
+ * @method AttributeDefinitions[] findByCondition($condition, $one) static
+ */
+ class AttributeDefinitions extends BaseAttributeDefinitions
 {
 
     protected static $dbResourceName     = 'dbClient';

@@ -34,14 +34,16 @@ use fangface\concord\tests\models\Customer;
  * @property \fangface\concord\tests\models\Product $product
  * @property \fangface\concord\tests\models\Order $order
  * @property \fangface\concord\tests\models\Customer $customer
+ *
+ * @method Item findOne($condition = null) static
+ * @method Item[] findAll($condition = null) static
+ * @method Item[] findByCondition($condition, $one) static
  */
 class Item extends ActiveRecord
 {
 
     protected static $dbResourceName    = 'dbClient';
 
-    protected $disableCreatedUpd  = true;
-    protected $disableModifiedUpd = true;
 
     public function modelRelationMap()
     {

@@ -32,6 +32,10 @@ use fangface\concord\tests\models\Customer;
  * @property integer $modifiedBy User id of last user to modify record
  * @property \fangface\concord\tests\models\Item[] $items
  * @property \fangface\concord\tests\models\Customer $customer
+ *
+ * @method Order findOne($condition = null) static
+ * @method Order[] findAll($condition = null) static
+ * @method Order[] findByCondition($condition, $one) static
  */
 class Order extends ActiveRecord
 {

@@ -9,7 +9,7 @@ Yii2 - Concord is a work in progress. This is a project exploring the use of Git
 Installation
 ------------
 
-The preferred way to install the Yii framework is through [composer](http://getcomposer.org/download/).
+The preferred way to install yii2-concord is through [composer](http://getcomposer.org/download/).
 
 Either run
 

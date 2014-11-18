@@ -22,6 +22,10 @@ use yii\db\ActiveRecord;
  * @property integer $id primary key
  * @property integer $customerId ID of customer that the address belongs to
  * @property string $number
+ *
+ * @method Phone findOne($condition = null) static
+ * @method Phone[] findAll($condition = null) static
+ * @method Phone[] findByCondition($condition, $one) static
  */
 class Phone extends ActiveRecord
 {

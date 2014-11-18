@@ -26,6 +26,10 @@ use fangface\concord\db\ActiveRecord;
  * @property integer $createdBy	User id of user that created record
  * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
+ *
+ * @method Product findOne($condition = null) static
+ * @method Product[] findAll($condition = null) static
+ * @method Product[] findByCondition($condition, $one) static
  */
 class Product extends ActiveRecord
 {

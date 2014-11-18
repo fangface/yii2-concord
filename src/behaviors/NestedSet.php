@@ -96,7 +96,7 @@ class NestedSet extends Behavior
 	 * @param integer $depth the depth
 	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @param integer $limit [optional] limit results (typically used when only after limited number of immediate children)
-	 * @return ActiveQuery
+	 * @return ActiveQuery|integer
 	 */
 	public function descendants($depth = null, $object = null, $limit = 0)
 	{
@@ -132,11 +132,11 @@ class NestedSet extends Behavior
 	 * Gets children for node (direct descendants only)
 	 * @param ActiveRecord $object [optional] defaults to $this->owner
 	 * @param integer $limit [optional] limit results (typically used when only after limited number of immediate children)
-	 * @return ActiveQuery
+	 * @return ActiveQuery|integer
 	 */
 	public function children($object = null, $limit = 0)
 	{
-		return $this->descendants(1, $object, $limit);
+       return $this->descendants(1, $object, $limit);
 	}
 
 	/**
@@ -204,6 +204,28 @@ class NestedSet extends Behavior
 	public function parentOnly($object = null, $idOnly = false)
 	{
 		return $this->ancestors(1, $object, false, $idOnly);
+	}
+
+    /**
+	 * Gets entries at the same level of node (including self)
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
+	 * @param integer $limit [optional] limit results (typically used when only after limited number of immediate children)
+	 * @return ActiveQuery|integer
+	 */
+	public function level($object = null, $limit = 0)
+	{
+	    $parent = $this->parentOnly($object)->one();
+	    return $this->children($parent, $limit);
+	}
+
+    /**
+	 * Gets a count of entries at the same level of node (including self)
+	 * @param ActiveRecord $object [optional] defaults to $this->owner
+	 * @return integer
+	 */
+	public function levelCount($object = null)
+	{
+	    return $this->level($object, true)->count();
 	}
 
 	/**
@@ -445,11 +467,13 @@ class NestedSet extends Behavior
      *        If false, it means the method was called at the top level
      * @param boolean $fromDeleteFull
      *        has the delete() call come from deleteFull() or not
+     * @param boolean $deleteFull
+     *        should deleteFull be performed if available
      * @return boolean
      *        did deleteNode() successfully process
 
 	 */
-	public function deleteNode($hasParentModel = false, $fromDeleteFull = false)
+	public function deleteNode($hasParentModel = false, $fromDeleteFull = false, $deleteFull = false)
 	{
 		return $this->delete($hasParentModel, $fromDeleteFull);
 	}

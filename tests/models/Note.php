@@ -31,6 +31,10 @@ use fangface\concord\tests\models\Order;
  * @property integer $created_by	User id of user that created record
  * @property string $modified_at Date and time record was last modified
  * @property integer $modified_by User id of last user to modify record
+ *
+ * @method Note findOne($condition = null) static
+ * @method Note[] findAll($condition = null) static
+ * @method Note[] findByCondition($condition, $one) static
  */
 class Note extends ActiveRecord
 {

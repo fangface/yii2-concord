@@ -50,7 +50,6 @@ class NestedSetQuery extends Behavior
 		/** @var $modelClass ActiveRecord */
 		$modelClass=$this->owner->modelClass;
 		$this->owner->andWhere($modelClass::getDb()->quoteColumnName($this->leftAttribute) . '=1');
-
 		return $this->owner;
 	}
 }

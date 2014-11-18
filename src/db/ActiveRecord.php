@@ -17,12 +17,7 @@ namespace fangface\concord\db;
 use Yii;
 use fangface\concord\Tools;
 use fangface\concord\base\traits\ActionErrors;
-use fangface\concord\base\traits\AttributeActiveFieldConfig;
-use fangface\concord\base\traits\AttributeConfig;
-use fangface\concord\base\traits\AttributeHintBlocks;
-use fangface\concord\base\traits\AttributeIcons;
-use fangface\concord\base\traits\AttributePlaceholders;
-use fangface\concord\base\traits\AttributeTooltips;
+use fangface\concord\base\traits\AttributeSupport;
 use fangface\concord\behaviors\AutoSavedBy;
 use fangface\concord\behaviors\AutoDatestamp;
 use fangface\concord\db\ActiveAttributeRecord;
@@ -44,19 +39,20 @@ use yii\db\ActiveQueryInterface;
 use yii\db\Connection;
 use yii\helpers\ArrayHelper;
 
-
+/**
+ * Concord Active Record
+ *
+ * @method ActiveRecord findOne($condition = null) static
+ * @method ActiveRecord[] findAll($condition = null) static
+ * @method ActiveRecord[] findByCondition($condition, $one) static
+ */
 class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
 {
 
     use ActionErrors;
     use ActiveRecordParentalTrait;
     use ActiveRecordReadOnlyTrait;
-    use AttributeActiveFieldConfig;
-    use AttributeConfig;
-    use AttributeHintBlocks;
-    use AttributeIcons;
-    use AttributePlaceholders;
-    use AttributeTooltips;
+    use AttributeSupport;
 
     protected static $dbResourceName    = false;
     protected static $isClientResource  = false;
@@ -65,8 +61,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
     private $modelRelationMap           = [];
 
-    protected $disableCreatedUpd        = false;
-    protected $disableModifiedUpd       = false;
+    protected $disableAutoBehaviors     = false;
     protected $createdAtAttr            = 'createdAt';
     protected $createdByAttr            = 'createdBy';
     protected $modifiedAtAttr           = 'modifiedAt';
@@ -352,17 +347,9 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     // leave as null
                 } elseif ($skipIfSet && $this->getAttribute($colName) !== null) {
                     // leave as is
-                } elseif (false && is_string($defaultValue) && $defaultValue == '') {
-                    // leave as null
-                } elseif (false && is_numeric($defaultValue) && $defaultValue === 0) {
-                    // leave as null
-                } elseif (false && !$this->disableCreatedUpd && $this->createdAtAttr && $colName == $this->createdAtAttr && $defaultValue == Tools::DATE_TIME_DB_EMPTY) {
-                    // leave as null
-                } elseif (false && !$this->disableModifiedUpd && $this->modifiedAtAttr && $colName == $this->modifiedAtAttr && $defaultValue == Tools::DATE_TIME_DB_EMPTY) {
-                    // leave as null
                 } else {
                     $this->setAttribute($colName, $defaultValue);
-                    if ($spec->type == 'text' && $defaultValue == '') {
+                    if (($spec->type == 'text' || $spec->type == 'binary') && $defaultValue == '') {
                         // some fields need to have the default set and included in the sql statements even if not set to anything yet
                         $this->defaultsAppliedText = true;
                     } else {
@@ -383,9 +370,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     {
         $defaults = array();
 
-        if ($this->disableCreatedUpd && $this->disableModifiedUpd) {
+        if ($this->disableAutoBehaviors) {
 
-            // neither modified or created attributes require updating
+            // do not apply the default behaviors - by default even if not switched off the behaviors will work
+            // even if fields required to support them do not exist, but this option allows for the behaviors not
+            // to be attached in the first place
 
         } else {
 
@@ -397,11 +386,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
                 $defaults['savedby']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT] = array();
 
-                if (!$this->disableCreatedUpd && $this->createdByAttr) {
+                if ($this->createdByAttr) {
                     $defaults['savedby']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT][] = $this->createdByAttr;
                 }
 
-                if (!$this->disableModifiedUpd && $this->modifiedByAttr) {
+                if ($this->modifiedByAttr) {
                     $defaults['savedby']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT][] = $this->modifiedByAttr;
                     $defaults['savedby']['attributes'][ActiveRecord::EVENT_BEFORE_UPDATE] = array();
                     $defaults['savedby']['attributes'][ActiveRecord::EVENT_BEFORE_UPDATE][] = $this->modifiedByAttr;
@@ -417,11 +406,11 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
                 $defaults['datestamp']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT] = array();
 
-                if (!$this->disableCreatedUpd && $this->createdAtAttr) {
+                if ($this->createdAtAttr) {
                     $defaults['datestamp']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT][] = $this->createdAtAttr;
                 }
 
-                if (!$this->disableModifiedUpd && $this->modifiedAtAttr) {
+                if ($this->modifiedAtAttr) {
                     $defaults['datestamp']['attributes'][ActiveRecord::EVENT_BEFORE_INSERT][] = $this->modifiedAtAttr;
                     $defaults['datestamp']['attributes'][ActiveRecord::EVENT_BEFORE_UPDATE] = array();
                     $defaults['datestamp']['attributes'][ActiveRecord::EVENT_BEFORE_UPDATE][] = $this->modifiedAtAttr;
@@ -597,6 +586,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
         } else {
             if ($this->hasChanges()) {
+
                 try {
                     $ok = parent::save($runValidation, $attributes);
                     if ($ok) {
@@ -606,6 +596,14 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     $ok = false;
                     $this->addActionError($e->getMessage(), $e->getCode());
                 }
+
+                if (false) {
+                    if ($this->hasActionErrors()) {
+                        $actionError = $this->getFirstActionError();
+                        throw new Exception(print_r($actionError['message'], true), $actionError['code']);
+                    }
+                }
+
                 return $ok;
             } elseif ($this->getIsNewRecord() && !$hasParentModel) {
                 $message = 'Attempting to save an empty ' . Tools::getClassName($this) . ' model';
@@ -767,6 +765,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
                 // run beforeSaveAll and abandon saveAll() if it returns false
                 if (!$this->beforeSaveAllInternal($runValidation, $hasParentModel, $push)) {
+                    \Yii::info('Model not saved dur to beforeSaveALlInternal returning false.', __METHOD__);
                     return false;
                 }
 
@@ -826,6 +825,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                     $this->afterSaveAllInternal();
                 } else {
                     $this->afterSaveAllFailedInternal();
+                    if (false) {
+                        if ($this->hasActionErrors()) {
+                            $actionError = $this->getFirstActionError();
+                            throw new Exception(print_r($actionError['message'], true), $actionError['code']);
+                        }
+                    }
                 }
             }
 

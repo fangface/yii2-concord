@@ -16,6 +16,13 @@ namespace fangface\concord\tests\models\eav;
 
 use fangface\concord\models\eav\AttributeEntities as BaseAttributeEntities;
 
+/**
+ * Active Record class for the clients dbClient.{prefix}attributeEntities table
+ *
+ * @method AttributeEntities findOne($condition = null) static
+ * @method AttributeEntities[] findAll($condition = null) static
+ * @method AttributeEntities[] findByCondition($condition, $one) static
+ */
 class AttributeEntities extends BaseAttributeEntities
 {
 

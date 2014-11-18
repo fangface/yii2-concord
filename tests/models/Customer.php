@@ -35,6 +35,10 @@ use fangface\concord\tests\models\Order;
  * @property fangface\concord\tests\models\Address $address
  * @property fangface\concord\tests\models\Phone $phone
  * @property fangface\concord\tests\models\Order[] $orders
+ *
+ * @method Customer findOne($condition = null) static
+ * @method Customer[] findAll($condition = null) static
+ * @method Customer[] findByCondition($condition, $one) static
  */
 class Customer extends ActiveRecord
 {
