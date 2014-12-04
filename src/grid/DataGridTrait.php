@@ -364,4 +364,15 @@ trait DataGridTrait {
         }
         return [];
     }
+
+    /**
+     * Return the page length active in the dataProvider
+     * @param integer $all [optional] result if unlimited page size
+     * @return integer
+     */
+    public function getPageLengthFromDataProvider($all = 0)
+    {
+        $length = $this->dataProvider->getPagination()->getPageSize();
+        return ($length == null ? $all : $length);
+    }
 }

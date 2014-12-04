@@ -48,4 +48,4 @@ if (is_file($yii_php)) {
 	}
 }
 
-Yii::setAlias('@fangface/concord/tests', __DIR__);
+Yii::setAlias('@fangface/tests', __DIR__);
