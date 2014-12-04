@@ -12,16 +12,16 @@
  *
  */
 
-namespace fangface\base\traits;
+namespace fangface\widgets;
 
-use common\lib\Exception;
+use fangface\Exception;
 use fangface\web\View;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\JsExpression;
 
 
-trait Widget {
+trait WidgetTrait {
 
     /**
      * Section name yags to replace in the rendered layout. Enter this as `$key => $value` pairs,

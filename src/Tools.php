@@ -19,6 +19,7 @@ use fangface\base\traits\ServiceGetterStatic;
 use fangface\base\traits\Singleton;
 use fangface\helpers\Inflector;
 use fangface\models\db\Client;
+use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 
 class Tools
@@ -1113,6 +1114,18 @@ class Tools
         \Yii::$app->session->setFlash($key, $values);
     }
 
+    public static function sessionArrayRecord($value, $attribute, $default = false, $element = 'auto')
+    {
+        if (!$value) {
+            $arr = \Yii::$app->session->get($element, []);
+            $value = ArrayHelper::getValue($arr, $attribute, $default);
+        } else {
+            $arr = \Yii::$app->session->get($element, []);
+            $arr[$attribute] = $value;
+            \Yii::$app->session->set($element, $arr);
+        }
+        return $value;
+    }
 
     /**
      * Check to see if a string exists within another that has been structured for such a search

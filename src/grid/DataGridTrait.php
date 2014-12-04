@@ -12,8 +12,9 @@
  *
  */
 
-namespace fangface\base\traits;
+namespace fangface\grid;
 
+use fangface\grid\ActionColumn;
 use fangface\grid\DataColumn;
 use fangface\helpers\Html;
 use yii\base\InvalidConfigException;
@@ -21,10 +22,10 @@ use yii\i18n\Formatter;
 use yii\grid\Column;
 
 
-trait DataGrid {
+trait DataGridTrait {
 
     /**
-     * @var \yii\data\DataProviderInterface or \fangface\data\ActiveDataProvider, the data provider for the view.
+     * @var \fangface\data\ActiveDataProvider|\yii\data\DataProviderInterface, the data provider for the view.
      * This property is required.
      */
     public $dataProvider;
@@ -244,7 +245,7 @@ trait DataGrid {
 
     /**
      * Check to see if a column type exists
-     * @param object|string $class
+     * @param DataColumn|string $class
      * @param string $attribute [optional] if specified the attribute must exist in the class, default null
      * @param string $value [optional] if specified the attribute value must match this, default null
      * @param string $returnAttribute [optional] if specified the attribute is returned rather than true, default null
@@ -280,5 +281,87 @@ trait DataGrid {
             $result = false;
         }
         return $result;
+    }
+
+    /**
+     * Get the position within the columns array for the specified attribute or column class
+     * @param string $attribute [optional] look for this attribute
+     * @param DataColumn|string $class [optional] look for the first column with this column class type
+     * @return integer|false
+     */
+    public function getColumnPosition($attribute = null, $class = null)
+    {
+        $pos = -1;
+        foreach ($this->columns as $k => $column) {
+            $pos++;
+            if ($attribute !== null) {
+                if (isset($column->attribute) && $column->attribute == $attribute) {
+                    return $pos;
+                } elseif (is_string($k) && $k == $attribute) {
+                    return $pos;
+                }
+            } elseif ($class != null) {
+                if ($column instanceof $class) {
+                    return $pos;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the position of the first DataColumn
+     * @param DataColumn|string $class [optional] look for specific column class
+     * default null looks for \yii\grid\DataColumn
+     * @param boolean $checkSortable [optional] only consider sortable columns default false
+     * @param boolean $returnName [optional] return attribute name instead of position default false
+     * @return integer|false
+     */
+    public function getFirstDataColumnPosition($class = null, $checkSortable = false, $returnName = false)
+    {
+        $class = ($class != null ? : \yii\grid\DataColumn::className());
+        $pos = -1;
+        foreach ($this->columns as $k => $column) {
+            $pos++;
+            if ($column instanceof $class) {
+                if ($checkSortable) {
+                    if (isset($column->enableSorting) && $column->enableSorting) {
+                        return ($returnName ? (isset($column->attribute) ? $column->attribute : (is_string($k) ? $k : $pos)) : $pos);
+                    }
+                } else {
+                    return ($returnName ? (isset($column->attribute) ? $column->attribute : (is_string($k) ? $k : $pos)) : $pos);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return the sort column and direction active in the dataProvider
+     * @param boolean $position [optional] should column position be returned
+     * rather than attribute name default false
+     * @return array
+     */
+    public function getSortColumnFromDataProvider($position = false)
+    {
+        $orders = $this->dataProvider->getSort()->getOrders();
+        if ($orders) {
+            $order = array_slice($orders, 0, 1);
+            $sortAttribute = key($order);
+            $sortDirection = $order[key($order)];
+            if ($position) {
+                $sortPosition = $this->getColumnPosition($sortAttribute);
+                if ($sortPosition !== false) {
+                    return [$sortPosition, ($sortDirection == SORT_DESC ? 'desc' : 'asc')];
+                }
+            } else {
+                return [$sortAttribute, ($sortDirection == SORT_DESC ? 'desc' : 'asc')];
+            }
+        }
+        $sortPosition = $this->getFirstDataColumnPosition(null, true, !$position);
+        if ($sortPosition !== false) {
+            return [$sortPosition, 'asc'];
+        }
+        return [];
     }
 }
