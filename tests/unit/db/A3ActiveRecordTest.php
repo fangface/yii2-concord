@@ -329,7 +329,7 @@ class A3ActiveRecordTest extends DbTestCase
 
             $fullDataCheck = $this->cleanDatesForComparison($fullDataCheck);
 
-            $resultsPath = \Yii::getAlias('@fangface/concord/tests/data/results');
+            $resultsPath = \Yii::getAlias('@fangface/tests/data/results');
             $resultsFile = $resultsPath . '/ar-test-' . strtolower($client->clientCode) . '.json';
             if (false) {
                 // for use when comparing future tests

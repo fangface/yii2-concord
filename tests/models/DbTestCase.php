@@ -82,7 +82,7 @@ abstract class DbTestCase extends ConnectionTestCase
 
         if ($dbSetupType) {
 
-            $migrationPath = \Yii::getAlias('@fangface/concord/tests/migrations');
+            $migrationPath = \Yii::getAlias('@fangface/tests/migrations');
             $migrations = [];
             $files = glob($migrationPath . DIRECTORY_SEPARATOR . ($dbSetupType ? $dbSetupType . DIRECTORY_SEPARATOR : '') . '*.php');
             foreach ($files as $path) {
@@ -138,7 +138,7 @@ abstract class DbTestCase extends ConnectionTestCase
 
         if ($dbSetupType) {
 
-            $fixturesPath = \Yii::getAlias('@fangface/concord/tests/fixtures');
+            $fixturesPath = \Yii::getAlias('@fangface/tests/fixtures');
             $fixtures = [];
 
             $files = glob($fixturesPath . DIRECTORY_SEPARATOR . ($dbSetupType ? $dbSetupType . DIRECTORY_SEPARATOR : '') . '*.php');
@@ -335,7 +335,7 @@ abstract class DbTestCase extends ConnectionTestCase
 
         $fullDataCheck = $this->cleanDatesForComparison($fullDataCheck);
 
-        $resultsPath = \Yii::getAlias('@fangface/concord/tests/data/results');
+        $resultsPath = \Yii::getAlias('@fangface/tests/data/results');
         $resultsFile = $resultsPath . '/ar-test2-' . strtolower($clientCode) . '.json';
         if (false) {
             // for use when comparing future tests
