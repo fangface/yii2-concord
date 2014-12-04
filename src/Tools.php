@@ -12,13 +12,13 @@
  *
  */
 
-namespace fangface\concord;
+namespace fangface;
 
-use fangface\concord\Tools;
-use fangface\concord\base\traits\ServiceGetterStatic;
-use fangface\concord\base\traits\Singleton;
-use fangface\concord\helpers\Inflector;
-use fangface\concord\models\db\Client;
+use fangface\Tools;
+use fangface\base\traits\ServiceGetterStatic;
+use fangface\base\traits\Singleton;
+use fangface\helpers\Inflector;
+use fangface\models\db\Client;
 use yii\helpers\StringHelper;
 
 class Tools
@@ -98,7 +98,7 @@ class Tools
 
     /**
      * Determine default table name for an ActiveRecord class
-     * @param \fangface\concord\db\ActiveRecord $object
+     * @param \fangface\db\ActiveRecord $object
      * @return string
      */
 

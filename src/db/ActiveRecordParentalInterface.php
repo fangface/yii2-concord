@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\db;
+namespace fangface\db;
 
 interface ActiveRecordParentalInterface
 {
@@ -21,7 +21,7 @@ interface ActiveRecordParentalInterface
     /**
      * Set parent model
      *
-     * @param \fangface\concord\db\ActiveRecord $parentModel
+     * @param \fangface\db\ActiveRecord $parentModel
      * @return void
      */
     public function setParentModel($parentModel);
@@ -30,7 +30,7 @@ interface ActiveRecordParentalInterface
     /**
      * get parent model
      *
-     * @return \fangface\concord\db\ActiveRecord
+     * @return \fangface\db\ActiveRecord
      */
     public function getParentModel();
 
@@ -38,7 +38,7 @@ interface ActiveRecordParentalInterface
     /**
      * shorthand get parent model
      *
-     * @return \fangface\concord\db\ActiveRecord
+     * @return \fangface\db\ActiveRecord
      */
     public function parent();
 

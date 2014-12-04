@@ -12,17 +12,17 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\tests\models\Address;
-use fangface\concord\tests\models\ConnectionTestCase;
-use fangface\concord\tests\models\Country;
-use fangface\concord\tests\models\Customer;
-use fangface\concord\tests\models\Item;
-use fangface\concord\tests\models\TestCase;
-use fangface\concord\tests\models\Order;
-use fangface\concord\tests\models\Product;
-use fangface\concord\tests\models\eav\AttributeValues;
+use fangface\tests\models\Address;
+use fangface\tests\models\ConnectionTestCase;
+use fangface\tests\models\Country;
+use fangface\tests\models\Customer;
+use fangface\tests\models\Item;
+use fangface\tests\models\TestCase;
+use fangface\tests\models\Order;
+use fangface\tests\models\Product;
+use fangface\tests\models\eav\AttributeValues;
 
 /**
  * This is the base class for all Concord database unit tests
@@ -38,8 +38,8 @@ abstract class DbTestCase extends ConnectionTestCase
 
     /**
      * (non-PHPdoc)
-     * @see \fangface\concord\tests\TestCase::setUp()
-     * @see \fangface\concord\tests\TestCase::localSetUp()
+     * @see \fangface\tests\TestCase::setUp()
+     * @see \fangface\tests\TestCase::localSetUp()
      */
     protected function localSetUp()
     {
@@ -50,8 +50,8 @@ abstract class DbTestCase extends ConnectionTestCase
 
     /**
      * (non-PHPdoc)
-     * @see \fangface\concord\tests\TestCase::tearDown()
-     * @see \fangface\concord\tests\TestCase::localTearDown()
+     * @see \fangface\tests\TestCase::tearDown()
+     * @see \fangface\tests\TestCase::localTearDown()
      */
     protected function localTearDown()
     {
@@ -90,7 +90,7 @@ abstract class DbTestCase extends ConnectionTestCase
                 if (preg_match('/^(.*)\.(.*?)\.php$/', $file, $matches) && is_file($path)) {
                     $migrations[] = array(
                         'db' => $matches[1],
-                        'classFull' => '\\fangface\concord\\tests\\migrations\\' . ($dbSetupType ? $dbSetupType . '\\' : '') . $matches[1] . ucfirst($matches[2]),
+                        'classFull' => '\\fangface\\tests\\migrations\\' . ($dbSetupType ? $dbSetupType . '\\' : '') . $matches[1] . ucfirst($matches[2]),
                         'class' => $matches[1] . ucfirst($matches[2]),
                         'file' => $file,
                         'path' => $path,

@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\db;
+namespace fangface\db;
 
 /**
  * mysql has a long standing bug where the case of the table will switch

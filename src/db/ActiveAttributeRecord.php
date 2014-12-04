@@ -12,20 +12,20 @@
  *
  */
 
-namespace fangface\concord\db;
+namespace fangface\db;
 
-use fangface\concord\Tools;
-use fangface\concord\base\traits\ActionErrors;
-use fangface\concord\base\traits\ServiceGetter;
-use fangface\concord\db\ActiveRecordParentalInterface;
-use fangface\concord\db\ActiveRecordParentalTrait;
-use fangface\concord\db\ActiveRecordReadOnlyInterface;
-use fangface\concord\db\ActiveRecordReadOnlyTrait;
-use fangface\concord\db\ActiveRecordSaveAllInterface;
-use fangface\concord\db\Exception;
-use fangface\concord\models\eav\AttributeDefinitions;
-use fangface\concord\models\eav\AttributeEntities;
-use fangface\concord\models\eav\AttributeValues;
+use fangface\Tools;
+use fangface\base\traits\ActionErrors;
+use fangface\base\traits\ServiceGetter;
+use fangface\db\ActiveRecordParentalInterface;
+use fangface\db\ActiveRecordParentalTrait;
+use fangface\db\ActiveRecordReadOnlyInterface;
+use fangface\db\ActiveRecordReadOnlyTrait;
+use fangface\db\ActiveRecordSaveAllInterface;
+use fangface\db\Exception;
+use fangface\models\eav\AttributeDefinitions;
+use fangface\models\eav\AttributeEntities;
+use fangface\models\eav\AttributeValues;
 use yii\base\InvalidConfigException;
 use yii\base\ModelEvent;
 

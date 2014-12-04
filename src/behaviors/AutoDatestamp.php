@@ -12,10 +12,10 @@
  *
  */
 
-namespace fangface\concord\behaviors;
+namespace fangface\behaviors;
 
-use fangface\concord\Tools;
-use fangface\concord\db\ActiveRecord;
+use fangface\Tools;
+use fangface\db\ActiveRecord;
 use yii\base\Behavior;
 use yii\db\Expression;
 
@@ -26,7 +26,7 @@ use yii\db\Expression;
  * public function behaviors()
  * {
  *     return [
- *         'datestamp' => ['class' => 'fangface\concord\behaviors\AutoDatestamp'],
+ *         'datestamp' => ['class' => 'fangface\behaviors\AutoDatestamp'],
  *     ];
  * }
  * ~~~

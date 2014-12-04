@@ -12,15 +12,15 @@
  *
  */
 
-namespace fangface\concord\tests\unit\db;
+namespace fangface\tests\unit\db;
 
-use fangface\concord\models\db\Client;
-use fangface\concord\tests\models\DbTestCase;
-use fangface\concord\tests\models\Customer;
-use fangface\concord\tests\models\Order;
-use fangface\concord\tests\models\Item;
-use fangface\concord\tests\models\Note;
-use fangface\concord\tests\models\Pick;
+use fangface\models\db\Client;
+use fangface\tests\models\DbTestCase;
+use fangface\tests\models\Customer;
+use fangface\tests\models\Order;
+use fangface\tests\models\Item;
+use fangface\tests\models\Note;
+use fangface\tests\models\Pick;
 
 /**
  * Test Concord Active Record add-on for Yii2
@@ -28,7 +28,7 @@ use fangface\concord\tests\models\Pick;
 class A3ActiveRecordTest extends DbTestCase
 {
 
-    use \fangface\concord\base\traits\ServiceGetter;
+    use \fangface\base\traits\ServiceGetter;
 
     /**
      * Test active record extensions across the two test clients
@@ -456,7 +456,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct deleteFull() fails on readOnly relation
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Country readOnly model
      */
     function testActiveRecordDirectDeleteFullOnReadOnlyFails()
@@ -480,7 +480,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct delete() fails on readOnly relation
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Country readOnly model
      */
     function testActiveRecordDirectDeleteOnReadOnlyFails()
@@ -504,7 +504,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct fullDelete() fails on !canDelete relation
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Country model flagged as not deletable
      */
     function testActiveRecordDirectDeleteFullOnNonCanDeleteFails()
@@ -531,7 +531,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct delete() fails on !canDelete relation
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Country model flagged as not deletable
      */
     function testActiveRecordDirectDeleteOnNonCanDeleteFails()
@@ -558,7 +558,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct saveAll() fails on !readOnly
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to saveAll on Country readOnly model
      */
     function testActiveRecordDirectSaveAllOnReadOnlyFails()
@@ -582,7 +582,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions direct save() fails on !readOnly
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save on Country readOnly model
      */
     function testActiveRecordDirectSaveOnReadOnlyFails()
@@ -607,7 +607,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions set attribute for a readOnly model
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `longName` on a read only Country model
      */
     function testActiveRecordSetAttributeOnReadOnlyFails()
@@ -635,7 +635,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions set attribute via magic method for a readOnly model
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `longName` on a read only Country model
      */
     function testActiveRecordSetAttributeViaMagicSetOnReadOnlyFails()
@@ -663,7 +663,7 @@ class A3ActiveRecordTest extends DbTestCase
     /**
      * Test active record extensions set attributes for a readOnly model
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to set attributes on a read only Country model
      */
     function testActiveRecordSetAttributesOnReadOnlyFails()
@@ -692,7 +692,7 @@ class A3ActiveRecordTest extends DbTestCase
      * Test invalid active record property being set
      *
      * @expectedException        \yii\base\UnknownPropertyException
-     * @expectedExceptionMessage Setting unknown property: fangface\concord\tests\models\Customer::fieldNotExist
+     * @expectedExceptionMessage Setting unknown property: fangface\tests\models\Customer::fieldNotExist
      */
     function testActiveRecordSetNonExistAttributeFails()
     {
@@ -718,7 +718,7 @@ class A3ActiveRecordTest extends DbTestCase
      * Test invalid active record property being set via setAttribute()
      *
      * @expectedException        \yii\base\InvalidParamException
-     * @expectedExceptionMessage fangface\concord\tests\models\Customer has no attribute named "fieldNotExist".
+     * @expectedExceptionMessage fangface\tests\models\Customer has no attribute named "fieldNotExist".
      */
     function testActiveRecordSetNonExistSetAttributeFails()
     {
@@ -798,7 +798,7 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct deleteFull() fails on readOnly relation
      * where readOnly is defined in the model class itself
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Product readOnly model
      */
     function testActiveRecordDirectDeleteFullOnClassDefinedReadOnlyFails()
@@ -823,7 +823,7 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct deleteFull() fails on !canDelete relation
      * where !canDelete is defined in the model class itself
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Product model flagged as not deletable
      */
     function testActiveRecordDirectDeleteFullOnClassDefinedNonCanDeleteFails()
@@ -850,7 +850,7 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct delete() fails on readOnly relation
      * where readOnly is defined in the model class itself
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Product readOnly model
      */
     function testActiveRecordDirectDeleteOnClassDefinedReadOnlyFails()
@@ -875,7 +875,7 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions direct delete() fails on !canDelete relation
      * where !canDelete is defined in the model class itself
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Product model flagged as not deletable
      */
     function testActiveRecordDirectDeleteOnClassDefinedNonCanDeleteFails()
@@ -902,7 +902,7 @@ class A3ActiveRecordTest extends DbTestCase
      * Test active record extensions set attribute via magic method for a readOnly model
      * where readOnly is defined in the model class itself
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `description` on a read only Product model
      */
     function testActiveRecordSetAttributeViaMagicSetOnClassDefinedReadOnlyFails()

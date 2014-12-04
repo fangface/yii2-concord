@@ -12,13 +12,13 @@
  *
  */
 
-namespace fangface\concord\db;
+namespace fangface\db;
 
-use fangface\concord\base\traits\ServiceGetter;
-use fangface\concord\db\Exception;
-use fangface\concord\models\db\Client;
-use fangface\concord\models\db\DbResource;
-use fangface\concord\models\db\client\DbResource as ClientDbResource;
+use fangface\base\traits\ServiceGetter;
+use fangface\db\Exception;
+use fangface\models\db\Client;
+use fangface\models\db\DbResource;
+use fangface\models\db\client\DbResource as ClientDbResource;
 use yii\base\Component;
 use yii\db\Connection;
 use yii\db\Exception as YiiDbException;

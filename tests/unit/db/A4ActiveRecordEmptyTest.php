@@ -12,12 +12,12 @@
  *
  */
 
-namespace fangface\concord\tests\unit\db;
+namespace fangface\tests\unit\db;
 
-use fangface\concord\models\db\Client;
-use fangface\concord\tests\models\DbTestCase;
-use fangface\concord\tests\models\Note;
-use fangface\concord\tests\models\Pick;
+use fangface\models\db\Client;
+use fangface\tests\models\DbTestCase;
+use fangface\tests\models\Note;
+use fangface\tests\models\Pick;
 
 /**
  * Test Concord Active Record add-on for Yii2
@@ -25,13 +25,13 @@ use fangface\concord\tests\models\Pick;
 class A4ActiveRecordTest extends DbTestCase
 {
 
-    use \fangface\concord\base\traits\ServiceGetter;
+    use \fangface\base\traits\ServiceGetter;
 
     /**
      * Test creating an empty active record causes an error
      * this model has a mixture of field types with default values
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save an empty Note model
      */
     function testEmptyActiveRecordSaveFails()
@@ -48,7 +48,7 @@ class A4ActiveRecordTest extends DbTestCase
      * Test creating an empty active record causes an error
      * this model has a mixture of field types with default values
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save an empty Note model
      */
     function testEmptyActiveRecordSave2Fails()
@@ -67,7 +67,7 @@ class A4ActiveRecordTest extends DbTestCase
      * Test creating an empty active record causes an error
      * this model has a mixture of field types with default values
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save an empty Note model
      */
     function testEmptyActiveRecordSave3Fails()
@@ -85,7 +85,7 @@ class A4ActiveRecordTest extends DbTestCase
      * Test creating an empty active record causes an error
      * this model has a mixture of field types with default values
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save an empty Note model
      */
     function testEmptyActiveRecordSave4Fails()
@@ -105,7 +105,7 @@ class A4ActiveRecordTest extends DbTestCase
      * this model has a mixture of field types with default values
      * including a long text which has no default value and does not allow nulls
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save an empty Pick model
      */
     function testEmptyActiveRecordSave5Fails()
@@ -123,7 +123,7 @@ class A4ActiveRecordTest extends DbTestCase
      * this model has a mixture of field types with default values
      * including a long text which has no default value and does not allow nulls
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save an empty Pick model
      */
     function testEmptyActiveRecordSave6Fails()
@@ -143,7 +143,7 @@ class A4ActiveRecordTest extends DbTestCase
      * this model has a mixture of field types with default values
      * including a long text which has no default value and does not allow nulls
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to save an empty Pick model
      */
     function testEmptyActiveRecordSave7Fails()

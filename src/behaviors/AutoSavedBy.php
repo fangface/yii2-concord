@@ -12,10 +12,10 @@
  *
  */
 
-namespace fangface\concord\behaviors;
+namespace fangface\behaviors;
 
 use Yii;
-use fangface\concord\db\ActiveRecord;
+use fangface\db\ActiveRecord;
 use yii\base\Behavior;
 use yii\db\Expression;
 
@@ -26,7 +26,7 @@ use yii\db\Expression;
  * public function behaviors()
  * {
  *     return [
- *         'savedby' => ['class' => 'fangface\concord\behaviors\AutoSavedBy'],
+ *         'savedby' => ['class' => 'fangface\behaviors\AutoSavedBy'],
  *     ];
  * }
  * ~~~

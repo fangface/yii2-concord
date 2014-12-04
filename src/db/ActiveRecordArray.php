@@ -12,19 +12,19 @@
  *
  */
 
-namespace fangface\concord\db;
+namespace fangface\db;
 
-use fangface\concord\Tools;
-use fangface\concord\base\traits\ActionErrors;
-use fangface\concord\db\ActiveAttributeRecord;
-use fangface\concord\db\ActiveRecord;
-use fangface\concord\db\ActiveRecordArrayException;
-use fangface\concord\db\ActiveRecordParentalInterface;
-use fangface\concord\db\ActiveRecordParentalTrait;
-use fangface\concord\db\ActiveRecordReadOnlyInterface;
-use fangface\concord\db\ActiveRecordReadOnlyTrait;
-use fangface\concord\db\ActiveRecordSaveAllInterface;
-use fangface\concord\db\Exception;
+use fangface\Tools;
+use fangface\base\traits\ActionErrors;
+use fangface\db\ActiveAttributeRecord;
+use fangface\db\ActiveRecord;
+use fangface\db\ActiveRecordArrayException;
+use fangface\db\ActiveRecordParentalInterface;
+use fangface\db\ActiveRecordParentalTrait;
+use fangface\db\ActiveRecordReadOnlyInterface;
+use fangface\db\ActiveRecordReadOnlyTrait;
+use fangface\db\ActiveRecordSaveAllInterface;
+use fangface\db\Exception;
 use yii\base\ModelEvent;
 use yii\db\ActiveRecord as YiiActiveRecord;
 

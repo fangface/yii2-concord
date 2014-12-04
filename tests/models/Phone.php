@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
 use yii\db\ActiveRecord;
 
@@ -41,7 +41,7 @@ class Phone extends ActiveRecord
             return \Yii::$app->get($dbResourceName);
         }
 
-        throw new \fangface\concord\db\Exception('Database resource \'' . $dbResourceName . '\' not found');
+        throw new \fangface\db\Exception('Database resource \'' . $dbResourceName . '\' not found');
     }
 
 

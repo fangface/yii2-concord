@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\db\ActiveAttributeRecord;
+use fangface\db\ActiveAttributeRecord;
 
 /**
  * Active Record class for the clients dbClient.{prefix}attributeValues table
@@ -41,16 +41,16 @@ class CustomerAttributes extends ActiveAttributeRecord
     /**
      * @var string attribute entities class - repoint to test class so that it can specify dbCLIENT as the relevant db connection
      */
-    protected $attributeEntitiesClass    = 'fangface\concord\tests\models\eav\AttributeEntities';
+    protected $attributeEntitiesClass    = 'fangface\tests\models\eav\AttributeEntities';
 
     /**
      * @var string attribute definitions model - repoint to test class so that it can specify dbCLIENT as the relevant db connection
      */
-    protected $attributeDefinitionsClass = 'fangface\concord\tests\models\eav\AttributeDefinitions';
+    protected $attributeDefinitionsClass = 'fangface\tests\models\eav\AttributeDefinitions';
 
     /**
      * @var string rattribute values class - epoint to test class so that it can specify dbCLIENT as the relevant db connection
      */
-    protected $attributeValuesClass      = 'fangface\concord\tests\models\eav\AttributeValues';
+    protected $attributeValuesClass      = 'fangface\tests\models\eav\AttributeValues';
 
 }

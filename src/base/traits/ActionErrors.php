@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\base\traits;
+namespace fangface\base\traits;
 
-use fangface\concord\Tools;
+use fangface\Tools;
 
 trait ActionErrors {
 
@@ -50,7 +50,7 @@ trait ActionErrors {
      * as saveAll() and deleteFull() as a simplifed message array
      *
      * @param boolean $noAttribute Exclude attribute name from error text
-     * @return array array of action errors message and code
+     * @return array Action errors message and code
      */
     public function getBasicActionErrors($noAttribute = false)
     {

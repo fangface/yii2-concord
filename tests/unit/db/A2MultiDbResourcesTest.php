@@ -12,15 +12,15 @@
  *
  */
 
-namespace fangface\concord\tests\unit\db;
+namespace fangface\tests\unit\db;
 
-use fangface\concord\tests\models\DbTestCase;
-use fangface\concord\models\db\DbResource;
-use fangface\concord\models\db\client\DbResource as ClientDBResource;
-use fangface\concord\base\traits\ServiceGetter;
-use fangface\concord\models\db\Client;
-use fangface\concord\tests\models\Customer;
-use fangface\concord\tests\models\Robot;
+use fangface\tests\models\DbTestCase;
+use fangface\models\db\DbResource;
+use fangface\models\db\client\DbResource as ClientDBResource;
+use fangface\base\traits\ServiceGetter;
+use fangface\models\db\Client;
+use fangface\tests\models\Customer;
+use fangface\tests\models\Robot;
 use yii\db\Connection;
 
 /**
@@ -273,7 +273,7 @@ class A2MultiDbResourcesTest extends DbTestCase
      * Fail to obtain the 'db' connection via the connection manager because it has not been
      * defined in the connection manager and the parameters specify to attempt to add the
      * resource and not to use anything defined in components
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Missing dbParams on addResource
      */
     public function testGetUndefinedDbConnectionFails()

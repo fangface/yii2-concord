@@ -12,13 +12,13 @@
  *
  */
 
-namespace fangface\concord\tests\unit\db;
+namespace fangface\tests\unit\db;
 
-use fangface\concord\models\db\Client;
-use fangface\concord\tests\models\DbTestCase;
-use fangface\concord\tests\models\Customer;
-use fangface\concord\tests\models\Order;
-use fangface\concord\tests\models\Item;
+use fangface\models\db\Client;
+use fangface\tests\models\DbTestCase;
+use fangface\tests\models\Customer;
+use fangface\tests\models\Order;
+use fangface\tests\models\Item;
 
 /**
  * Test Concord Active Record array add-on for Yii2 hasMany/multi active record arrays
@@ -28,14 +28,14 @@ use fangface\concord\tests\models\Item;
 class A3ActiveRecordArrayExtraTest extends DbTestCase
 {
 
-    use \fangface\concord\base\traits\ServiceGetter;
+    use \fangface\base\traits\ServiceGetter;
 
 
     /**
      * Test add invalid object to new active record object array
      *
-     * @expectedException        \fangface\concord\db\ActiveRecordArrayException
-     * @expectedExceptionMessage Item added to array not of type `fangface\concord\tests\models\Item` it is of type `fangface\concord\tests\models\Customer`
+     * @expectedException        \fangface\db\ActiveRecordArrayException
+     * @expectedExceptionMessage Item added to array not of type `fangface\tests\models\Item` it is of type `fangface\tests\models\Customer`
      */
     function testActiveRecordArrayAddInvalidObjectToNewArray()
     {
@@ -51,8 +51,8 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test add invalid object to existing active record object array
      *
-     * @expectedException        \fangface\concord\db\ActiveRecordArrayException
-     * @expectedExceptionMessage Item added to array not of type `fangface\concord\tests\models\Item` it is of type `fangface\concord\tests\models\Customer`
+     * @expectedException        \fangface\db\ActiveRecordArrayException
+     * @expectedExceptionMessage Item added to array not of type `fangface\tests\models\Item` it is of type `fangface\tests\models\Customer`
      */
     function testActiveRecordArrayAddInvalidObjectToExistingArray()
     {
@@ -113,7 +113,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array set attribute via magic method for a readOnly array
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to set attribute `productCode` on a read only Item model
      */
     function testActiveRecordSetAttributeViaMagicSetOnReadOnlyFails()
@@ -143,7 +143,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array saveAll() where readOnly has been set
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to saveAll on Item(s) which is read only
      */
     function testActiveRecordSaveAllOnReadOnlyArrayFails()
@@ -169,7 +169,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array deleteFull() where readOnly has been set
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Item(s) readOnly model
      */
     function testActiveRecordDeleteFullOnReadOnlyArrayFails()
@@ -195,7 +195,7 @@ class A3ActiveRecordArrayExtraTest extends DbTestCase
     /**
      * Test active record array deleteFull() where canDelete has been set to false
      *
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Attempting to delete Item(s) model flagged as not deletable
      */
     function testActiveRecordDeleteFullOnNonCanDeleteArrayFails()

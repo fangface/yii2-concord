@@ -12,11 +12,11 @@
  *
  */
 
-namespace fangface\concord\tests\unit;
+namespace fangface\tests\unit;
 
-use fangface\concord\tests\models\TestCase as TestCase;
-use fangface\concord\tests\models\Item;
-use fangface\concord\Tools;
+use fangface\tests\models\TestCase as TestCase;
+use fangface\tests\models\Item;
+use fangface\Tools;
 
 /**
  * Test Concord Tools class

@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\base\traits;
+namespace fangface\base\traits;
 
 trait Singleton
 {

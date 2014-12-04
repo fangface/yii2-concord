@@ -12,24 +12,24 @@
  *
  */
 
-namespace fangface\concord\db;
+namespace fangface\db;
 
 use Yii;
-use fangface\concord\Tools;
-use fangface\concord\base\traits\ActionErrors;
-use fangface\concord\base\traits\AttributeSupport;
-use fangface\concord\behaviors\AutoSavedBy;
-use fangface\concord\behaviors\AutoDatestamp;
-use fangface\concord\db\ActiveAttributeRecord;
-use fangface\concord\db\ActiveRecord;
-use fangface\concord\db\ActiveRecordArray;
-use fangface\concord\db\ActiveRecordParentalInterface;
-use fangface\concord\db\ActiveRecordParentalTrait;
-use fangface\concord\db\ActiveRecordReadOnlyInterface;
-use fangface\concord\db\ActiveRecordReadOnlyTrait;
-use fangface\concord\db\ActiveRecordSaveAllInterface;
-use fangface\concord\db\ConnectionManager;
-use fangface\concord\db\Exception;
+use fangface\Tools;
+use fangface\base\traits\ActionErrors;
+use fangface\base\traits\AttributeSupport;
+use fangface\behaviors\AutoSavedBy;
+use fangface\behaviors\AutoDatestamp;
+use fangface\db\ActiveAttributeRecord;
+use fangface\db\ActiveRecord;
+use fangface\db\ActiveRecordArray;
+use fangface\db\ActiveRecordParentalInterface;
+use fangface\db\ActiveRecordParentalTrait;
+use fangface\db\ActiveRecordReadOnlyInterface;
+use fangface\db\ActiveRecordReadOnlyTrait;
+use fangface\db\ActiveRecordSaveAllInterface;
+use fangface\db\ConnectionManager;
+use fangface\db\Exception;
 use yii\base\InvalidParamException;
 use yii\base\ModelEvent;
 use yii\base\UnknownMethodException;
@@ -557,7 +557,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      * @see \yii\db\BaseActiveRecord::save()
      *
      * @param boolean $runValidation
-     *        should validations be executed on all models before allowing saveAll()
+     *        should validations be executed on all models before allowing save()
      * @param array $attributes
      *        which attributes should be saved (default null means all changed attributes)
      * @param boolean $hasParentModel
@@ -737,10 +737,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      *        If false, it means the method was called at the top level
      * @param boolean $push
      *        is saveAll being pushed onto lazy (un)loaded models as well
+     * @param array $attributes
+     *        which attributes should be saved (default null means all changed attributes)
      * @return boolean
      *         did saveAll() successfully process
      */
-    public function saveAll($runValidation = true, $hasParentModel = false, $push = false)
+    public function saveAll($runValidation = true, $hasParentModel = false, $push = false, $attributes = null)
     {
 
         $this->clearActionErrors();
@@ -764,8 +766,8 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
             if (!$hasParentModel) {
 
                 // run beforeSaveAll and abandon saveAll() if it returns false
-                if (!$this->beforeSaveAllInternal($runValidation, $hasParentModel, $push)) {
-                    \Yii::info('Model not saved dur to beforeSaveALlInternal returning false.', __METHOD__);
+                if (!$this->beforeSaveAllInternal($runValidation, $hasParentModel, $push, $attributes)) {
+                    \Yii::info('Model not saved due to beforeSaveALlInternal returning false.', __METHOD__);
                     return false;
                 }
 
@@ -791,7 +793,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
                     if ($this->hasChanges()) {
 
-                        $ok = $this->save($runValidation, null, $hasParentModel, true);
+                        $ok = $this->save($runValidation, $attributes, $hasParentModel, true);
 
                     } elseif ($isNewRecord && !$hasParentModel) {
 
@@ -1093,10 +1095,12 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
      *        If false, it means the method was called at the top level
      * @param boolean $push
      *        is saveAll being pushed onto lazy (un)loaded models as well
+     * @param array $attributes
+     *        which attributes should be saved (default null means all changed attributes)
      * @return boolean whether the saveAll() method call should continue
      *        If false, saveAll() will be cancelled.
      */
-    public function beforeSaveAllInternal($runValidation = true, $hasParentModel = false, $push = false)
+    public function beforeSaveAllInternal($runValidation = true, $hasParentModel = false, $push = false, $attributes = null)
     {
 
         $this->clearActionErrors();
@@ -1137,7 +1141,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
                             $this->setChildOldValues('this', $this->getResetDataForFailedSave());
                         }
 
-                        $canSaveAll = $this->validate();
+                        $canSaveAll = $this->validate($attributes);
                         if (!$canSaveAll) {
                             $errors = $this->getErrors();
                             foreach ($errors as $errorField => $errorDescription) {

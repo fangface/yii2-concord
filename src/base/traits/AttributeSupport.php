@@ -12,12 +12,12 @@
  *
  */
 
-namespace fangface\concord\base\traits;
+namespace fangface\base\traits;
 
-use fangface\concord\Tools;
-use fangface\concord\tools\InputField;
-use fangface\concord\validators\FilterValidator;
-use fangface\concord\validators\StrengthValidator;
+use fangface\Tools;
+use fangface\tools\InputField;
+use fangface\validators\FilterValidator;
+use fangface\validators\StrengthValidator;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
@@ -175,7 +175,7 @@ trait AttributeSupport
         $columns = ($columns === null ? self::getTableSchema()->columns : $columns);
 
         if (isset($columns[$attribute])) {
-            $spec = $columns[$attribute];
+            $spec = (isset($columns[$attribute]) ? $columns[$attribute] : false);
 
             $max = -1;
             $noTrim = false;
@@ -195,28 +195,42 @@ trait AttributeSupport
             switch ($type) {
                 case InputField::INPUT_TEXT:
                 case InputField::INPUT_PASSWORD:
-                    $max = $spec->size;
+                    $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
                     break;
                 case InputField::INPUT_PASSWORD_STRENGTH:
-                    $max = $spec->size;
+                    $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
                     $addRules[] = ['check' => [StrengthValidator::className()], 'rule' => [StrengthValidator::className(), 'preset' => 'normal', 'hasUser' => false, 'hasEmail' => false, 'userAttribute' => false]];
                     break;
                 case InputField::INPUT_INTEGER:
-                    $max = $spec->size + ($spec->unsigned ? 0 : 1);
-                    $maxValue = pow(10, $spec->size) - 1;
-                    $minValue = ($spec->unsigned ? 0 : -1 * $maxValue);
+                    if ($spec) {
+                        $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
+                        $unsigned = $spec->unsigned;
+                    } else {
+                        $max = $config['active']['options']['maxlength'];
+                        $unsigned = (!isset($config['active']['options']['data-inputmask-allowminus']) && $config['active']['options']['data-inputmask-allowminus'] == 'false' ? true : false);
+                    }
+                    $maxValue = pow(10, $max) - 1;
+                    $minValue = ($unsigned ? 0 : -1 * $maxValue);
                     $noTrim = true;
                     $defaultOnEmpty = 0;
                     $addRules[] = ['check' => ['integer'], 'rule' => ['integer', 'max' => $maxValue, 'min' => $minValue]];
                     break;
                 case InputField::INPUT_DECIMAL:
-                    $max = $spec->size + ($spec->unsigned ? 1 : 2);
-                    $maxValue = pow(10, $spec->size - $spec->scale) - 0.01;
-                    $minValue = ($spec->unsigned ? 0 : -1 * $maxValue);
+                    if ($spec) {
+                        $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
+                        $unsigned = $spec->unsigned;
+                        $scale = $spec->scale;
+                    } else {
+                        $max = $config['active']['options']['maxlength'];
+                        $unsigned = (!isset($config['active']['options']['data-inputmask-allowminus']) && $config['active']['options']['data-inputmask-allowminus'] == 'false' ? true : false);
+                        $scale = (isset($config['active']['options']['data-inputmask-digits']) ? $config['active']['options']['data-inputmask-digits'] : 2);
+                    }
+                    $maxValue = pow(10, $max) - 0.01;
+                    $minValue = ($unsigned ? 0 : -1 * $maxValue);
                     $noTrim = true;
                     $defaultOnEmpty = '0.00';
                     $addRules[] = ['check' => ['double'], 'rule' => ['double', 'max' => $maxValue, 'min' => $minValue]];
-                    $addRules[] = ['check' => [FilterValidator::className()], 'rule' => [FilterValidator::className(), 'filter' => 'number_format', 'args' => [$spec->scale, '.', '']]];
+                    $addRules[] = ['check' => [FilterValidator::className()], 'rule' => [FilterValidator::className(), 'filter' => 'number_format', 'args' => [$scale, '.', '']]];
                     break;
                 case InputField::INPUT_TEXTAREA:
                     break;
@@ -246,7 +260,7 @@ trait AttributeSupport
                     $addRules[] = ['check' => ['integer'], 'rule' => ['integer', 'max' => Tools::YEAR_DB_MAX, 'min' => Tools::YEAR_DB_EMPTY]];
                     break;
                 case InputField::INPUT_COLOR:
-                    $max = ($spec->size > 18 ? 18 : $spec->size);
+                    $max = (!$spec || $spec->size > 18 ? 18 : $spec->size);
                     break;
                 case InputField::INPUT_SELECT_PICKER_MULTI:
                 case InputField::INPUT_CHECKBOX_LIST:
@@ -264,7 +278,7 @@ trait AttributeSupport
                     break;
                 case InputField::INPUT_SELECT2_TAGS:
                     // received as a pipe delimited string
-                    $max = $spec->size;
+                    $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
                     default:
                 case InputField::INPUT_SELECT_PICKER:
                 case InputField::INPUT_RADIO_LIST:

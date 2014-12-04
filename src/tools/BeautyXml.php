@@ -17,7 +17,7 @@
 // contact me - sj@gex.pl
 //==============================================================================
 
-namespace fangface\concord\tools;
+namespace fangface\tools;
 
 class BeautyXml {
 

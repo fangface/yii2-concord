@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\helpers;
+namespace fangface\helpers;
 
 /**
  * Html provides a set of static methods for generating commonly used HTML tags.

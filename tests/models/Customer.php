@@ -12,13 +12,13 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\db\ActiveRecord;
-use fangface\concord\tests\models\CustomerAttributes;
-use fangface\concord\tests\models\Address;
-use fangface\concord\tests\models\Phone;
-use fangface\concord\tests\models\Order;
+use fangface\db\ActiveRecord;
+use fangface\tests\models\CustomerAttributes;
+use fangface\tests\models\Address;
+use fangface\tests\models\Phone;
+use fangface\tests\models\Order;
 
 /**
  * Active Record class for the clients dbClient.{prefix}customers table
@@ -31,10 +31,10 @@ use fangface\concord\tests\models\Order;
  * @property integer $createdBy	User id of user that created record
  * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
- * @property fangface\concord\tests\models\CustomerAttributes $customerAttributes
- * @property fangface\concord\tests\models\Address $address
- * @property fangface\concord\tests\models\Phone $phone
- * @property fangface\concord\tests\models\Order[] $orders
+ * @property fangface\tests\models\CustomerAttributes $customerAttributes
+ * @property fangface\tests\models\Address $address
+ * @property fangface\tests\models\Phone $phone
+ * @property fangface\tests\models\Order[] $orders
  *
  * @method Customer findOne($condition = null) static
  * @method Customer[] findAll($condition = null) static

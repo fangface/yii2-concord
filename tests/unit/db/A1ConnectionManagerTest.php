@@ -12,10 +12,10 @@
  *
  */
 
-namespace fangface\concord\tests\unit\db;
+namespace fangface\tests\unit\db;
 
-use fangface\concord\tests\models\DbTestCase;
-use fangface\concord\db\ConnectionManager;
+use fangface\tests\models\DbTestCase;
+use fangface\db\ConnectionManager;
 
 /**
  * Test Concord Connection Manager class and methods
@@ -88,7 +88,7 @@ class A1ConnectionManagerTest extends DbTestCase
      * defined in the connection manager and the parameters specify to attempt to add the
      * resource and not to use anything defined in components and no dbResources table exists
      * was 'Unable to load dbResources'
-     * @expectedException        \fangface\concord\db\Exception
+     * @expectedException        \fangface\db\Exception
      * @expectedExceptionMessage Missing dbParams on addResource
      */
     public function testGetUndefinedDbConnectionWithNoDbResourcesFails()

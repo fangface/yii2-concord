@@ -12,11 +12,11 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\db\ActiveRecord;
-use fangface\concord\tests\models\Country;
-use fangface\concord\tests\models\Customer;
+use fangface\db\ActiveRecord;
+use fangface\tests\models\Country;
+use fangface\tests\models\Customer;
 
 /**
  * Active Record class for the clients dbClient.{prefix}addresses table
@@ -38,8 +38,8 @@ use fangface\concord\tests\models\Customer;
  * @property integer $createdBy	User id of user that created record
  * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
- * @property \fangface\concord\tests\models\Country $country
- * @property \fangface\concord\tests\models\Customer $customer
+ * @property \fangface\tests\models\Country $country
+ * @property \fangface\tests\models\Customer $customer
  *
  * @method Address findOne($condition = null) static
  * @method Address[] findAll($condition = null) static

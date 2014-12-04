@@ -12,9 +12,11 @@
  *
  */
 
-namespace fangface\concord\base;
+namespace fangface\base;
 
-use fangface\concord\base\traits\ServiceGetter;
+use fangface\base\traits\ServiceGetter;
+use fangface\db\ActiveRecord;
+use yii\base\Model;
 use yii\helpers\Html;
 use yii\helpers\Json;
 
@@ -87,7 +89,7 @@ class Controller extends \yii\web\Controller
      * @param string $div DIV id into which the view should be rendered
      * @param string $view Name of view to render
      * @param array $params [optional]
-     * @param string $type [optional]
+     * @param string $type [optional] default 'general'
      */
     public function addAjaxResponse($div, $view, $params = [], $type = 'general')
     {
@@ -105,7 +107,7 @@ class Controller extends \yii\web\Controller
      *
      * @param string $div DIV id into which the content should be rendered
      * @param string $content Content to be rendered
-     * @param string $type [optional]
+     * @param string $type [optional] default 'general'
      */
     public function addAjaxResponseRaw($div, $content, $type = 'general')
     {
@@ -121,12 +123,13 @@ class Controller extends \yii\web\Controller
      * Add a redirect to the AJAX response
      *
      * @param string $url URL to redirect the user to
+     * @param string $type [optional] default 'general'
      */
-    public function addAjaxRedirect($url)
+    public function addAjaxRedirect($url, $type = 'general')
     {
         $this->startAjaxResponse();
         $this->ajaxResponses[] = [
-            'type' => 'general',
+            'type' => $type,
             'name' => 'redirect',
             'data' => $url,
         ];
@@ -136,15 +139,30 @@ class Controller extends \yii\web\Controller
      * Add a javascript snippet to be eval'd by the AJAX response processor client side
      *
      * @param string $js JS to be processed
+     * @param string $type [optional] default 'general'
      */
-    public function addAjaxJSResponse($js)
+    public function addAjaxJSResponse($js, $type = 'general')
     {
         $this->startAjaxResponse();
         $this->ajaxResponses[] = [
-            'type' => 'general',
+            'type' => $type,
             'name' => 'js_x',
             'data' => $js,
         ];
+    }
+
+    /**
+     * Add data to the response
+     * @param array $array array of data to be included in the response
+     */
+    public function addAjaxDataResponse($array = [])
+    {
+        $this->startAjaxResponse();
+        if ($array) {
+            foreach ($array as $k => $v) {
+                $this->ajaxResponses[$k] = $v;
+            }
+        }
     }
 
     /**
@@ -166,6 +184,7 @@ class Controller extends \yii\web\Controller
      *
      * @param string $title
      * @param string $message
+     * @param ActiveRecord $model
      * @param string $type [optional] 'success', 'info', 'warning' or 'error'. default is 'info'
      * @param array $options [optional] override default toast options
      *      closeButton: true,
@@ -180,14 +199,29 @@ class Controller extends \yii\web\Controller
      *      showMethod: 'fadeIn',
      *      hideMethod: 'fadeOut',
      */
-    public function addAjaxToastResponse($title, $message, $type = 'info', $options = [])
+    public function addAjaxToastResponse($title, $message, $type = 'info', $model = null, $options = [])
     {
+        $message = ($message ? Html::encode($message) : '');
+        if ($model !== null) {
+            if ($model instanceof Model && $model->hasErrors()) {
+                $errors = $model->getFirstErrors();
+                foreach ($errors as $error) {
+                    $message .= ($message != '' ? '<br/>' : '') . Html::encode($error);
+                }
+            }
+            if ($model instanceof ActiveRecord && $model->hasActionErrors()) {
+                $errors = $model->getBasicActionErrors();
+                foreach ($errors as $error) {
+                    $message .= ($message != '' ? '<br/>' : '') . Html::encode($error);
+                }
+            }
+        }
         if ($options) {
             foreach ($options as $k => $option) {
                 $options[$k] = Html::encode($option);
             }
         }
-        $this->addAjaxJSResponse("App.newToast('" . Html::encode($type) . "', '" . Html::encode($title) . "', '" . Html::encode($message) . "', '" . Json::encode($options) . "');");
+        $this->addAjaxJSResponse("App.newToast('" . Html::encode($type) . "', '" . Html::encode($title) . "', '" . $message . "', '" . Json::encode($options) . "');");
     }
 
     /**
@@ -203,12 +237,13 @@ class Controller extends \yii\web\Controller
     /**
      * Send an OK response
      * @param array $array array to be included in the response
+     * @param string $element name of element to put array in default is support
      */
-    public function sendOk($array=[])
+    public function sendOk($array = [], $element = 'support')
     {
         $this->startAjaxResponse();
         $this->ajaxResponses['answer'] = 1;
-        $this->ajaxResponses['support'] = $array;
+        $this->ajaxResponses[$element] = $array;
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $this->ajaxResponses;
     }
@@ -216,12 +251,13 @@ class Controller extends \yii\web\Controller
     /**
      * Send a FAIL response
      * @param array $array array to be included in the response
+     * @param string $element name of element to put array in default is support
      */
-    public function sendFail($array=[])
+    public function sendFail($array = [], $element = 'support')
     {
         $this->startAjaxResponse();
         $this->ajaxResponses['answer'] = 0;
-        $this->ajaxResponses['support'] = $array;
+        $this->ajaxResponses[$element] = $array;
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $this->ajaxResponses;
     }

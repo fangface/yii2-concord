@@ -1,26 +1,59 @@
 <?php
 /**
+ * This file is part of the fangface/yii2-concord package
+ *
+ * For the full copyright and license information, please view
+ * the file LICENSE.md that was distributed with this source code.
+ *
+ * @package fangface/yii2-concord
+ * @author Fangface <dev@fangface.net>
+ * @copyright Copyright (c) 2014 Fangface <dev@fangface.net>
+ * @license https://github.com/fangface/yii2-concord/blob/master/LICENSE.md MIT License
+ *
+ */
+
+/**
+ * Based on;
  * @link https://github.com/creocoder/yii2-nested-set-behavior
  * @copyright Copyright (c) 2013 Alexander Kochetov
  * @license http://opensource.org/licenses/BSD-3-Clause
  */
 
-namespace fangface\concord\behaviors;
+namespace fangface\behaviors;
 
-use fangface\concord\Tools;
-use fangface\concord\db\ActiveRecord;
+use fangface\Tools;
+use fangface\db\ActiveRecord;
 use yii\base\Behavior;
-use yii\base\Event;
+use yii\base\ModelEvent;
 use yii\db\ActiveQuery;
 use yii\db\Exception;
 use yii\db\Expression;
 
 /**
+ * Nested Set behavior for attaching to ActiveRecord
+ * CREATE TABLE `example_nest` (
+ *   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+ *   `name` char(100) NOT NULL DEFAULT '',
+ *   `path` varchar(255) NOT NULL DEFAULT '',
+ *   `lft` bigint(20) unsigned NOT NULL DEFAULT '0',
+ *   `rgt` bigint(20) unsigned NOT NULL DEFAULT '0',
+ *   `level` smallint(5) unsigned NOT NULL DEFAULT '0',
+ *   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+ *   `created_by` bigint(20) unsigned NOT NULL DEFAULT '0',
+ *   `modified_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+ *   `modified_by` bigint(20) unsigned NOT NULL DEFAULT '0',
+ *   PRIMARY KEY (`id`),
+ *   KEY `lft` (`lft`),
+ *   KEY `rgt` (`rgt`),
+ *   KEY `level` (`level`,`lft`) USING BTREE
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ *
  * @author Alexander Kochetov <creocoder@gmail.com>
+ * @author Fangface <dev@fangface.net>
  */
 class NestedSet extends Behavior
 {
-	/**
+    /**
 	 * @var ActiveRecord the owner of this behavior.
 	 */
 	public $owner;
@@ -28,6 +61,14 @@ class NestedSet extends Behavior
 	 * @var boolean
 	 */
 	public $hasManyRoots = false;
+	/**
+	 * @var boolean
+	 */
+	public $hasPaths = false;
+	/**
+	 * @var boolean
+	 */
+	public $hasAction = false;
 	/**
 	 * @var boolean should deletes be performed on each active record individually
 	 */
@@ -49,6 +90,14 @@ class NestedSet extends Behavior
 	 */
 	public $levelAttribute = 'level';
 	/**
+	 * @var string
+	 */
+	public $nameAttribute = 'name';
+	/**
+	 * @var string
+	 */
+	public $pathAttribute = 'path';
+	/**
 	 * @var boolean
 	 */
 	private $_ignoreEvent = false;
@@ -56,6 +105,10 @@ class NestedSet extends Behavior
 	 * @var boolean
 	 */
 	private $_deleted = false;
+	/**
+	 * @var string
+	 */
+	private $_previousPath = '';
 	/**
 	 * @var integer
 	 */
@@ -79,6 +132,8 @@ class NestedSet extends Behavior
 			ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
 			ActiveRecord::EVENT_BEFORE_INSERT => 'beforeInsert',
 			ActiveRecord::EVENT_BEFORE_UPDATE => 'beforeUpdate',
+		    ActiveRecord::EVENT_BEFORE_SAVE_ALL => 'beforeSaveAll',
+		    ActiveRecord::EVENT_BEFORE_DELETE_FULL => 'beforeDeleteFull',
 		];
 	}
 
@@ -278,7 +333,7 @@ class NestedSet extends Behavior
 	 * Create root node if multiple-root tree mode. Update node if it's not new
 	 *
      * @param boolean $runValidation
-     *        should validations be executed on all models before allowing saveAll()
+     *        should validations be executed on all models before allowing save()
      * @param array $attributes
      *        which attributes should be saved (default null means all changed attributes)
      * @param boolean $hasParentModel
@@ -289,7 +344,7 @@ class NestedSet extends Behavior
      * @return boolean
      *        did save() successfully process
 	 */
-	public function save($runValidation = true, $attributes = null, $hasParentModel = false, $fromSaveAll = false)
+	private function save($runValidation = true, $attributes = null, $hasParentModel = false, $fromSaveAll = false)
 	{
 
 	    if ($this->owner->getReadOnly() && !$hasParentModel) {
@@ -298,7 +353,7 @@ class NestedSet extends Behavior
 	        // not allowed to amend or delete
 	        $message = 'Attempting to save on ' . Tools::getClassName($this->owner) . ' readOnly model';
 	        //$this->addActionError($message);
-	        throw new \fangface\concord\db\Exception($message);
+	        throw new \fangface\db\Exception($message);
 
 	    } elseif ($this->owner->getReadOnly() && $hasParentModel) {
 
@@ -316,10 +371,101 @@ class NestedSet extends Behavior
     			return $this->makeRoot($attributes);
     		}
 
-    		$this->_ignoreEvent = true;
-    		$result = $this->owner->update(false, $attributes);
-    		//$result = $this->owner->save(false, $attributes, $hasParentModel, $fromSaveAll);
-    		$this->_ignoreEvent = false;
+    		$updateChildPaths = false;
+            if ($this->hasPaths && !$this->owner->getIsNewRecord()) {
+                if ($this->owner->hasAttribute($this->pathAttribute)) {
+                    if ($this->owner->hasChanged($this->pathAttribute)) {
+                        $updateChildPaths = true;
+                        if ($this->_previousPath == '') {
+                            $this->_previousPath = $this->owner->getOldAttribute($this->pathAttribute);
+                        }
+                    }
+                }
+                if (!$updateChildPaths && $this->owner->hasAttribute($this->nameAttribute)) {
+                    if ($this->owner->hasChanged($this->nameAttribute)) {
+                        $this->_previousPath = $this->owner->getAttribute($this->pathAttribute);
+                        $this->checkAndSetPath($this->owner);
+                        if ($this->_previousPath != $this->owner->getAttribute($this->pathAttribute)) {
+                            $updateChildPaths = true;
+                        }
+                    }
+                }
+            }
+
+            $nameChanged = false;
+            if ($this->owner->hasAttribute($this->nameAttribute) && $this->owner->hasChanged($this->nameAttribute)) {
+                $nameChanged = true;
+                if (!$this->beforeRenameNode($this->_previousPath)) {
+                    return false;
+                }
+            }
+
+            $result = false;
+            $db = $this->owner->getDb();
+
+    		if ($db->getTransaction() === null) {
+    			$transaction = $db->beginTransaction();
+    		}
+
+    		try {
+
+                $this->_ignoreEvent = true;
+    			//$result = $this->owner->update(false, $attributes);
+                if (false && method_exists($this->owner, 'saveAll')) {
+                    $result = $this->owner->saveAll(false, $hasParentModel, false, $attributes);
+                } else {
+                    $result = $this->owner->save(false, $attributes, $hasParentModel, $fromSaveAll);
+                }
+        		$this->_ignoreEvent = false;
+
+                if ($result && $updateChildPaths) {
+                    // only if we have children
+                    if ($this->owner->getAttribute($this->rightAttribute) > $this->owner->getAttribute($this->leftAttribute) + 1) {
+                        $condition = $db->quoteColumnName($this->leftAttribute) . '>' . $this->owner->getAttribute($this->leftAttribute) . ' AND '
+        					. $db->quoteColumnName($this->rightAttribute) . '<' . $this->owner->getAttribute($this->rightAttribute);
+    				    $params = [];
+    				    if ($this->hasManyRoots) {
+    					   $condition .= ' AND ' . $db->quoteColumnName($this->rootAttribute) . '=:' . $this->rootAttribute;
+    					   $params[':' . $this->rootAttribute] = $this->owner->getAttribute($this->rootAttribute);
+    				    }
+
+                        $updateColumns = [];
+                        $pathLength = Tools::strlen($this->_previousPath) + 1;
+                        // SQL Server: SUBSTRING() rather than SUBSTR
+                        // SQL Server: + instead of CONCAT
+                        if ($db->getDriverName() == 'mssql') {
+                            $updateColumns[$this->pathAttribute] = new Expression($db->quoteValue($this->owner->getAttribute($this->pathAttribute)) . ' + SUBSTRING(' . $db->quoteColumnName($this->pathAttribute) . ', ' . $pathLength . '))');
+                        } else {
+                            $updateColumns[$this->pathAttribute] = new Expression('CONCAT(' . $db->quoteValue($this->owner->getAttribute($this->pathAttribute)) . ', SUBSTR(' . $db->quoteColumnName($this->pathAttribute) . ', ' . $pathLength . '))');
+                        }
+    				    $result = $this->owner->updateAll(
+    					   $updateColumns,
+    					   $condition,
+    					   $params
+    				    );
+                    }
+                }
+
+	            if ($result && $nameChanged) {
+                    $result = $this->afterRenameNode($this->_previousPath);
+	            }
+
+    		} catch (\Exception $e) {
+    			if (isset($transaction)) {
+    				$transaction->rollback();
+    			}
+    			throw $e;
+    		}
+
+            if (isset($transaction)) {
+                if (!$result) {
+                    $transaction->rollback();
+                } else {
+                    $transaction->commit();
+                }
+			}
+
+    		$this->_previousPath = '';
 
 	    }
 
@@ -346,12 +492,10 @@ class NestedSet extends Behavior
      *        If false, it means the method was called at the top level
      * @param boolean $fromDeleteFull
      *        has the delete() call come from deleteFull() or not
-     * @param boolean $deleteFull
-     *        should deleteFull be performed if available
      * @return boolean
      *        did delete() successfully process
 	 */
-	public function delete($hasParentModel = false, $fromDeleteFull = false, $deleteFull = false)
+	private function delete($hasParentModel = false, $fromDeleteFull = false)
 	{
 		if ($this->owner->getIsNewRecord()) {
 			throw new Exception('The node can\'t be deleted because it is new.');
@@ -361,16 +505,23 @@ class NestedSet extends Behavior
 			throw new Exception('The node can\'t be deleted because it is already deleted.');
 		}
 
+        if (!$this->beforeDeleteNode()) {
+            return false;
+        }
+
 		$db = $this->owner->getDb();
 
 		if ($db->getTransaction() === null) {
 			$transaction = $db->beginTransaction();
 		}
 
+        if ($this->owner->hasAttribute($this->pathAttribute) && $this->owner->hasAttribute($this->nameAttribute)) {
+            $this->_previousPath = $this->owner->getAttribute($this->pathAttribute);
+        }
+
 		try {
 
 		    $result = true;
-
 		    if (!$this->owner->isLeaf()) {
 
 		        $condition = $db->quoteColumnName($this->leftAttribute) . '>='
@@ -392,11 +543,11 @@ class NestedSet extends Behavior
     		        foreach ($nodes as $node) {
 
     		            $node->setIgnoreEvents(true);
-    		            if ($deleteFull && method_exists($node, 'deleteFull')) {
-    		                $result = $node->deleteFull($hasParentModel);
-    		            } else {
-    		                $result = $node->delete($hasParentModel, $fromDeleteFull);
-    		            }
+        		        if (method_exists($node, 'deleteFull')) {
+                    	    $result = $node->deleteFull($hasParentModel);
+                    	} else {
+                    	    $result = $node->delete();
+                    	}
     		            $node->setIgnoreEvents(false);
 
     		            if (method_exists($node, 'hasActionErrors')) {
@@ -419,23 +570,31 @@ class NestedSet extends Behavior
 		    }
 
 		    if ($result) {
+
 		        $this->shiftLeftRight(
                     $this->owner->getAttribute($this->rightAttribute) + 1,
                     $this->owner->getAttribute($this->leftAttribute) - $this->owner->getAttribute($this->rightAttribute) - 1
                 );
-                $this->correctCachedOnDelete();
 
-                if ($this->owner->isLeaf()) {
-                	$this->_ignoreEvent = true;
-                	if ($deleteFull && method_exists($this->owner, 'deleteFull')) {
-                	    $result = $this->owner->deleteFull($hasParentModel);
-                	} else {
-                	    $result = $this->owner->delete($hasParentModel, $fromDeleteFull);
-                	}
-                	$this->_ignoreEvent = false;
-                }
+        		$left = $this->owner->getAttribute($this->leftAttribute);
+                $right = $this->owner->getAttribute($this->rightAttribute);
 
+            	$this->_ignoreEvent = true;
+            	if (method_exists($this->owner, 'deleteFull')) {
+            	    $result = $this->owner->deleteFull($hasParentModel);
+            	} else {
+            	    $result = $this->owner->delete();
+            	}
+            	$this->_ignoreEvent = false;
+
+		        $this->correctCachedOnDelete($left, $right);
 		    }
+
+            if ($result) {
+                $result = $this->afterDeleteNode($this->_previousPath);
+            }
+
+            $this->_previousPath = '';
 
 			if (!$result) {
 				if (isset($transaction)) {
@@ -455,7 +614,7 @@ class NestedSet extends Behavior
 
 			throw $e;
 		}
-
+        $this->_previousPath = '';
 		return true;
 	}
 
@@ -467,40 +626,31 @@ class NestedSet extends Behavior
      *        If false, it means the method was called at the top level
      * @param boolean $fromDeleteFull
      *        has the delete() call come from deleteFull() or not
-     * @param boolean $deleteFull
-     *        should deleteFull be performed if available
      * @return boolean
      *        did deleteNode() successfully process
 
 	 */
-	public function deleteNode($hasParentModel = false, $fromDeleteFull = false, $deleteFull = false)
+	public function deleteNode($hasParentModel = false, $fromDeleteFull = false)
 	{
 		return $this->delete($hasParentModel, $fromDeleteFull);
 	}
 
 	/**
-	 * Deletes node and it's descendants and relations.
-	 *
-	 * @param boolean $hasParentModel
-     *        whether this method was called from the top level or by a parent
-     *        If false, it means the method was called at the top level
-     * @return boolean
-     *        did deleteNodeFull() successfully process
-	 */
-	public function deleteNodeFull($hasParentModel = false)
-	{
-	    return $this->delete($hasParentModel, false, true);
-	}
-
-	/**
 	 * Prepends node to target as first child
 	 * @param ActiveRecord $target the target
-	 * @param boolean $runValidation whether to perform validation
-	 * @param array $attributes list of attributes
+	 * @param boolean $runValidation [optional] whether to perform validation
+	 * @param array $attributes [optional] list of attributes
 	 * @return boolean whether the prepending succeeds
 	 */
 	public function prependTo($target, $runValidation = true, $attributes = null)
 	{
+        if ($runValidation) {
+            if (!$this->owner->validate($attributes)) {
+                return false;
+            }
+            $runValidation = false;
+        }
+	    $this->checkAndSetPath($target, true);
 		return $this->addNode(
 			$target,
 			$target->getAttribute($this->leftAttribute) + 1,
@@ -513,8 +663,8 @@ class NestedSet extends Behavior
 	/**
 	 * Prepends target to node as first child
 	 * @param ActiveRecord $target the target
-	 * @param boolean $runValidation whether to perform validation
-	 * @param array $attributes list of attributes
+	 * @param boolean $runValidation [optional] whether to perform validation
+	 * @param array $attributes [optional] list of attributes
 	 * @return boolean whether the prepending succeeds
 	 */
 	public function prepend($target, $runValidation = true, $attributes = null)
@@ -529,13 +679,20 @@ class NestedSet extends Behavior
 	/**
 	 * Appends node to target as last child
 	 * @param ActiveRecord $target the target
-	 * @param boolean $runValidation whether to perform validation
-	 * @param array $attributes list of attributes
+	 * @param boolean $runValidation [optional] whether to perform validation
+	 * @param array $attributes [optional] list of attributes
 	 * @return boolean whether the appending succeeds
 	 */
 	public function appendTo($target, $runValidation = true, $attributes = null)
 	{
-		return $this->addNode(
+        if ($runValidation) {
+            if (!$this->owner->validate($attributes)) {
+                return false;
+            }
+            $runValidation = false;
+        }
+	    $this->checkAndSetPath($target, true);
+	    return $this->addNode(
 			$target,
 			$target->getAttribute($this->rightAttribute),
 			1,
@@ -547,8 +704,8 @@ class NestedSet extends Behavior
 	/**
 	 * Appends target to node as last child
 	 * @param ActiveRecord $target the target
-	 * @param boolean $runValidation whether to perform validation
-	 * @param array $attributes list of attributes
+	 * @param boolean $runValidation [optional] whether to perform validation
+	 * @param array $attributes [optional] list of attributes
 	 * @return boolean whether the appending succeeds
 	 */
 	public function append($target, $runValidation = true, $attributes = null)
@@ -563,13 +720,21 @@ class NestedSet extends Behavior
 	/**
 	 * Inserts node as previous sibling of target.
 	 * @param ActiveRecord $target the target.
-	 * @param boolean $runValidation whether to perform validation.
-	 * @param array $attributes list of attributes.
+	 * @param boolean $runValidation [optional] whether to perform validation
+	 * @param array $attributes [optional] list of attributes
+	 * @param ActiveRecord $parent [optional] parent node if already known
 	 * @return boolean whether the inserting succeeds.
 	 */
-	public function insertBefore($target, $runValidation = true, $attributes = null)
+	public function insertBefore($target, $runValidation = true, $attributes = null, $parent = null)
 	{
-		return $this->addNode(
+        if ($runValidation) {
+            if (!$this->owner->validate($attributes)) {
+                return false;
+            }
+            $runValidation = false;
+        }
+	    $this->checkAndSetPath($target, false, false, $parent);
+	    return $this->addNode(
 			$target,
 			$target->getAttribute($this->leftAttribute),
 			0,
@@ -581,13 +746,21 @@ class NestedSet extends Behavior
 	/**
 	 * Inserts node as next sibling of target
 	 * @param ActiveRecord $target the target
-	 * @param boolean $runValidation whether to perform validation
-	 * @param array $attributes list of attributes
+	 * @param boolean $runValidation [optional] whether to perform validation
+	 * @param array $attributes [optional] list of attributes
+	 * @param ActiveRecord $parent [optional] parent node if already known
 	 * @return boolean whether the inserting succeeds
 	 */
-	public function insertAfter($target, $runValidation = true, $attributes = null)
+	public function insertAfter($target, $runValidation = true, $attributes = null, $parent = null)
 	{
-		return $this->addNode(
+        if ($runValidation) {
+            if (!$this->owner->validate($attributes)) {
+                return false;
+            }
+            $runValidation = false;
+        }
+	    $this->checkAndSetPath($target, false, false, $parent);
+	    return $this->addNode(
 			$target,
 			$target->getAttribute($this->rightAttribute) + 1,
 			0,
@@ -599,11 +772,13 @@ class NestedSet extends Behavior
 	/**
 	 * Move node as previous sibling of target
 	 * @param ActiveRecord $target the target
+	 * @param ActiveRecord $parent [optional] parent node if already known
 	 * @return boolean whether the moving succeeds
 	 */
-	public function moveBefore($target)
+	public function moveBefore($target, $parent = null)
 	{
-		return $this->moveNode(
+        $this->checkAndSetPath($target, false, true, $parent);
+	    return $this->moveNode(
 			$target,
 			$target->getAttribute($this->leftAttribute),
 			0
@@ -613,11 +788,13 @@ class NestedSet extends Behavior
 	/**
 	 * Move node as next sibling of target
 	 * @param ActiveRecord $target the target
+	 * @param ActiveRecord $parent [optional] parent node if already known
 	 * @return boolean whether the moving succeeds
 	 */
-	public function moveAfter($target)
+	public function moveAfter($target, $parent = null)
 	{
-		return $this->moveNode(
+        $this->checkAndSetPath($target, false, true, $parent);
+	    return $this->moveNode(
 			$target,
 			$target->getAttribute($this->rightAttribute) + 1,
 			0
@@ -627,11 +804,13 @@ class NestedSet extends Behavior
 	/**
 	 * Move node as first child of target
 	 * @param ActiveRecord $target the target
+	 * @param ActiveRecord $parent [optional] parent node if already known
 	 * @return boolean whether the moving succeeds
 	 */
-	public function moveAsFirst($target)
+	public function moveAsFirst($target, $parent = null)
 	{
-		return $this->moveNode(
+        $this->checkAndSetPath($target, true, true, $parent);
+	    return $this->moveNode(
 			$target,
 			$target->getAttribute($this->leftAttribute) + 1,
 			1
@@ -641,11 +820,13 @@ class NestedSet extends Behavior
 	/**
 	 * Move node as last child of target
 	 * @param ActiveRecord $target the target
+	 * @param ActiveRecord $parent [optional] parent node if already known
 	 * @return boolean whether the moving succeeds
 	 */
-	public function moveAsLast($target)
+	public function moveAsLast($target, $parent = null)
 	{
-		return $this->moveNode(
+        $this->checkAndSetPath($target, true, true, $parent);
+	    return $this->moveNode(
 			$target,
 			$target->getAttribute($this->rightAttribute),
 			1
@@ -673,6 +854,10 @@ class NestedSet extends Behavior
 
 		if ($this->owner->isRoot()) {
 			throw new Exception('The node already is root node.');
+		}
+
+		if ($this->hasPaths) {
+			throw new Exception('Paths not yet supported for moveAsRoot.');
 		}
 
 		$db = $this->owner->getDb();
@@ -717,6 +902,66 @@ class NestedSet extends Behavior
 		}
 
 		return true;
+	}
+
+    /**
+     * Check to see if this nested set supports path or not
+	 * @param ActiveRecord $target the target
+	 * @param boolean $isParent is target the parent node
+	 * @param boolean $isMove is this relating to a node move
+	 * @param boolean $isParent is $target the parent of $this->owner
+	 * @param ActiveRecord $parent [optional] parent node if already known
+     */
+	public function checkAndSetPath($target, $isParent = false, $isMove = false, $parent = null)
+	{
+        if ($this->hasPaths) {
+            if ($this->owner->hasAttribute($this->pathAttribute) && $this->owner->hasAttribute($this->nameAttribute)) {
+                $this->_previousPath = $this->owner->getAttribute($this->pathAttribute);
+                $this->owner->setAttribute($this->pathAttribute, $this->calculatePath($target, $isParent, $parent));
+            }
+        }
+	}
+
+    /**
+     * Calculate path based on name and target
+	 * @param ActiveRecord $target the target
+	 * @param boolean $isParent is target the parent node
+	 * @param ActiveRecord $parent [optional] parent node if already known
+	 * @return string
+     */
+	public function calculatePath($target, $isParent = false, $parent = null)
+	{
+        $uniqueNames = false;
+	    if (method_exists($this->owner, 'getIsUniqueNames')) {
+            $uniqueNames = $this->owner->getIsUniqueNames();
+        }
+
+	    if ($this->hasPaths || $uniqueNames) {
+            if (!$isParent && $parent) {
+                $target = $parent;
+            } elseif (!$isParent) {
+                $target = $target->parentOnly()->one();
+    	    }
+	    }
+        if ($this->hasPaths) {
+            if ($target->getAttribute($this->pathAttribute) == '/') {
+                $path = '/' . $this->owner->getAttribute($this->nameAttribute);
+            } else {
+                $path = $target->getAttribute($this->pathAttribute) . '/' . $this->owner->getAttribute($this->nameAttribute);
+            }
+        } else {
+            $path = '';
+        }
+        if ($uniqueNames) {
+            $matches = $this->children($target)->andWhere([$this->nameAttribute => $this->owner->getAttribute($this->nameAttribute)]);
+            if (!$this->owner->getIsNewRecord()) {
+                $matches->andWhere('id != ' . $this->owner->id);
+            }
+            if ($matches->count()) {
+                $path = '__DUPLICATE__';
+            }
+        }
+        return $path;
 	}
 
 	/**
@@ -782,7 +1027,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Handle 'afterFind' event of the owner
-	 * @param Event $event event parameter
+	 * @param ModelEvent $event event parameter
 	 */
 	public function afterFind($event)
 	{
@@ -791,7 +1036,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Handle 'beforeInsert' event of the owner
-	 * @param Event $event event parameter
+	 * @param ModelEvent $event event parameter
 	 * @throws Exception
 	 * @return boolean
 	 */
@@ -806,7 +1051,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Handle 'beforeUpdate' event of the owner
-	 * @param Event $event event parameter
+	 * @param ModelEvent $event event parameter
 	 * @throws Exception
 	 * @return boolean
 	 */
@@ -821,7 +1066,7 @@ class NestedSet extends Behavior
 
 	/**
 	 * Handle 'beforeDelete' event of the owner
-	 * @param Event $event event parameter
+	 * @param ModelEvent $event event parameter
 	 * @throws Exception
 	 * @return boolean
 	 */
@@ -831,6 +1076,36 @@ class NestedSet extends Behavior
 			return true;
 		} else {
 			throw new Exception('You should not use ActiveRecord::delete() method when NestedSet behavior attached.');
+		}
+	}
+
+	/**
+	 * Handle 'beforeSaveAll' event of the owner
+	 * @param ModelEvent $event event parameter
+	 * @throws Exception
+	 * @return boolean
+	 */
+	public function beforeSaveAll($event)
+	{
+		if ($this->_ignoreEvent) {
+			return true;
+		} elseif ($this->owner->getIsNewRecord()) {
+			throw new Exception('You should not use ActiveRecord::saveAll() on new records when NestedSet behavior attached.');
+		}
+	}
+
+	/**
+	 * Handle 'beforeDeleteFull' event of the owner
+	 * @param ModelEvent $event event parameter
+	 * @throws Exception
+	 * @return boolean
+	 */
+	public function beforeDeleteFull($event)
+	{
+		if ($this->_ignoreEvent) {
+			return true;
+		} else {
+			throw new Exception('You should not use ActiveRecord::beforeDeleteFull() method when NestedSet behavior attached.');
 		}
 	}
 
@@ -890,9 +1165,17 @@ class NestedSet extends Behavior
 			throw new Exception('The target node should not be root.');
 		}
 
-		if ($runValidation && !$this->owner->validate()) {
+        if ($this->hasPaths && $this->owner->getAttribute($this->pathAttribute) == '__DUPLICATE__') {
+			throw new Exception('New node has duplicate path.');
+        }
+
+		if ($runValidation && !$this->owner->validate($attributes)) {
 			return false;
 		}
+
+        if (!$this->beforeAddNode()) {
+            return false;
+        }
 
 		if ($this->hasManyRoots) {
 			$this->owner->setAttribute($this->rootAttribute, $target->getAttribute($this->rootAttribute));
@@ -910,14 +1193,22 @@ class NestedSet extends Behavior
 			$this->owner->setAttribute($this->rightAttribute, $key + 1);
 			$this->owner->setAttribute($this->levelAttribute, $target->getAttribute($this->levelAttribute) + $levelUp);
 			$this->_ignoreEvent = true;
-			$result = $this->owner->insert(false, $attributes);
+            //$result = $this->owner->insert(false, $attributes);
+            if (method_exists($this->owner, 'saveAll')) {
+                $result = $this->owner->saveAll(false, false, false, $attributes);
+            } else {
+                $result = $this->owner->save(false, $attributes);
+            }
 			$this->_ignoreEvent = false;
+
+            if ($result) {
+                $result = $this->afterAddNode();
+            }
 
 			if (!$result) {
 				if (isset($transaction)) {
 					$transaction->rollback();
 				}
-
 				return false;
 			}
 
@@ -932,7 +1223,6 @@ class NestedSet extends Behavior
 			if (isset($transaction)) {
 				$transaction->rollback();
 			}
-
 			throw $e;
 		}
 
@@ -949,6 +1239,9 @@ class NestedSet extends Behavior
 		$this->owner->setAttribute($this->leftAttribute, 1);
 		$this->owner->setAttribute($this->rightAttribute, 2);
 		$this->owner->setAttribute($this->levelAttribute, 1);
+        if ($this->hasPaths && $this->owner->hasAttribute($this->pathAttribute) && $this->owner->getAttribute($this->pathAttribute) == '') {
+            $this->owner->setAttribute($this->pathAttribute, '/');
+        }
 
 		if ($this->hasManyRoots) {
 			$db = $this->owner->getDb();
@@ -959,7 +1252,12 @@ class NestedSet extends Behavior
 
 			try {
 				$this->_ignoreEvent = true;
-				$result = $this->owner->insert(false, $attributes);
+    			//$result = $this->owner->insert(false, $attributes);
+                if (method_exists($this->owner, 'saveAll')) {
+                    $result = $this->owner->saveAll(false, false, false, $attributes);
+                } else {
+                    $result = $this->owner->save(false, $attributes);
+                }
 				$this->_ignoreEvent = false;
 
 				if (!$result) {
@@ -1000,7 +1298,12 @@ class NestedSet extends Behavior
 			}
 
 			$this->_ignoreEvent = true;
-			$result = $this->owner->insert(false, $attributes);
+			//$result = $this->owner->insert(false, $attributes);
+            if (method_exists($this->owner, 'saveAll')) {
+                $result = $this->owner->saveAll(false, false, false, $attributes);
+            } else {
+                $result = $this->owner->save(false, $attributes);
+            }
 			$this->_ignoreEvent = false;
 
 			if (!$result) {
@@ -1045,6 +1348,10 @@ class NestedSet extends Behavior
 		if (!$levelUp && $target->isRoot()) {
 			throw new Exception('The target node should not be root.');
 		}
+
+        if (!$this->beforeMoveNode($this->_previousPath)) {
+            return false;
+        }
 
 		$db = $this->owner->getDb();
 
@@ -1112,11 +1419,23 @@ class NestedSet extends Behavior
 					$params[':' . $this->rootAttribute] = $this->owner->getAttribute($this->rootAttribute);
 				}
 
+                $updateColumns = [];
+                $updateColumns[$this->levelAttribute] = new Expression($db->quoteColumnName($this->levelAttribute)
+					. sprintf('%+d', $levelDelta));
+
+				if ($this->hasPaths && $this->owner->hasAttribute($this->pathAttribute)) {
+                    $pathLength = Tools::strlen($this->_previousPath) + 1;
+                    // SQL Server: SUBSTRING() rather than SUBSTR
+                    // SQL Server: + instead of CONCAT
+                    if ($db->getDriverName() == 'mssql') {
+                        $updateColumns[$this->pathAttribute] = new Expression($db->quoteValue($this->owner->getAttribute($this->pathAttribute)) . ' + SUBSTRING(' . $db->quoteColumnName($this->pathAttribute) . ', ' . $pathLength . '))');
+                    } else {
+                        $updateColumns[$this->pathAttribute] = new Expression('CONCAT(' . $db->quoteValue($this->owner->getAttribute($this->pathAttribute)) . ', SUBSTR(' . $db->quoteColumnName($this->pathAttribute) . ', ' . $pathLength . '))');
+                    }
+				}
+
 				$this->owner->updateAll(
-					[
-						$this->levelAttribute => new Expression($db->quoteColumnName($this->levelAttribute)
-							. sprintf('%+d', $levelDelta)),
-					],
+					$updateColumns,
 					$condition,
 					$params
 				);
@@ -1142,8 +1461,16 @@ class NestedSet extends Behavior
 
 				$this->shiftLeftRight($right + 1, -$delta);
 
+                $result = $this->afterMoveNode($this->_previousPath);
+
 				if (isset($transaction)) {
-					$transaction->commit();
+				    if ($result) {
+                        $transaction->commit();
+				    } else {
+				        $transaction->rollback();
+				        $this->_previousPath = '';
+				        return false;
+				    }
 				}
 
 				$this->correctCachedOnMoveNode($key, $levelDelta);
@@ -1156,19 +1483,21 @@ class NestedSet extends Behavior
 			throw $e;
 		}
 
+		$this->_previousPath = '';
+
 		return true;
 	}
 
 	/**
 	 * Correct cache for [[delete()]] and [[deleteNode()]].
+	 *
+	 * @param integer $left
+	 * @param integer $right
 	 */
-	private function correctCachedOnDelete()
+	private function correctCachedOnDelete($left, $right)
 	{
-		$left = $this->owner->getAttribute($this->leftAttribute);
-		$right = $this->owner->getAttribute($this->rightAttribute);
 		$key = $right + 1;
 		$delta = $left - $right - 1;
-
 		foreach (self::$_cached[get_class($this->owner)] as $node) {
 			/** @var $node ActiveRecord */
 			if ($node->getIsNewRecord() || $node->getIsDeletedRecord()) {
@@ -1182,7 +1511,7 @@ class NestedSet extends Behavior
 
 			if ($node->getAttribute($this->leftAttribute) >= $left
 				&& $node->getAttribute($this->rightAttribute) <= $right) {
-				$node->setIsDeletedRecord(true);
+                    $node->setIsDeletedRecord(true);
 			} else {
 				if ($node->getAttribute($this->leftAttribute) >= $key) {
 					$node->setAttribute(
@@ -1391,15 +1720,124 @@ class NestedSet extends Behavior
 		}
 	}
 
-    /**
+	/**
+	 * Optionally perform actions/checks before addNode is processed
+	 * @return boolean success
+	 */
+	protected function beforeAddNode()
+	{
+        if (method_exists($this->owner, 'beforeAddNode')) {
+            return $this->owner->beforeAddNode();
+        }
+        return true;
+	}
+
+	/**
+	 * Optionally perform actions/checks after addNode has processed
+	 * @return boolean success
+	 */
+	protected function afterAddNode()
+	{
+        if (method_exists($this->owner, 'afterAddNode')) {
+            return $this->owner->afterAddNode();
+        }
+        return true;
+	}
+
+	/**
+	 * Optionally perform actions/checks before a node name is changed
+     * @param string $old old folder path
+	 * @return boolean success
+	 */
+	protected function beforeRenameNode($old)
+	{
+        if (method_exists($this->owner, 'beforeRenameNode')) {
+            return $this->owner->beforeRenameNode($old);
+        }
+        return true;
+	}
+
+	/**
+	 * Optionally perform actions/checks after the node name has been changed
+     * @param string $old old folder path
+	 * @return boolean success
+	 */
+	protected function afterRenameNode($old)
+	{
+        if (method_exists($this->owner, 'afterRenameNode')) {
+            return $this->owner->afterRenameNode($old);
+        }
+        return true;
+	}
+
+	/**
+	 * Optionally perform actions/checks before a node is moved
+     * @param string $old old folder path
+	 * @return boolean success
+	 */
+	protected function beforeMoveNode($old)
+	{
+        if (method_exists($this->owner, 'beforeMoveNode')) {
+            return $this->owner->beforeMoveNode($old);
+        }
+        return true;
+	}
+
+	/**
+	 * Optionally perform actions/checks after the node is moved
+     * @param string $old old folder path
+	 * @return boolean success
+	 */
+	protected function afterMoveNode($old)
+	{
+        if (method_exists($this->owner, 'afterMoveNode')) {
+            return $this->owner->afterMoveNode($old);
+        }
+        return true;
+	}
+
+	/**
+	 * Optionally perform actions/checks before a node is deleted
+	 * @return boolean success
+	 */
+	protected function beforeDeleteNode()
+	{
+        if (method_exists($this->owner, 'beforeDeleteNode')) {
+            return $this->owner->beforeDeleteNode();
+        }
+        return true;
+	}
+
+	/**
+	 * Optionally perform actions/checks after the node has been deleted
+     * @param string $path
+	 * @return boolean success
+	 */
+	protected function afterDeleteNode($path)
+	{
+        if (method_exists($this->owner, 'afterDeleteNode')) {
+            return $this->owner->afterDeleteNode($path);
+        }
+        return true;
+	}
+
+	/**
      * Override ignore events flag
      * @param boolean $value
      */
-    function setIgnoreEvents($value)
+    public function setIgnoreEvents($value)
     {
         $this->_ignoreEvent = $value;
     }
 
+    /**
+     * Set previous path (sometimes useful to avoid looking up parent multiple times)
+     * @param string $path
+     */
+    public function setPreviousPath($path)
+    {
+        $this->_previousPath = $path;
+    }
 
 	/**
 	 * Destructor

@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\models\db;
+namespace fangface\models\db;
 
-use fangface\concord\db\ActiveRecord;
+use fangface\db\ActiveRecord;
 
 /**
  * Active Record class to the main db.{prefix}clients table

@@ -12,12 +12,12 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\db\ActiveRecord;
-use fangface\concord\tests\models\Product;
-use fangface\concord\tests\models\Order;
-use fangface\concord\tests\models\Customer;
+use fangface\db\ActiveRecord;
+use fangface\tests\models\Product;
+use fangface\tests\models\Order;
+use fangface\tests\models\Customer;
 
 /**
  * Active Record class for the clients dbCLIENT.{prefix}items table
@@ -31,9 +31,9 @@ use fangface\concord\tests\models\Customer;
  * @property string $field1
  * @property string $field2
  * @property string $field3
- * @property \fangface\concord\tests\models\Product $product
- * @property \fangface\concord\tests\models\Order $order
- * @property \fangface\concord\tests\models\Customer $customer
+ * @property \fangface\tests\models\Product $product
+ * @property \fangface\tests\models\Order $order
+ * @property \fangface\tests\models\Customer $customer
  *
  * @method Item findOne($condition = null) static
  * @method Item[] findAll($condition = null) static

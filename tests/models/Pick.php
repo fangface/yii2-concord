@@ -12,13 +12,13 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\db\ActiveRecord;
-use fangface\concord\tests\models\CustomerAttributes;
-use fangface\concord\tests\models\Address;
-use fangface\concord\tests\models\Phone;
-use fangface\concord\tests\models\Order;
+use fangface\db\ActiveRecord;
+use fangface\tests\models\CustomerAttributes;
+use fangface\tests\models\Address;
+use fangface\tests\models\Phone;
+use fangface\tests\models\Order;
 
 /**
  * Active Record class for the clients dbClient.{prefix}picks table

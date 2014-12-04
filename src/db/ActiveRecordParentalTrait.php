@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\db;
+namespace fangface\db;
 
-use fangface\concord\db\ActiveRecord;
+use fangface\db\ActiveRecord;
 
 trait ActiveRecordParentalTrait
 {

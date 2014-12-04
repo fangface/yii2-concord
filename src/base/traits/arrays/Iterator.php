@@ -12,7 +12,7 @@
  *
  */
 
-namespace fangface\concord\base\traits\arrays;
+namespace fangface\base\traits\arrays;
 
 trait Iterator
 {

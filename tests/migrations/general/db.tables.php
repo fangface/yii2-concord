@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\tests\migrations\general;
+namespace fangface\tests\migrations\general;
 
-use fangface\concord\db\Migration;
+use fangface\db\Migration;
 use yii\db\Schema;
 
 /**

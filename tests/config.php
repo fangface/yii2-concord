@@ -93,7 +93,7 @@ return [
             ],
 
             'dbFactory' => [
-                'class' => \fangface\concord\db\ConnectionManager::className(),
+                'class' => \fangface\db\ConnectionManager::className(),
             ],
 
             'dbCache' => $cacheConfig,

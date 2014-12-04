@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\models\eav;
+namespace fangface\models\eav;
 
-use fangface\concord\db\ActiveRecord;
+use fangface\db\ActiveRecord;
 
 /**
  * Default Active Record class for the attributeValues table

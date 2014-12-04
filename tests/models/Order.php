@@ -12,11 +12,11 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\db\ActiveRecord;
-use fangface\concord\tests\models\Item;
-use fangface\concord\tests\models\Customer;
+use fangface\db\ActiveRecord;
+use fangface\tests\models\Item;
+use fangface\tests\models\Customer;
 
 /**
  * Active Record class for the clients dbClient.{prefix}orders table
@@ -30,8 +30,8 @@ use fangface\concord\tests\models\Customer;
  * @property integer $createdBy	User id of user that created record
  * @property string $modifiedAt Date and time record was last modified
  * @property integer $modifiedBy User id of last user to modify record
- * @property \fangface\concord\tests\models\Item[] $items
- * @property \fangface\concord\tests\models\Customer $customer
+ * @property \fangface\tests\models\Item[] $items
+ * @property \fangface\tests\models\Customer $customer
  *
  * @method Order findOne($condition = null) static
  * @method Order[] findAll($condition = null) static

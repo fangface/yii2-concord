@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\tests\models\eav;
+namespace fangface\tests\models\eav;
 
-use fangface\concord\models\eav\AttributeEntities as BaseAttributeEntities;
+use fangface\models\eav\AttributeEntities as BaseAttributeEntities;
 
 /**
  * Active Record class for the clients dbClient.{prefix}attributeEntities table

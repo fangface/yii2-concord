@@ -12,9 +12,9 @@
  *
  */
 
-namespace fangface\concord\tests\models;
+namespace fangface\tests\models;
 
-use fangface\concord\db\ActiveRecord;
+use fangface\db\ActiveRecord;
 
 /**
  * Active Record class for the clients dbClient.{prefix}products table

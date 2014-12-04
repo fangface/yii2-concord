@@ -1,8 +1,8 @@
 <?
 
-namespace fangface\concord\tools;
+namespace fangface\tools;
 
-use fangface\concord\tools\Xml;
+use fangface\tools\Xml;
 use yii\base\Model;
 
 class XmlPost extends Model {

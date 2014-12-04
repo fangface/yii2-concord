@@ -12,11 +12,11 @@
  *
  */
 
-namespace fangface\concord\tests\unit\db;
+namespace fangface\tests\unit\db;
 
-use fangface\concord\models\db\Client;
-use fangface\concord\tests\models\CustomerAttributes;
-use fangface\concord\tests\models\DbTestCase;
+use fangface\models\db\Client;
+use fangface\tests\models\CustomerAttributes;
+use fangface\tests\models\DbTestCase;
 
 /**
  * Test Concord Active Attribute Record add-on for Yii2
@@ -24,7 +24,7 @@ use fangface\concord\tests\models\DbTestCase;
  */
 class A3ActiveAttributeRecordTest extends DbTestCase
 {
-    use \fangface\concord\base\traits\ServiceGetter;
+    use \fangface\base\traits\ServiceGetter;
 
     /**
      * Test ability to get attribute record schema

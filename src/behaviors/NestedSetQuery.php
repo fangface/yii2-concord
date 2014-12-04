@@ -5,9 +5,9 @@
  * @license http://opensource.org/licenses/BSD-3-Clause
  */
 
-namespace fangface\concord\behaviors;
+namespace fangface\behaviors;
 
-use fangface\concord\db\ActiveRecord;
+use fangface\db\ActiveRecord;
 use yii\base\Behavior;
 use yii\db\ActiveQuery;
 
@@ -25,6 +25,10 @@ class NestedSetQuery extends Behavior
 	 */
 	public $hasManyRoots = false;
 	/**
+	 * @var boolean
+	 */
+	public $hasPaths = false;
+	/**
 	 * @var string
 	 */
 	public $rootAttribute = 'root';
@@ -40,6 +44,15 @@ class NestedSetQuery extends Behavior
 	 * @var string
 	 */
 	public $levelAttribute = 'level';
+	/**
+	 * @var string
+	 */
+	public $nameAttribute = 'name';
+	/**
+	 * @var string
+	 */
+	public $pathAttribute = 'path';
+
 
 	/**
 	 * Gets root node(s)
