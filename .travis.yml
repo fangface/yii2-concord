@@ -11,10 +11,10 @@ services:
 sudo: false
 
 install:
-  - composer self-update && composer --version
-  - composer global require "fxp/composer-asset-plugin:1.0.0-beta3"
+  - travis_retry composer self-update && composer --version
+  - travis_retry composer global require "fxp/composer-asset-plugin:1.0.0-beta4"
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer install --prefer-dist
+  - travis_retry composer install --prefer-dist
   - /bin/sh tests/data/travis/apc-setup.sh
   - /bin/sh tests/data/travis/memcache-setup.sh
 
