@@ -279,7 +279,7 @@ trait AttributeSupport
                 case InputField::INPUT_SELECT2_TAGS:
                     // received as a pipe delimited string
                     $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
-                    default:
+                    break;
                 case InputField::INPUT_SELECT_PICKER:
                 case InputField::INPUT_RADIO_LIST:
                 case InputField::INPUT_RADIO_LIST_ICHECK:

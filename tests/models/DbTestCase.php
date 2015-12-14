@@ -195,20 +195,20 @@ abstract class DbTestCase extends ConnectionTestCase
             } else {
                 switch ($k)
                 {
-                	case 'createdAt':
-                	case 'created_at':
-            	    case 'modifiedAt':
-            	    case 'modified_at':
-            	        $v = '2050-12-31 23:59:59';
-                	    break;
-                	case 'createdBy':
-                	case 'created_by':
-            	    case 'modifiedBy':
-            	    case 'modified_by':
-            	        $v = 99;
-                	    break;
-            	    default:
-                	    break;
+                  case 'createdAt':
+                  case 'created_at':
+                  case 'modifiedAt':
+                  case 'modified_at':
+                      $v = '2050-12-31 23:59:59';
+                      break;
+                  case 'createdBy':
+                  case 'created_by':
+                  case 'modifiedBy':
+                  case 'modified_by':
+                      $v = 99;
+                      break;
+                  default:
+                      break;
                 }
                 $data[$k] = $v;
             }
@@ -235,11 +235,11 @@ abstract class DbTestCase extends ConnectionTestCase
                 if ($customerId > 0) {
                     switch ($k)
                     {
-                    	case 'customerId':
-                    	    $v = $customerId;
-                    	    break;
-                    	default:
-                    	    break;
+                      case 'customerId':
+                          $v = $customerId;
+                          break;
+                      default:
+                          break;
                     }
                 }
                 $data[$k] = $v;
@@ -358,30 +358,30 @@ abstract class DbTestCase extends ConnectionTestCase
         if ($type != '') {
             switch ($type)
             {
-            	case 'full':
-            	    $customers = 1;
-            	    $addresses = 1;
-            	    $phones = 1;
-            	    $orders = 1;
-            	    $items = 3;
-            	    $attributes = ($clientCode == 'CLIENT2' ? 5 : 4);
-            	    break;
-            	case 'lessoneitem':
-            	    $customers = 1;
-            	    $addresses = 1;
-            	    $phones = 1;
-            	    $orders = 1;
-            	    $items = 2;
-            	    $attributes = ($clientCode == 'CLIENT2' ? 5 : 4);
-            	    break;
-            	case 'lessaddress':
-            	    $customers = 1;
-            	    $addresses = 0;
-            	    $phones = 1;
-            	    $orders = 1;
-            	    $items = 3;
-            	    $attributes = ($clientCode == 'CLIENT2' ? 5 : 4);
-            	    break;
+              case 'full':
+                  $customers = 1;
+                  $addresses = 1;
+                  $phones = 1;
+                  $orders = 1;
+                  $items = 3;
+                  $attributes = ($clientCode == 'CLIENT2' ? 5 : 4);
+                  break;
+              case 'lessoneitem':
+                  $customers = 1;
+                  $addresses = 1;
+                  $phones = 1;
+                  $orders = 1;
+                  $items = 2;
+                  $attributes = ($clientCode == 'CLIENT2' ? 5 : 4);
+                  break;
+              case 'lessaddress':
+                  $customers = 1;
+                  $addresses = 0;
+                  $phones = 1;
+                  $orders = 1;
+                  $items = 3;
+                  $attributes = ($clientCode == 'CLIENT2' ? 5 : 4);
+                  break;
             }
         }
 

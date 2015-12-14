@@ -309,6 +309,11 @@ class A3ActiveRecordTest extends DbTestCase
                     //////// save all new order and changes
 
                     $ok = $customer->saveAll();
+
+                    if (!$ok) {
+                        print_r($customer->getActionErrors());
+                    }
+
                     $this->assertTrue($ok, 'Failed to run saveAll - adding orders');
 
                 } else {

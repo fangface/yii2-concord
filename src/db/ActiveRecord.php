@@ -290,6 +290,17 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \yii\db\BaseActiveRecord::getDirtyAttributes($names)
+     */
+    public function getDirtyAttributes($names = null)
+    {
+        if ($names === null || is_bool($names)) {
+            $names = $this->attributes();
+        }
+        return parent::getDirtyAttributes($names);
+    }
 
     /**
      * (non-PHPdoc)

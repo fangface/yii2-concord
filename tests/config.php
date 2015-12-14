@@ -38,14 +38,14 @@ return [
         'components' => [
 
             'db' => [
-        		'class' => \yii\db\Connection::className(),
-        		'dsn' => 'mysql:host=localhost;dbname=dbTestMain',
-        		'username' => 'root',
-        		'password' => '',
-        		'charset' => 'utf8',
-        		'enableSchemaCache' => true,
-        		'schemaCache' => 'dbCache',
-        		'tablePrefix' => '',
+                'class' => \yii\db\Connection::className(),
+                'dsn' => 'mysql:host=localhost;dbname=dbTestMain',
+                'username' => 'root',
+                'password' => '',
+                'charset' => 'utf8',
+                'enableSchemaCache' => true,
+                'schemaCache' => 'dbCache',
+                'tablePrefix' => '',
             ],
 
             'db2' => [
