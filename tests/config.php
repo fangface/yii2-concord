@@ -2,7 +2,12 @@
 
 if (getenv('TRAVIS') && getenv('TRAVIS') == 'true') {
     // running tests on travis
-    if (version_compare(PHP_VERSION, '5.5.0') >= 0) {
+    if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+        $cacheConfig = [
+            'class' => 'yii\caching\DummyCache',
+            'keyPrefix' => 'concord_prefix',
+        ];
+    } elseif (version_compare(PHP_VERSION, '5.5.0') >= 0) {
         $cacheConfig = [
             'class' => 'yii\caching\MemCache',
             'useMemcached' => true,
