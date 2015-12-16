@@ -26,7 +26,7 @@ class Request extends \yii\web\Request
      * (non-PHPdoc)
      * @see \yii\web\Request::validateCsrfToken()
      */
-    public function validateCsrfToken()
+    public function validateCsrfToken($token = null)
     {
         if(
             $this->enableCsrfValidation &&
