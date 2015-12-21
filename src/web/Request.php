@@ -36,4 +36,21 @@ class Request extends \yii\web\Request
         }
         return parent::validateCsrfToken();
     }
+
+    /**
+     * Returns POST or GET parameter with a given name.
+     *
+     * @param string $name the parameter name
+     * @param mixed $defaultValue the default parameter value if the parameter does not exist.
+     * @return array|mixed
+     */
+    public function postOrGet($name, $defaultValue = null)
+    {
+        $value = \Yii::$app->request->post($name, null);
+        if ($value === null) {
+            $value = \Yii::$app->request->get($name, $defaultValue);
+        }
+        return $value;
+    }
+
 }
