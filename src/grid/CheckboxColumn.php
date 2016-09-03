@@ -14,8 +14,8 @@
 
 namespace fangface\grid;
 
-use fangface\helpers\Html;
 use yii\grid\Column;
+use yii\helpers\Html;
 
 class CheckboxColumn extends \yii\grid\CheckboxColumn
 {

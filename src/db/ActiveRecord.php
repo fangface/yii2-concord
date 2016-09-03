@@ -18,6 +18,7 @@ use Yii;
 use fangface\Tools;
 use fangface\base\traits\ActionErrors;
 use fangface\base\traits\AttributeSupport;
+use fangface\base\traits\AttributeSupportInterface;
 use fangface\behaviors\AutoSavedBy;
 use fangface\behaviors\AutoDatestamp;
 use fangface\db\ActiveAttributeRecord;
@@ -46,7 +47,7 @@ use yii\helpers\ArrayHelper;
  * @method ActiveRecord[] findAll($condition = null) static
  * @method ActiveRecord[] findByCondition($condition, $one) static
  */
-class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface
+class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterface, ActiveRecordReadOnlyInterface, ActiveRecordSaveAllInterface, AttributeSupportInterface
 {
 
     use ActionErrors;
@@ -437,7 +438,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
     /**
      * Determine if model has any unsaved changes
      *
-     * @param boolean $checkRelations should changes in relations be checked as well
+     * @param boolean $checkRelations should changes in relations be checked as well, default false
      * @return boolean
      */
     public function hasChanges($checkRelations = false)
@@ -670,7 +671,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
         } elseif ($this->hasAttribute('modifiedAt')) {
             $this->modifiedAt = date(Tools::DATETIME_DATABASE);
         }
-        $this->saveAll();
+        return $this->saveAll();
     }
 
     /**
@@ -778,7 +779,7 @@ class ActiveRecord extends YiiActiveRecord implements ActiveRecordParentalInterf
 
                 // run beforeSaveAll and abandon saveAll() if it returns false
                 if (!$this->beforeSaveAllInternal($runValidation, $hasParentModel, $push, $attributes)) {
-                    \Yii::info('Model not saved due to beforeSaveALlInternal returning false.', __METHOD__);
+                    \Yii::info('Model not saved due to beforeSaveAllInternal returning false.', __METHOD__);
                     return false;
                 }
 

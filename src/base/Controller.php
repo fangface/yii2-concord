@@ -221,7 +221,7 @@ class Controller extends \yii\web\Controller
                 $options[$k] = Html::encode($option);
             }
         }
-        $this->addAjaxJSResponse("App.newToast('" . Html::encode($type) . "', '" . Html::encode($title) . "', '" . $message . "', '" . Json::encode($options) . "');");
+        $this->addAjaxJSResponse("Main.newToast('" . Html::encode($type) . "', '" . Html::encode($title) . "', '" . $message . "', '" . Json::encode($options) . "');");
     }
 
     /**
@@ -230,6 +230,14 @@ class Controller extends \yii\web\Controller
     public function endAjaxResponse()
     {
         $this->startAjaxResponse();
+        if (YII_DEBUG && YII_DEBUG_AJAX) {
+            if (!defined('YII_DEBUG_AJAX_MODAL') || !YII_DEBUG_AJAX_MODAL) {
+                $content = $this->getView()->endAjax();
+                if ($content) {
+                    $this->addAjaxResponseRaw('yii-debug-toolbar-wrapper', $content);
+                }
+            }
+        }
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return $this->ajaxResponses;
     }
@@ -244,8 +252,7 @@ class Controller extends \yii\web\Controller
         $this->startAjaxResponse();
         $this->ajaxResponses['answer'] = 1;
         $this->ajaxResponses[$element] = $array;
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return $this->ajaxResponses;
+        return $this->endAjaxResponse();
     }
 
     /**
@@ -258,8 +265,7 @@ class Controller extends \yii\web\Controller
         $this->startAjaxResponse();
         $this->ajaxResponses['answer'] = 0;
         $this->ajaxResponses[$element] = $array;
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return $this->ajaxResponses;
+        return $this->endAjaxResponse();
     }
 
     /**

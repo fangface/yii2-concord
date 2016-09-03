@@ -16,10 +16,10 @@ namespace fangface\grid;
 
 use fangface\grid\ActionColumn;
 use fangface\grid\DataColumn;
-use fangface\helpers\Html;
 use yii\base\InvalidConfigException;
 use yii\i18n\Formatter;
 use yii\grid\Column;
+use yii\helpers\Html;
 
 
 trait DataGridTrait {

@@ -21,6 +21,11 @@ class View extends \yii\web\View
 {
 
     /**
+     * @event \yii\base\Event an event that is triggered by [[endAjax()]].
+     */
+    const EVENT_END_AJAX_DEBUG = 'endAjax';
+
+    /**
      * The location of registered JavaScript code block or files.
      * This means the location is in the head section.
      */
@@ -609,6 +614,17 @@ class View extends \yii\web\View
             echo '});</script>' . "\n";
         }
 
+    }
+
+    /**
+     * Called at the end of an ajax request by Controller::endAjaxResponse()
+     */
+    public function endAjax()
+    {
+        ob_start();
+        ob_implicit_flush(false);
+        $this->trigger(self::EVENT_END_AJAX_DEBUG);
+        return ob_get_clean();
     }
 
     /**

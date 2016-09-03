@@ -395,7 +395,11 @@ class Tools
                 case 'int':
                 case 'timestamp':
                     if ($value == '' || $value == '__NULL__') {
-                        $value = 0;
+                        if ($dataType == 'bigint') {
+                            $value = '0';
+                        } else {
+                            $value = 0;
+                        }
                     }
                     if ($zerofill) {
                         if ($value < 0) {
@@ -404,7 +408,11 @@ class Tools
                             $value = str_pad($value, $length, "0", STR_PAD_LEFT);
                         }
                     } else {
-                        $value = (int) $value;
+                        if ($dataType == 'bigint') {
+                            $value = number_format($value, 0, '', '');
+                        } else {
+                            $value = (int) $value;
+                        }
                     }
                     return $value;
 
@@ -1155,20 +1163,4 @@ class Tools
         return get_called_class();
     }
 
-    /**
-     * Convert a string to a URL friendly version
-     *
-     * @param string $str
-     * @return string
-     */
-    public static function friendlyUrl($str = '') {
-        $friendlyURL = htmlentities($str, ENT_COMPAT, "UTF-8", false);
-        $friendlyURL = preg_replace('/&([a-z]{1,2})(?:acute|circ|lig|grave|ring|tilde|uml|cedil|caron);/i','\1',$friendlyURL);
-        $friendlyURL = html_entity_decode($friendlyURL,ENT_COMPAT, "UTF-8");
-        $friendlyURL = preg_replace('/[^a-z0-9-]+/i', '-', $friendlyURL);
-        $friendlyURL = preg_replace('/-+/', '-', $friendlyURL);
-        $friendlyURL = trim($friendlyURL, '-');
-        $friendlyURL = strtolower($friendlyURL);
-        return $friendlyURL;
-    }
 }

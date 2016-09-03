@@ -24,7 +24,12 @@ use yii\web\JsExpression;
 trait WidgetTrait {
 
     /**
-     * Section name yags to replace in the rendered layout. Enter this as `$key => $value` pairs,
+     * @var string the template that is used to render the widget
+     */
+    public $template = "{input}";
+
+    /**
+     * Section name tags to replace in the rendered layout. Enter this as `$key => $value` pairs,
      * where:
      * - $key: string, defines the section name.
      * - $value: string|Closure, the value that will be replaced. You can set it as a callback
@@ -41,6 +46,11 @@ trait WidgetTrait {
      * @var string the name of the jQuery plugin
      */
     public $pluginName = '';
+
+    /**
+     * @var array widget default plugin options
+     */
+    public $defaultPluginOptions = [];
 
     /**
      * @var array widget plugin options
@@ -76,6 +86,26 @@ trait WidgetTrait {
     protected $_encOptions = '';
 
 
+    /**
+     * Renders a section of the specified name.
+     * If the named section is not supported, an empty string will be returned
+     * @param string $name the section name, e.g., `{summary}`, `{items}`.
+     * @return string the rendering result of the section
+     */
+    protected function renderSection($name)
+    {
+        return $this->getSection($name);
+    }
+
+    /**
+     * Apply plugin settings by merging [[pluginOptions]] and [[defaultPluginOptions]]
+     * @return void
+     */
+    protected function applyPluginSettings()
+    {
+        $this->pluginOptions = array_merge($this->defaultPluginOptions, $this->pluginOptions);
+    }
+
     protected function findSectionsToRender($content)
     {
         $content = preg_replace_callback("/{\\w+}/", function ($matches) {
@@ -87,17 +117,6 @@ trait WidgetTrait {
             }
         }, $content);
         return $content;
-    }
-
-    /**
-     * Renders a section of the specified name.
-     * If the named section is not supported, an empty string will be returned
-     * @param string $name the section name, e.g., `{summary}`, `{items}`.
-     * @return string the rendering result of the section
-     */
-    public function renderSection($name)
-    {
-        return $this->getSection($name);
     }
 
     /**

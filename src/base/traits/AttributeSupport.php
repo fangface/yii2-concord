@@ -14,8 +14,9 @@
 
 namespace fangface\base\traits;
 
+use fangface\forms\InputField;
 use fangface\Tools;
-use fangface\tools\InputField;
+use fangface\validators\DateValidator;
 use fangface\validators\FilterValidator;
 use fangface\validators\StrengthValidator;
 use yii\helpers\ArrayHelper;
@@ -83,11 +84,15 @@ trait AttributeSupport
      */
     public function getAttributeLabel($attribute)
     {
-        $labels = $this->attributeLabels();
-        if (array_key_exists($attribute, $labels)) {
-            $message = $labels[$attribute];
-        } else {
-            $message = $this->getAttributeConfig($attribute, 'label');
+        $message = $this->getAttributeConfig($attribute, 'label');
+        if (!$message) {
+            $message = $this->getAttributeConfig($attribute, 'active', 'label');
+            if (!$message) {
+                $labels = $this->attributeLabels();
+                if (array_key_exists($attribute, $labels)) {
+                    $message = $labels[$attribute];
+                }
+            }
         }
         if (!$message) {
             $message = $this->generateAttributeLabel($attribute);
@@ -121,7 +126,17 @@ trait AttributeSupport
                         }
                     } else {
                         foreach ($attrConfig['rules'] as $key => $rule) {
-                            $rules[] = $rule;
+                            if (array_key_exists('except', $rule)) {
+                                if (is_array($rule['except']) && in_array($this->getScenario(), $rule['except'])) {
+                                    // ignore this rule in this scenario
+                                } elseif ($rule['except'] == $this->getScenario()) {
+                                    // ignore this rule in this scenario
+                                } else {
+                                    $rules[] = $rule;
+                                }
+                            } else {
+                                $rules[] = $rule;
+                            }
                         }
                     }
                 }
@@ -185,6 +200,19 @@ trait AttributeSupport
             $dateFormat = '';
             $addRules = [];
 
+            $isInteger = false;
+            switch ($spec->type) {
+                case 'int':
+                case 'integer':
+                case 'tinyint':
+                case 'smallint':
+                case 'mediumint':
+                case '__bigint': // not included here as cast as will have been cast as a string
+                    $isInteger = true;
+                    break;
+                default:
+            }
+
             if ($type == '') {
                 $type = InputField::getDefaultInputFieldType($attribute, $spec, (isset($config['active']) ? $config['active'] : null));
                 if ($type == InputField::INPUT_STATIC) {
@@ -198,8 +226,9 @@ trait AttributeSupport
                     $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
                     break;
                 case InputField::INPUT_PASSWORD_STRENGTH:
-                    $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
-                    $addRules[] = ['check' => [StrengthValidator::className()], 'rule' => [StrengthValidator::className(), 'preset' => 'normal', 'hasUser' => false, 'hasEmail' => false, 'userAttribute' => false]];
+                    //wlchere - alternative or implement correctly again
+                    //$max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
+                    //$addRules[] = ['check' => [StrengthValidator::className()], 'rule' => [StrengthValidator::className(), 'preset' => 'normal', 'hasUser' => false, 'hasEmail' => false, 'userAttribute' => false]];
                     break;
                 case InputField::INPUT_INTEGER:
                     if ($spec) {
@@ -207,36 +236,63 @@ trait AttributeSupport
                         $unsigned = $spec->unsigned;
                     } else {
                         $max = $config['active']['options']['maxlength'];
-                        $unsigned = (!isset($config['active']['options']['data-inputmask-allowminus']) && $config['active']['options']['data-inputmask-allowminus'] == 'false' ? true : false);
+                        $unsigned = (!isset($config['active']['options']['data-inputmask']['allowMinus']) || !$config['active']['options']['data-inputmask']['allowMinus'] ? true : false);
                     }
                     $maxValue = pow(10, $max) - 1;
                     $minValue = ($unsigned ? 0 : -1 * $maxValue);
-                    $noTrim = true;
+                    $isString = false;
                     $defaultOnEmpty = 0;
+                    if ($maxValue > 2147483646) {
+                        // bigint for example is cast as a string
+                    } else {
+                        $addRules[] = [
+                            'check' => [FilterValidator::className(), 'filter' => 'intval'],
+                            'rule' => [FilterValidator::className(), 'filter' => 'intval'],
+                        ];
+                    }
                     $addRules[] = ['check' => ['integer'], 'rule' => ['integer', 'max' => $maxValue, 'min' => $minValue]];
+                    if (!$unsigned) {
+                        $max++;
+                    }
                     break;
                 case InputField::INPUT_DECIMAL:
                     if ($spec) {
-                        $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
+                        $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size + 1); // allow for decimal point
                         $unsigned = $spec->unsigned;
                         $scale = $spec->scale;
                     } else {
                         $max = $config['active']['options']['maxlength'];
-                        $unsigned = (!isset($config['active']['options']['data-inputmask-allowminus']) && $config['active']['options']['data-inputmask-allowminus'] == 'false' ? true : false);
-                        $scale = (isset($config['active']['options']['data-inputmask-digits']) ? $config['active']['options']['data-inputmask-digits'] : 2);
+                        $unsigned = (!isset($config['active']['options']['data-inputmask']['allowMinus']) || !$config['active']['options']['data-inputmask']['allowMinus'] ? true : false);
+                        $scale = (isset($config['active']['options']['data-inputmask']['digits']) ? $config['active']['options']['data-inputmask']['digits'] : 2);
                     }
-                    $maxValue = pow(10, $max) - 0.01;
+                    $maxValue = pow(10, ($max - 1)) - 0.01;
                     $minValue = ($unsigned ? 0 : -1 * $maxValue);
                     $noTrim = true;
                     $defaultOnEmpty = '0.00';
                     $addRules[] = ['check' => ['double'], 'rule' => ['double', 'max' => $maxValue, 'min' => $minValue]];
                     $addRules[] = ['check' => [FilterValidator::className()], 'rule' => [FilterValidator::className(), 'filter' => 'number_format', 'args' => [$scale, '.', '']]];
+                    if (!$unsigned) {
+                        $max++;
+                    }
                     break;
                 case InputField::INPUT_TEXTAREA:
+                    $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
                     break;
                 case InputField::INPUT_CHECKBOX:
+                case InputField::INPUT_CHECKBOX_BASIC:
+                case InputField::INPUT_CHECKBOX_SWITCH:
+                case InputField::INPUT_CHECKBOX_ICHECK:
                     $isString = false;
                     $addRules[] = ['check' => ['boolean'], 'rule' => ['boolean']];
+                    $defaultOnEmpty = 0;
+                    if ($spec && $isInteger) {
+                        if ($spec->size == 1) {
+                            $addRules[] = [
+                                'check' => [FilterValidator::className(), 'filter' => 'intval'],
+                                'rule' => [FilterValidator::className(), 'filter' => 'intval'],
+                            ];
+                        }
+                    }
                     break;
                 case InputField::INPUT_DATE:
                     $defaultOnEmpty = Tools::DATE_DB_EMPTY;
@@ -249,7 +305,7 @@ trait AttributeSupport
                     $dateFormat = 'Y-m-d H:i:s';
                     break;
                 case InputField::INPUT_TIME:
-                    $defaultOnEmpty = Tools::DATE_DB_EMPTY;
+                    $defaultOnEmpty = Tools::TIME_DB_EMPTY;
                     $max = 8;
                     $dateFormat = 'H:i:s';
                     break;
@@ -260,7 +316,10 @@ trait AttributeSupport
                     $addRules[] = ['check' => ['integer'], 'rule' => ['integer', 'max' => Tools::YEAR_DB_MAX, 'min' => Tools::YEAR_DB_EMPTY]];
                     break;
                 case InputField::INPUT_COLOR:
-                    $max = (!$spec || $spec->size > 18 ? 18 : $spec->size);
+                    $max = (!$spec || $spec->size > 21 ? 21 : $spec->size);
+                    break;
+                case InputField::INPUT_MINI_COLORS:
+                    $max = (!$spec || $spec->size > 25 ? 25 : $spec->size);
                     break;
                 case InputField::INPUT_SELECT_PICKER_MULTI:
                 case InputField::INPUT_CHECKBOX_LIST:
@@ -272,15 +331,24 @@ trait AttributeSupport
                 case InputField::INPUT_SELECT2:
                 case InputField::INPUT_DROPDOWN_LIST:
                 case InputField::INPUT_LIST_BOX:
+                case InputField::INPUT_SELECT_PICKER:
+                case InputField::INPUT_SELECT_SPLITTER:
                     if (isset($config['active']['options']['multiple']) && $config['active']['options']['multiple']) {
                         $isMultiple = true;
+                    } else {
+                        if ($spec && $isInteger) {
+                            $defaultOnEmpty = '0';
+                            $addRules[] = [
+                                'check' => [FilterValidator::className(), 'filter' => 'intval'],
+                                'rule' => [FilterValidator::className(), 'filter' => 'intval'],
+                            ];
+                        }
                     }
                     break;
                 case InputField::INPUT_SELECT2_TAGS:
                     // received as a pipe delimited string
                     $max = (isset($config['active']['options']['maxlength']) ? $config['active']['options']['maxlength'] : $spec->size);
                     break;
-                case InputField::INPUT_SELECT_PICKER:
                 case InputField::INPUT_RADIO_LIST:
                 case InputField::INPUT_RADIO_LIST_ICHECK:
                 case InputField::INPUT_RADIO:
@@ -298,12 +366,18 @@ trait AttributeSupport
                 $addRules[] = ['check' => [FilterValidator::className()], 'rule' => [FilterValidator::className(), 'filter' => 'implode', 'makeArray' => true, 'argsFirst' => true, 'args' => ['|']]];
             }
 
+            if ($defaultOnEmpty !== null) {
+                if (!$this->checkHasRule($rules, $attribute, 'default' , 'value')) {
+                    $data[] = ['default', 'value' => $defaultOnEmpty];
+                }
+            }
+
             if ($isString && $max != -1) {
                 if (!$this->checkHasRule($rules, $attribute, 'string', 'max')) {
                     if (isset($config['active']['options']['maxlength'])) {
                         $max = $config['active']['options']['maxlength'];
                     }
-                    $data[] = ['string', 'max' => ($max ? $max : $spec->size)];
+                    $data[] = ['string', 'max' => ($max ? intval($max) : $spec->size)];
                 }
                 if (!$noTrim && !$this->checkHasRule($rules, $attribute, 'filter', 'filter', 'trim')) {
                     $data[] = ['filter', 'filter' => 'trim'];
@@ -312,13 +386,7 @@ trait AttributeSupport
 
             if ($dateFormat != '') {
                 if (!$this->checkHasRule($rules, $attribute, 'date')) {
-                    $data[] = ['date', 'format' => 'php:' . $dateFormat];
-                }
-            }
-
-            if ($defaultOnEmpty !== null) {
-                if (!$this->checkHasRule($rules, $attribute, 'default' , 'value')) {
-                    $data[] = ['default', 'value' => $defaultOnEmpty];
+                    $data[] = [DateValidator::className(), 'format' => 'php:' . $dateFormat];
                 }
             }
 
@@ -402,7 +470,17 @@ trait AttributeSupport
         foreach ($config as $attribute => $attrConfig) {
             if (array_key_exists('scenarios', $attrConfig)) {
                 if ($attrConfig['scenarios']) {
-                    foreach ($attrConfig['scenarios'] as $key => $scenario) {
+                    if (is_array($attrConfig['scenarios'])) {
+                        foreach ($attrConfig['scenarios'] as $key => $scenario) {
+                            if (!array_key_exists($scenario, $data)) {
+                                $data[$scenario] = [];
+                                $data[$scenario][] = $attribute;
+                            } elseif (!in_array($attribute, $data[$scenario])) {
+                                $data[$scenario][] = $attribute;
+                            }
+                        }
+                    } else {
+                        $scenario = $attrConfig['scenarios'];
                         if (!array_key_exists($scenario, $data)) {
                             $data[$scenario] = [];
                             $data[$scenario][] = $attribute;
